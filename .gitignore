@@ -1,0 +1,126 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+*.nbconvert.*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+*.sqlite3
+
+# Environment variables & secrets
+.env
+.env.*
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+.aws/
+credentials
+config
+
+# AWS / Cloud artifacts
+*.pem
+*.key
+*.cert
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.*
+*.tfplan
+*.tfplan.*
+*.hcl
+*.tfstate.backup.*
+
+# Data files (large/sensitive)
+*.csv
+*.parquet
+*.jsonl
+*.xlsx
+*.xls
+*.pdf
+*.zip
+*.gz
+*.tar
+data/
+raw/
+processed/
+notebooks/data/
+
+# IDEs & editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Testing & coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+*.pytest_cache/
+tox/
+nox/
+.pytest_cache/
+
+# Dependency directories (if you use something unusual)
+node_modules/
+jspm_packages/
+
+# Temporary files
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+*.temp
+
+# SageMaker / AWS local artifacts
+.sagemaker/
+output/
+model.tar.gz
+*.checkpoint
+
+# Project-specific exclusions (add more as needed)
+cache/
+tmp/
+scratch/
+experiments/
