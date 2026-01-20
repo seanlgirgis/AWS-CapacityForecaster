@@ -41,7 +41,6 @@ ipython_config.py
 *.env.production.local
 .aws/
 credentials
-config
 
 # AWS / Cloud artifacts
 *.pem
@@ -59,8 +58,7 @@ terraform.tfstate.backup
 *.tfstate.backup.*
 
 # Data files (large/sensitive)
-*.csv
-*.parquet
+
 *.jsonl
 *.xlsx
 *.xls

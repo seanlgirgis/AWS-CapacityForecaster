@@ -1,0 +1,107 @@
+# config/config.yaml
+# Configuration for AWS-CapacityForecaster project
+# Use python-dotenv to load sensitive values from .env
+
+project:
+  name: AWS-CapacityForecaster
+  version: 1.0
+  description: Cloud-native enterprise server capacity forecasting system
+
+aws:
+  region: us-east-1
+  profile: default                        # boto3 profile name (optional)
+  bucket_name: sean-capacity-forecast-data
+  raw_prefix: raw/server_metrics/
+  processed_prefix: processed/server_metrics/
+  features_prefix: processed/features/
+  sagemaker_role_arn: ""                  # Fill from .env or IAM
+  sagemaker_instance_type: ml.t3.medium   # Cheap/small for development
+  athena_database: capacity_forecaster_db
+  athena_workgroup: primary               # or create custom
+
+data:
+  num_servers: 120
+  years_of_data: 4
+  granularity: daily                      # daily / hourly (future)
+  start_date: "2022-01-01"
+  end_date: "2025-12-31"
+  seasonality:
+    weekly: true
+    quarterly_peaks: true                 # end-of-quarter banking peaks
+    holiday_effect: true
+  p95_ranges:
+    cpu: [10.0, 95.0]
+    memory: [15.0, 92.0]
+    disk: [5.0, 85.0]
+    network_in: [20.0, 500.0]
+    network_out: [10.0, 300.0]
+
+ml:
+  forecast_horizon_months: 6
+  models:
+    - name: Prophet
+      enabled: true
+      params:
+        yearly_seasonality: true
+        weekly_seasonality: true
+        daily_seasonality: false
+        changepoint_prior_scale: 0.05
+    - name: RandomForest
+      enabled: true
+      params:
+        n_estimators: 200
+        max_depth: 10
+        random_state: 42
+    - name: GradientBoosting
+      enabled: true
+      params:
+        n_estimators: 150
+        learning_rate: 0.05
+        max_depth: 6
+    - name: AmazonForecast
+      enabled: false                        # Optional - toggle on when ready
+      forecast_frequency: D
+      prediction_length: 180
+  evaluation:
+    metrics: [MAE, RMSE, MAPE]
+    test_split_ratio: 0.2
+    cross_validation_folds: 5
+
+feature_engineering:
+  lags: [1, 7, 30]                        # 1-day, weekly, monthly lags
+  rolling_windows: [7, 14, 30]            # rolling means/std
+  external_regressors:
+    - is_end_of_quarter
+    - is_month_end
+  anomaly_detection:
+    z_score_threshold: 3.0
+    knn_neighbors: 5
+
+risk_analysis:
+  high_risk_threshold: 80.0               # P95 % utilization → flag as risk
+  very_high_risk_threshold: 90.0
+  underutilized_threshold: 40.0           # Average utilization → candidate for consolidation
+  clustering:
+    n_clusters: 4                         # K-Means clusters
+    features: [cpu_p95, memory_p95, disk_p95]
+
+paths:
+  local_data_dir: data/scratch/           # For local testing only
+  reports_dir: reports/
+  model_artifacts_dir: models/
+
+visualization:
+  theme: darkgrid  # seaborn style (compatible with matplotlib 3.8+)
+  figure_size: [12, 6]
+  interactive: true                       # Use plotly/dash when true
+  export_formats: [png, pdf, html]
+
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: logs/capacity_forecaster.log
+
+execution:
+  mode: local                             # local | sagemaker_processing | sagemaker_training | lambda
+  parallel_workers: 4                     # joblib/multiprocessing
+  random_seed: 42
