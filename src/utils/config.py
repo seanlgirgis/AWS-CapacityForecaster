@@ -1,253 +1,259 @@
 """
-Configuration Management Module for AWS-CapacityForecaster.
+Centralized configuration loader for AWS-CapacityForecaster project.
 
-Centralized, single source of truth for all configurable parameters.
-Loads settings from config/config.yaml with environment variable overrides from .env.
+Loads settings from config/config.yaml, applies optional .env overrides,
+performs strict validation, and provides convenient getter functions.
 
-Usage:
-    from src.utils.config import CONFIG
-
-    bucket = CONFIG['aws']['bucket_name']
-    num_servers = CONFIG['data']['num_servers']
+Supports seamless switching between local and AWS execution modes.
 """
 
 import os
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 import yaml
 from dotenv import load_dotenv
 
+# -----------------------------
+# Setup logging
+# -----------------------------
 logger = logging.getLogger(__name__)
 
-# Determine project root (parent of src/)
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-CONFIG_PATH = PROJECT_ROOT / "config" / "config.yaml"
+# -----------------------------
+# Constants
+# -----------------------------
+PROJECT_ROOT = Path(__file__).resolve().parents[3]  # Assumes structure: src/utils/config.py → 3 levels up
+CONFIG_DIR = PROJECT_ROOT / "config"
+DEFAULT_CONFIG_PATH = CONFIG_DIR / "config.yaml"
 ENV_PATH = PROJECT_ROOT / ".env"
 
-# Valid AWS regions for validation
 VALID_AWS_REGIONS = {
     "us-east-1", "us-east-2", "us-west-1", "us-west-2",
-    "eu-west-1", "eu-west-2", "eu-west-3", "eu-central-1",
-    "ap-northeast-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2",
-    "ap-south-1", "sa-east-1", "ca-central-1",
+    "eu-west-1", "eu-central-1", "ap-southeast-1", "ap-northeast-1",
+    # Add more as needed — static list avoids boto3 dependency here
 }
+
+# -----------------------------
+# Global config holder
+# -----------------------------
+CONFIG: Dict[str, Any] = {}
 
 
 def get_nested(d: Dict, keys: List[str], default: Any = None) -> Any:
-    """
-    Safely access nested dictionary values using a list of keys.
+    """Safely retrieve nested dictionary value with dot-like access.
 
     Args:
-        d: Dictionary to access
-        keys: List of keys for nested access, e.g., ['aws', 'bucket_name']
-        default: Default value if key path doesn't exist
+        d: Dictionary to search
+        keys: List of keys in order (e.g., ['aws', 'region'])
+        default: Value to return if path not found
 
     Returns:
-        Value at the nested key path, or default if not found
-
-    Example:
-        >>> config = {'aws': {'bucket_name': 'my-bucket'}}
-        >>> get_nested(config, ['aws', 'bucket_name'])
-        'my-bucket'
-        >>> get_nested(config, ['aws', 'missing'], 'default')
-        'default'
+        Nested value or default
     """
-    result = d
+    current = d
     for key in keys:
-        if isinstance(result, dict) and key in result:
-            result = result[key]
+        if isinstance(current, dict) and key in current:
+            current = current[key]
         else:
             return default
-    return result
+    return current
 
 
-def _apply_env_overrides(config: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Apply environment variable overrides to config dictionary.
+def load_config(
+    config_path: Optional[Path] = None,
+    env_path: Optional[Path] = None,
+) -> Dict[str, Any]:
+    """Load and merge configuration from YAML + .env overrides.
 
-    Environment variables take precedence over YAML values.
-    Mapping:
-        AWS_REGION -> config['aws']['region']
-        AWS_BUCKET_NAME -> config['aws']['bucket_name']
-        AWS_SAGEMAKER_ROLE_ARN -> config['aws']['sagemaker_role_arn']
-        AWS_PROFILE -> config['aws']['profile']
-        DATA_NUM_SERVERS -> config['data']['num_servers']
-        ML_FORECAST_HORIZON_MONTHS -> config['ml']['forecast_horizon_months']
-        EXECUTION_MODE -> config['execution']['mode']
-    """
-    env_mappings = [
-        ("AWS_REGION", ["aws", "region"], str),
-        ("AWS_BUCKET_NAME", ["aws", "bucket_name"], str),
-        ("AWS_SAGEMAKER_ROLE_ARN", ["aws", "sagemaker_role_arn"], str),
-        ("AWS_PROFILE", ["aws", "profile"], str),
-        ("DATA_NUM_SERVERS", ["data", "num_servers"], int),
-        ("ML_FORECAST_HORIZON_MONTHS", ["ml", "forecast_horizon_months"], int),
-        ("EXECUTION_MODE", ["execution", "mode"], str),
-    ]
-
-    for env_var, key_path, cast_type in env_mappings:
-        value = os.environ.get(env_var)
-        if value is not None:
-            # Navigate to parent and set the value
-            target = config
-            for key in key_path[:-1]:
-                target = target.setdefault(key, {})
-            try:
-                target[key_path[-1]] = cast_type(value)
-                logger.debug(f"Override from env: {env_var} -> {key_path}")
-            except (ValueError, TypeError) as e:
-                logger.warning(f"Invalid env override {env_var}={value}: {e}")
-
-    return config
-
-
-def validate_config(config: Dict[str, Any]) -> None:
-    """
-    Validate configuration values. Raises ValueError if invalid.
-
-    Checks:
-        - Required keys exist
-        - Numeric values are in valid ranges
-        - AWS region is valid
-        - At least one ML model is enabled
-    """
-    errors = []
-
-    # Required string fields (must be non-empty)
-    required_strings = [
-        (["aws", "bucket_name"], "AWS bucket name"),
-        (["aws", "region"], "AWS region"),
-    ]
-    for key_path, description in required_strings:
-        value = get_nested(config, key_path, "")
-        if not value or not isinstance(value, str):
-            errors.append(f"{description} is required (config path: {'.'.join(key_path)})")
-
-    # Validate AWS region
-    region = get_nested(config, ["aws", "region"], "")
-    if region and region not in VALID_AWS_REGIONS:
-        errors.append(f"Invalid AWS region: {region}. Must be one of: {', '.join(sorted(VALID_AWS_REGIONS))}")
-
-    # Numeric validations
-    num_servers = get_nested(config, ["data", "num_servers"], 0)
-    if not isinstance(num_servers, int) or num_servers <= 0:
-        errors.append(f"data.num_servers must be a positive integer, got: {num_servers}")
-
-    forecast_horizon = get_nested(config, ["ml", "forecast_horizon_months"], 0)
-    if not isinstance(forecast_horizon, int) or not (1 <= forecast_horizon <= 12):
-        errors.append(f"ml.forecast_horizon_months must be between 1 and 12, got: {forecast_horizon}")
-
-    # At least one ML model must be enabled
-    models = get_nested(config, ["ml", "models"], [])
-    enabled_models = [m for m in models if m.get("enabled", False)]
-    if not enabled_models:
-        errors.append("At least one ML model must be enabled in ml.models")
-
-    # Risk thresholds must be percentages
-    high_risk = get_nested(config, ["risk_analysis", "high_risk_threshold"], 0)
-    if not (0 < high_risk <= 100):
-        errors.append(f"risk_analysis.high_risk_threshold must be between 0 and 100, got: {high_risk}")
-
-    if errors:
-        error_msg = "Configuration validation failed:\n  - " + "\n  - ".join(errors)
-        raise ValueError(error_msg)
-
-    logger.info("Configuration validation passed")
-
-
-def load_config(config_path: Optional[Path] = None, validate: bool = True) -> Dict[str, Any]:
-    """
-    Load configuration from YAML file with environment variable overrides.
+    1. Loads base YAML config
+    2. Loads .env file if exists
+    3. Applies environment variable overrides (prefixed patterns)
+    4. Injects project root
+    5. Validates the final config
 
     Args:
-        config_path: Path to config YAML file (defaults to config/config.yaml)
-        validate: Whether to run validation checks (default True)
+        config_path: Path to config.yaml (defaults to DEFAULT_CONFIG_PATH)
+        env_path: Path to .env file (defaults to PROJECT_ROOT/.env)
 
     Returns:
-        Configuration dictionary
+        Validated configuration dictionary
 
     Raises:
-        FileNotFoundError: If config file doesn't exist
-        ValueError: If config validation fails
-        yaml.YAMLError: If YAML is malformed
+        FileNotFoundError: If config file missing
+        ValueError: On invalid YAML or validation failure
     """
-    # Load .env file if it exists
-    if ENV_PATH.exists():
-        load_dotenv(ENV_PATH)
-        logger.debug(f"Loaded environment from {ENV_PATH}")
+    config_path = config_path or DEFAULT_CONFIG_PATH
+    env_path = env_path or ENV_PATH
 
-    # Determine config path
-    path = config_path or CONFIG_PATH
+    if not config_path.exists():
+        raise FileNotFoundError(f"Config file not found: {config_path}")
 
-    if not path.exists():
-        raise FileNotFoundError(
-            f"Configuration file not found: {path}\n"
-            f"Please create {path} or copy from config/config.yaml.example"
-        )
-
-    # Load YAML
-    with open(path, "r", encoding="utf-8") as f:
-        try:
+    # Load base YAML
+    try:
+        with open(config_path, encoding="utf-8") as f:
             config = yaml.safe_load(f)
-        except yaml.YAMLError as e:
-            raise ValueError(f"Invalid YAML in {path}: {e}") from e
+    except yaml.YAMLError as e:
+        raise ValueError(f"Invalid YAML in {config_path}: {e}") from e
 
-    if config is None:
-        raise ValueError(f"Configuration file {path} is empty")
+    # Load .env if exists
+    if env_path.exists():
+        logger.info(f"Loading environment overrides from {env_path}")
+        load_dotenv(env_path, override=True)
 
-    logger.info(f"Loaded configuration from {path}")
-
-    # Apply environment overrides
-    config = _apply_env_overrides(config)
+    # Apply env overrides using prefix convention (e.g., AWS_REGION → config['aws']['region'])
+    _apply_env_overrides(config)
 
     # Inject project root for convenience
     config["_project_root"] = str(PROJECT_ROOT)
 
-    # Validate
-    if validate:
-        validate_config(config)
+    # Validate everything
+    validate_config(config)
 
+    global CONFIG
+    CONFIG = config
+    logger.info("Configuration loaded and validated successfully")
     return config
 
 
-# Load configuration on module import
-# This makes CONFIG available immediately: from src.utils.config import CONFIG
-try:
-    CONFIG: Dict[str, Any] = load_config()
-except Exception as e:
-    # Log error but don't crash on import - allows tests to mock CONFIG
-    logger.error(f"Failed to load configuration: {e}")
-    CONFIG = {}
+def _apply_env_overrides(config: Dict[str, Any]) -> None:
+    """Apply environment variable overrides to config dict.
+
+    Supports patterns like:
+    - AWS_REGION
+    - DATA_NUM_SERVERS
+    - ML_FORECAST_HORIZON_MONTHS
+    """
+    overrides = {
+        "AWS_REGION": ["aws", "region"],
+        "AWS_BUCKET_NAME": ["aws", "bucket_name"],
+        "AWS_SAGEMAKER_ROLE_ARN": ["aws", "sagemaker_role_arn"],
+        "DATA_NUM_SERVERS": ["data", "num_servers"],
+        "ML_FORECAST_HORIZON_MONTHS": ["ml", "forecast_horizon_months"],
+        "EXECUTION_MODE": ["execution", "mode"],
+    }
+
+    for env_key, path in overrides.items():
+        if value := os.getenv(env_key):
+            try:
+                # Attempt type conversion based on expected type
+                if "num_servers" in env_key or "horizon" in env_key:
+                    value = int(value)
+                # Add more type conversions as new fields appear
+
+                current = config
+                for key in path[:-1]:
+                    current = current.setdefault(key, {})
+                current[path[-1]] = value
+                logger.debug(f"Applied override: {env_key} = {value}")
+            except ValueError as e:
+                raise ValueError(
+                    f"Invalid type in .env for {env_key}: expected number, got '{os.getenv(env_key)}'"
+                ) from e
 
 
-def get_project_root() -> Path:
-    """Return the project root directory."""
-    return PROJECT_ROOT
+def validate_config(config: Dict[str, Any]) -> None:
+    """Strict validation of the configuration structure and values.
+
+    Raises ValueError with detailed messages on any failure.
+    """
+    errors = []
+
+    # ------------------- AWS Section -------------------
+    aws = get_nested(config, ["aws"], {})
+    if not aws:
+        errors.append("Missing 'aws' section in config")
+
+    region = aws.get("region")
+    if region not in VALID_AWS_REGIONS:
+        errors.append(f"Invalid AWS region: '{region}'. Must be one of: {VALID_AWS_REGIONS}")
+
+    if not aws.get("bucket_name"):
+        errors.append("AWS bucket name is required")
+
+    # Optional but if present, basic ARN check
+    role_arn = aws.get("sagemaker_role_arn")
+    if role_arn and not role_arn.startswith("arn:aws:iam::"):
+        errors.append("SageMaker role ARN appears invalid (must start with arn:aws:iam::)")
+
+    # ------------------- Data Section -------------------
+    data = get_nested(config, ["data"], {})
+    num_servers = data.get("num_servers")
+    if not isinstance(num_servers, int) or num_servers <= 0:
+        errors.append("data.num_servers must be a positive integer")
+
+    # ------------------- ML Section -------------------
+    ml = get_nested(config, ["ml"], {})
+    horizon = ml.get("forecast_horizon_months")
+    if not isinstance(horizon, int) or not (1 <= horizon <= 12):
+        errors.append("ml.forecast_horizon_months must be an integer between 1 and 12")
+
+    models = ml.get("models", [])
+    if not isinstance(models, list) or not models:
+        errors.append("At least one ML model must be defined in ml.models")
+    for i, model in enumerate(models):
+        if not isinstance(model, dict):
+            errors.append(f"ml.models[{i}] must be a dictionary")
+            continue
+        if "name" not in model or not isinstance(model["name"], str):
+            errors.append(f"ml.models[{i}]['name'] must be a non-empty string")
+        if "enabled" not in model or not isinstance(model["enabled"], bool):
+            errors.append(f"ml.models[{i}]['enabled'] must be boolean (true/false)")
+
+    # ------------------- Risk Analysis -------------------
+    risk = get_nested(config, ["risk_analysis"], {})
+    threshold = risk.get("high_risk_threshold")
+    if not isinstance(threshold, (int, float)) or not (0 <= threshold <= 100):
+        errors.append("risk_analysis.high_risk_threshold must be a number between 0 and 100")
+
+    # ------------------- Local Mode Path Checks -------------------
+    if get_nested(config, ["execution", "mode"], "local") == "local":
+        for key_path, expected_type in [
+            (["data", "raw_data_path"], (str, Path)),
+            (["data", "processed_data_path"], (str, Path)),
+        ]:
+            path_val = get_nested(config, key_path)
+            if path_val and not isinstance(path_val, (str, Path)):
+                errors.append(f"{'.'.join(key_path)} must be a string or Path")
+            # Optional: check existence (commented out for flexibility during dev)
+            # if path_val and not Path(path_val).exists():
+            #     errors.append(f"Path does not exist in local mode: {path_val}")
+
+    if errors:
+        raise ValueError("Configuration validation failed:\n  " + "\n  ".join(errors))
 
 
-def get_enabled_models() -> List[Dict[str, Any]]:
-    """Return list of enabled ML model configurations."""
-    models = get_nested(CONFIG, ["ml", "models"], [])
-    return [m for m in models if m.get("enabled", False)]
-
-
+# -----------------------------
+# Convenience getters (use these in other modules)
+# -----------------------------
 def get_aws_config() -> Dict[str, Any]:
-    """Return AWS-specific configuration section."""
-    return CONFIG.get("aws", {})
+    return get_nested(CONFIG, ["aws"], {})
 
 
 def get_data_config() -> Dict[str, Any]:
-    """Return data generation configuration section."""
-    return CONFIG.get("data", {})
+    return get_nested(CONFIG, ["data"], {})
 
 
 def get_ml_config() -> Dict[str, Any]:
-    """Return ML/forecasting configuration section."""
-    return CONFIG.get("ml", {})
+    return get_nested(CONFIG, ["ml"], {})
 
 
 def get_risk_config() -> Dict[str, Any]:
-    """Return risk analysis configuration section."""
-    return CONFIG.get("risk_analysis", {})
+    return get_nested(CONFIG, ["risk_analysis"], {})
+
+
+def get_execution_mode() -> str:
+    return get_nested(CONFIG, ["execution", "mode"], "local")
+
+
+def get_enabled_models() -> List[Dict[str, Any]]:
+    """Return list of enabled ML models from config."""
+    models = get_ml_config().get("models", [])
+    return [m for m in models if m.get("enabled", False)]
+
+
+# Auto-load on module import (optional — can be explicit in main scripts)
+try:
+    load_config()
+except Exception as e:
+    logger.warning(f"Auto-loading config failed (will load later explicitly): {e}")
