@@ -115,42 +115,31 @@ def load_config(
     logger.info("Configuration loaded and validated successfully")
     return config
 
-
 def _apply_env_overrides(config: Dict[str, Any]) -> None:
-    """Apply environment variable overrides to config dict.
-
-    Supports patterns like:
-    - AWS_REGION
-    - DATA_NUM_SERVERS
-    - ML_FORECAST_HORIZON_MONTHS
-    """
-    overrides = {
-        "AWS_REGION": ["aws", "region"],
-        "AWS_BUCKET_NAME": ["aws", "bucket_name"],
-        "AWS_SAGEMAKER_ROLE_ARN": ["aws", "sagemaker_role_arn"],
-        "DATA_NUM_SERVERS": ["data", "num_servers"],
-        "ML_FORECAST_HORIZON_MONTHS": ["ml", "forecast_horizon_months"],
-        "EXECUTION_MODE": ["execution", "mode"],
+    """Apply environment variable overrides to config dict with type conversion."""
+    overrides_map = {
+        "AWS_REGION": (["aws", "region"], str),
+        "AWS_BUCKET_NAME": (["aws", "bucket_name"], str),
+        "AWS_SAGEMAKER_ROLE_ARN": (["aws", "sagemaker_role_arn"], str),
+        "DATA_NUM_SERVERS": (["data", "num_servers"], int),
+        "ML_FORECAST_HORIZON_MONTHS": (["ml", "forecast_horizon_months"], int),
+        "EXECUTION_MODE": (["execution", "mode"], str),
+        # Add more as your config grows
     }
 
-    for env_key, path in overrides.items():
-        if value := os.getenv(env_key):
+    for env_key, (path, expected_type) in overrides_map.items():
+        if raw_value := os.getenv(env_key):
             try:
-                # Attempt type conversion based on expected type
-                if "num_servers" in env_key or "horizon" in env_key:
-                    value = int(value)
-                # Add more type conversions as new fields appear
-
+                value = expected_type(raw_value)
                 current = config
                 for key in path[:-1]:
                     current = current.setdefault(key, {})
                 current[path[-1]] = value
-                logger.debug(f"Applied override: {env_key} = {value}")
+                logger.debug(f"Applied override: {env_key} = {value} ({type(value).__name__})")
             except ValueError as e:
                 raise ValueError(
-                    f"Invalid type in .env for {env_key}: expected number, got '{os.getenv(env_key)}'"
+                    f"Invalid type for env var {env_key}: expected {expected_type.__name__}, got '{raw_value}'"
                 ) from e
-
 
 def validate_config(config: Dict[str, Any]) -> None:
     """Strict validation of the configuration structure and values.

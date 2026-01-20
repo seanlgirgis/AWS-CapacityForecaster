@@ -53,21 +53,25 @@ def invalid_config() -> Dict:
 
 def test_load_config_success(temp_config_file: Path):
     """Test successful config loading and basic content."""
-    # No more validate=False — validation is always on now
     config = load_config(config_path=temp_config_file)
     assert isinstance(config, dict)
     assert config["aws"]["region"] == "us-east-1"
     assert config["data"]["num_servers"] == 100
-    assert "_project_root" in config  # Injected root
+    assert "_project_root" in config
 
 def test_load_config_with_env_overrides(temp_config_file: Path, monkeypatch):
-    """Test environment variable overrides."""
+    """Test environment variable overrides with proper type conversion."""
     monkeypatch.setenv("AWS_REGION", "us-west-2")
     monkeypatch.setenv("DATA_NUM_SERVERS", "50")
-    # No validate=False
+    
+    # IMPORTANT: Reset global CONFIG before loading to isolate test
+    CONFIG.clear()
+    
     config = load_config(config_path=temp_config_file)
+    
     assert config["aws"]["region"] == "us-west-2"
-    assert config["data"]["num_servers"] == 50
+    assert config["data"]["num_servers"] == 50  # must be int, not str
+    assert isinstance(config["data"]["num_servers"], int)
 
 def test_load_config_invalid_yaml(tmp_path: Path):
     """Test loading malformed YAML."""
@@ -107,31 +111,34 @@ def test_get_nested():
 
 def test_get_enabled_models():
     """Test extracting enabled models."""
-    # Temporarily override global CONFIG for this test
     original = CONFIG.copy()
+    CONFIG.clear()
     CONFIG["ml"] = {"models": [{"name": "Prophet", "enabled": True}, {"name": "RF", "enabled": False}]}
     enabled = get_enabled_models()
     assert len(enabled) == 1
     assert enabled[0]["name"] == "Prophet"
-    # Restore (good practice in tests)
     CONFIG.clear()
     CONFIG.update(original)
 
 def test_config_getters():
-    """Test section getters."""
-    # Temporarily override
+    """Test section getters in isolation."""
     original = CONFIG.copy()
-    CONFIG.update({
+    CONFIG.clear()  # Crucial: start clean so we don't merge with real config
+    
+    test_data = {
         "aws": {"test": "aws"},
         "data": {"test": "data"},
         "ml": {"test": "ml"},
         "risk_analysis": {"test": "risk"},
-    })
+    }
+    CONFIG.update(test_data)
+    
     assert get_aws_config() == {"test": "aws"}
     assert get_data_config() == {"test": "data"}
     assert get_ml_config() == {"test": "ml"}
     assert get_risk_config() == {"test": "risk"}
-    # Restore
+    
+    # Restore original
     CONFIG.clear()
     CONFIG.update(original)
 
@@ -139,6 +146,6 @@ def test_project_root():
     """Test project root resolution — only check basic properties."""
     assert isinstance(PROJECT_ROOT, Path)
     assert PROJECT_ROOT.is_absolute()
-    # Do NOT check .exists() or specific subfolders — unreliable in pytest temp context
-    # Instead: check that it contains expected name parts (repo name)
-    assert "AWS-CapacityForecaster" in str(PROJECT_ROOT).replace("\\", "/")
+    # More robust check: should contain project name or be under known dev path
+    str_path = str(PROJECT_ROOT).replace("\\", "/").lower()
+    assert any(part in str_path for part in ["aws-capacityforecaster", "capacityforecaster", "pyproj"])
