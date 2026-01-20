@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aws-capacity-forecaster"
+version = "0.1.0"
+description = "AWS Capacity Forecasting Tool"
+requires-python = ">=3.8"
+
+# You can add dependencies here instead of requirements.txt
+# dependencies = [
+#     "boto3",
+#     "pandas",
+# ]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+
+# This tells setuptools where to find your packages
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "scripts*"]
+
+# pytest configuration (optional but useful)
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
