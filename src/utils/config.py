@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # -----------------------------
 # Constants
 # -----------------------------
-PROJECT_ROOT = Path(__file__).resolve().parents[3]  # Assumes structure: src/utils/config.py → 3 levels up
+PROJECT_ROOT = Path(__file__).resolve().parents[2]  # Assumes structure: src/utils/config.py → 2 levels up
 CONFIG_DIR = PROJECT_ROOT / "config"
 DEFAULT_CONFIG_PATH = CONFIG_DIR / "config.yaml"
 ENV_PATH = PROJECT_ROOT / ".env"
@@ -111,7 +111,8 @@ def load_config(
     validate_config(config)
 
     global CONFIG
-    CONFIG = config
+    CONFIG.clear()
+    CONFIG.update(config)
     logger.info("Configuration loaded and validated successfully")
     return config
 

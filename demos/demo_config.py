@@ -19,13 +19,25 @@ from src.utils.config import (
 logging.basicConfig(level=logging.INFO)
 
 def main():
-    logging.info("Loaded CONFIG overview:")
-    print(f"Project Root: {CONFIG['_project_root']}")
-    print(f"AWS Config: {get_aws_config()}")
-    print(f"Data Config: {get_data_config()}")
-    print(f"ML Config: {get_ml_config()}")
-    print(f"Enabled Models: {[m['name'] for m in get_enabled_models()]}")
-    print(f"Risk Config: {get_risk_config()}")
+    print("\n" + "="*60)
+    print(" 🛠️  PROJECT CONFIGURATION OVERVIEW")
+    print("="*60)
+
+    print(f"\n📂 [Project Root]: {CONFIG['_project_root']}")
+
+    import json
+    def pretty_print(title, data):
+        print(f"\n🔹 [{title}]:")
+        print(json.dumps(data, indent=2, default=str))
+
+    pretty_print("AWS Config", get_aws_config())
+    pretty_print("Data Config", get_data_config())
+    pretty_print("ML Config", get_ml_config())
+    
+    print(f"\n✅ [Enabled Models]: {', '.join([m['name'] for m in get_enabled_models()])}")
+    
+    pretty_print("Risk Config", get_risk_config())
+    print("\n" + "-"*60)
 
     # Example usage: Simulate data gen params from config
     num_servers = get_data_config()["num_servers"]
