@@ -1,4 +1,5 @@
 """
+# Run command: python demos/demo_config.py
 Demo app for config.py usage.
 
 Loads config and prints key sections for verification.

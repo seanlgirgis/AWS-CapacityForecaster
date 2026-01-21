@@ -30,23 +30,22 @@ from botocore.exceptions import ClientError
 from typing import Optional, Tuple, Dict, List
 import logging
 import holidays  # For US banking holidays; install via requirements.txt if needed
+from src.utils.config import get_aws_config, get_data_config
 
 # Set up logging for debugging (configurable via environment vars in production)
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # Constants for synthetic data generation (customizable for Citi-like scenarios)
-DEFAULT_START_DATE = "2022-01-01"
-DEFAULT_END_DATE = "2025-12-31"
-DEFAULT_FREQ = "D"  # Daily metrics, as per Citi monthly/seasonal reporting
+# Defaults will be pulled from config where applicable
 METRIC_COLUMNS = ['cpu_p95', 'memory_p95', 'disk_p95', 'network_out_p95']
 SERVER_METADATA_COLUMNS = ['server_id', 'app_name', 'business_unit', 'criticality', 'region']
 
 def generate_synthetic_server_metrics(
     n_servers: int = 80,
-    start_date: str = DEFAULT_START_DATE,
-    end_date: str = DEFAULT_END_DATE,
-    freq: str = DEFAULT_FREQ,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    freq: Optional[str] = None,
     seed: int = 42,
     add_seasonality: bool = True,
     add_eoq_spikes: bool = True,
@@ -80,6 +79,15 @@ def generate_synthetic_server_metrics(
 
     Aligns with Capacity Planning: Simulates P95 metrics for risk analysis/forecasting.
     """
+    data_config = get_data_config()
+    start_date = start_date or data_config.get("start_date", "2022-01-01")
+    end_date = end_date or data_config.get("end_date", "2025-12-31")
+    
+    # Default to 'D' if not in config
+    if not freq:
+        freq = data_config.get("granularity", "daily")
+        freq = "D" if freq == "daily" else "H"
+
     np.random.seed(seed)
     
     if base_utilization is None:
@@ -185,7 +193,7 @@ def load_from_s3(
     key: str,
     file_type: str = 'csv',  # 'csv' or 'parquet'
     profile_name: Optional[str] = None,
-    region: str = "us-east-1"
+    region: Optional[str] = None
 ) -> pd.DataFrame:
     """
     Load data from S3 into a pandas DataFrame (for AWS integration).
@@ -208,6 +216,9 @@ def load_from_s3(
 
     Aligns with AWS/Cloud: Enables pulling data from S3 for SageMaker/Athena pipelines.
     """
+    if region is None:
+        region = get_aws_config().get("region", "us-east-1")
+
     session = boto3.Session(profile_name=profile_name, region_name=region)
     s3 = session.client('s3')
     
@@ -336,8 +347,11 @@ def add_calendar_features(
     df['is_eoq'] = dt.dt.is_quarter_end.astype(int)
     
     if include_holidays:
-        us_holidays = holidays.US(years=dt.dt.year.unique())
-        df['is_holiday'] = df[date_col].apply(lambda x: x in us_holidays).astype(int)
+        unique_years = dt.dt.year.unique()
+        us_holidays = holidays.US(years=unique_years)
+        # Convert holidays keys (datetime.date) to timestamps for vectorized check
+        holiday_dates = pd.to_datetime(list(us_holidays.keys()))
+        df['is_holiday'] = df[date_col].isin(holiday_dates).astype(int)
     
     return df
 
@@ -391,8 +405,62 @@ def resample_to_daily(
     - pd.DataFrame: Resampled.
     """
     df = df.copy()
+    df[date_col] = pd.to_datetime(df[date_col])
     df.set_index(date_col, inplace=True)
-    df = df.groupby(group_col).resample('D').agg(agg_method).reset_index()
+    
+    # Select only numeric indices/columns for aggregation to avoid issues with string identifiers
+    # and explicitly reset index properly
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
+    # Ensure we don't drop the grouper if it's not numeric? 
+    # Actually, proper way is:
+    
+    df = df.groupby(group_col)[numeric_cols].resample('D').agg(agg_method).reset_index()
     return df
 
 # Additional helpers can be added as project evolves (e.g., detect_anomalies with scipy)
+
+def detect_anomalies_simple(
+    df: pd.DataFrame, 
+    columns: List[str] = METRIC_COLUMNS, 
+    threshold: float = 3.0
+) -> pd.DataFrame:
+    """
+    Flag anomalies using basic Z-score method.
+    
+    Parameters:
+    - df: Input DataFrame.
+    - columns: List of columns to check.
+    - threshold: Z-score threshold (default 3.0).
+    
+    Returns:
+    - pd.DataFrame: DataFrame with boolean columns 'is_outlier_<col>'.
+    """
+    outliers = pd.DataFrame(index=df.index)
+    for col in columns:
+        if col in df.columns:
+            # Handle potential division by zero if std is 0
+            std_dev = df[col].std()
+            if std_dev > 0:
+                z_score = (df[col] - df[col].mean()) / std_dev
+                outliers[f'is_outlier_{col}'] = (z_score.abs() > threshold)
+            else:
+                outliers[f'is_outlier_{col}'] = False
+    return outliers
+
+def get_date_range(
+    start_date: str, 
+    end_date: str, 
+    freq: str = 'D'
+) -> pd.DatetimeIndex:
+    """
+    Generate a date range.
+    
+    Parameters:
+    - start_date: Start date string.
+    - end_date: End date string.
+    - freq: Frequency string.
+    
+    Returns:
+    - pd.DatetimeIndex
+    """
+    return pd.date_range(start=start_date, end=end_date, freq=freq)
