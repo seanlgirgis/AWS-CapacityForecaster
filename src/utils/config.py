@@ -120,6 +120,7 @@ def _apply_env_overrides(config: Dict[str, Any]) -> None:
     """Apply environment variable overrides to config dict with type conversion."""
     overrides_map = {
         "AWS_REGION": (["aws", "region"], str),
+        "AWS_PROFILE": (["aws", "profile"], str),
         "AWS_BUCKET_NAME": (["aws", "bucket_name"], str),
         "AWS_SAGEMAKER_ROLE_ARN": (["aws", "sagemaker_role_arn"], str),
         "DATA_NUM_SERVERS": (["data", "num_servers"], int),

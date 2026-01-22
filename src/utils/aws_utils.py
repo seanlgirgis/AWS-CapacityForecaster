@@ -31,13 +31,16 @@ Version: 1.0
 import boto3
 import botocore.exceptions
 import logging
+import botocore.exceptions
+import logging
 import os
+from src.utils.config import get_aws_config
 
 # Set up logging for the module
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)  # Adjust level as needed (e.g., DEBUG for development)
 
-def get_aws_session(region: str = 'us-east-1') -> boto3.Session:
+def get_aws_session(region: str = None) -> boto3.Session:
     """
     Create and return a boto3 session for AWS operations.
 
@@ -46,7 +49,7 @@ def get_aws_session(region: str = 'us-east-1') -> boto3.Session:
     session handling across the project, reducing overhead in repeated calls.
 
     Args:
-        region (str): AWS region to use (default: 'us-east-1').
+        region (str): AWS region to use (defaults to config value or 'us-east-1').
 
     Returns:
         boto3.Session: An active boto3 session object.
@@ -55,8 +58,15 @@ def get_aws_session(region: str = 'us-east-1') -> boto3.Session:
         botocore.exceptions.NoCredentialsError: If no AWS credentials are found.
     """
     try:
-        session = boto3.Session(region_name=region)
-        logger.info(f"AWS session created for region: {region}")
+        aws_cfg = get_aws_config()
+        if region is None:
+            region = aws_cfg.get('region', 'us-east-1')
+        
+        # Optional: Support named profiles from config if set
+        profile = aws_cfg.get('profile')
+        
+        session = boto3.Session(region_name=region, profile_name=profile)
+        logger.info(f"AWS session created for region: {region}" + (f" with profile: {profile}" if profile else ""))
         return session
     except botocore.exceptions.NoCredentialsError as e:
         logger.error("AWS credentials not found. Please configure via AWS CLI or environment variables.")
@@ -65,7 +75,7 @@ def get_aws_session(region: str = 'us-east-1') -> boto3.Session:
         logger.error(f"Error creating AWS session: {str(e)}")
         raise e
 
-def create_s3_bucket(bucket_name: str, region: str = 'us-east-1') -> bool:
+def create_s3_bucket(bucket_name: str, region: str = None) -> bool:
     """
     Create an S3 bucket if it does not already exist.
 
@@ -75,7 +85,7 @@ def create_s3_bucket(bucket_name: str, region: str = 'us-east-1') -> bool:
 
     Args:
         bucket_name (str): The unique name of the S3 bucket to create.
-        region (str): AWS region for the bucket (default: 'us-east-1').
+        region (str): AWS region for the bucket (defaults to session region).
 
     Returns:
         bool: True if the bucket was created or already exists.
@@ -84,6 +94,8 @@ def create_s3_bucket(bucket_name: str, region: str = 'us-east-1') -> bool:
         botocore.exceptions.ClientError: If there's an issue with bucket creation (e.g., naming conflict).
     """
     session = get_aws_session(region)
+    # Ensure we use the resolved region from the session if argument was None
+    region = session.region_name
     s3_client = session.client('s3')
     try:
         # Check if bucket exists
