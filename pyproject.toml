@@ -28,3 +28,7 @@ include = ["src*", "scripts*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+filterwarnings = [
+    "ignore:Could not find the number of physical cores:UserWarning",
+    "ignore:.*LOKY_MAX_CPU_COUNT.*:UserWarning"
+]

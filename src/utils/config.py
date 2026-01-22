@@ -233,6 +233,10 @@ def get_risk_config() -> Dict[str, Any]:
     return get_nested(CONFIG, ["risk_analysis"], {})
 
 
+def get_feature_engineering_config() -> Dict[str, Any]:
+    return get_nested(CONFIG, ["feature_engineering"], {})
+
+
 def get_execution_mode() -> str:
     return get_nested(CONFIG, ["execution", "mode"], "local")
 

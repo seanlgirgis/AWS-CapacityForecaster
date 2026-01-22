@@ -32,11 +32,22 @@ from src.utils.ml_utils import engineer_features, train_prophet_model
 
 For testing and development, use synthetic data from data_generation.py.
 Commit changes to GitHub: https://github.com/seanlgirgis/AWS-CapacityForecaster
-Local path: C:\pyproj\AWS-CapacityForecaster\src\utils\ml_utils.py
+Local path: C:/pyproj/AWS-CapacityForecaster/src/utils/ml_utils.py
 """
+
+import os
+
+# Suppress joblib/loky warning on Windows about physical cores
+# Must be set BEFORE importing sklearn/joblib backends
+if os.name == 'nt' and 'LOKY_MAX_CPU_COUNT' not in os.environ:
+    os.environ['LOKY_MAX_CPU_COUNT'] = str(os.cpu_count() or 4)
 
 import pandas as pd
 import numpy as np
+import joblib
+import logging
+from typing import List, Dict, Union, Optional
+
 from prophet import Prophet
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.cluster import KMeans
@@ -44,32 +55,34 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_absolu
 from sklearn.impute import KNNImputer
 from statsmodels.tsa.stattools import adfuller
 from scipy import stats
-import joblib
-import logging
-from typing import List, Dict, Union, Optional
+
+from src.utils.config import get_ml_config, get_risk_config, get_feature_engineering_config
 
 # Set up logging for debug/info
-logging.basicConfig(level=logging.INFO)
+# Note: Basic config should be handled by the entry point script
 logger = logging.getLogger(__name__)
+
+# Suppress noisy library logs
+logging.getLogger("prophet").setLevel(logging.WARNING)
+logging.getLogger("cmdstanpy").setLevel(logging.WARNING)
 
 
 def engineer_features(
     df: pd.DataFrame,
     metrics: List[str],
-    lag_periods: int = 7,
-    rolling_windows: List[int] = [7, 30],
+    lag_periods: Optional[List[int]] = None,
+    rolling_windows: Optional[List[int]] = None,
     seasonal_flags: bool = True
 ) -> pd.DataFrame:
     """
     Engineer features for time-series data, including lags, rolling statistics, and seasonal indicators.
-    This function prepares data for ML models by adding temporal features, mirroring Citi-style
-    feature engineering for forecasting models.
+    This function prepares data for ML models by adding temporal features.
 
     Args:
         df (pd.DataFrame): Input DataFrame with 'timestamp' as datetime index and server metrics columns.
         metrics (List[str]): List of metric columns to engineer (e.g., ['cpu_p95', 'mem_p95']).
-        lag_periods (int, optional): Number of lag periods to create. Defaults to 7.
-        rolling_windows (List[int], optional): Windows for rolling mean/std. Defaults to [7, 30].
+        lag_periods (List[int], optional): Data points to lag. Defaults to config or [1, 7, 30].
+        rolling_windows (List[int], optional): Windows for rolling mean/std. Defaults to config or [7, 30].
         seasonal_flags (bool, optional): Add seasonal dummies (e.g., quarter-end). Defaults to True.
 
     Returns:
@@ -77,23 +90,25 @@ def engineer_features(
 
     Raises:
         ValueError: If 'timestamp' is not the index or not datetime.
-
-    Example:
-        >>> df = pd.DataFrame({'timestamp': pd.date_range(start='2020-01-01', periods=100, freq='D'),
-                               'cpu_p95': np.random.rand(100)})
-        >>> df.set_index('timestamp', inplace=True)
-        >>> engineered_df = engineer_features(df, metrics=['cpu_p95'])
-        >>> print(engineered_df.columns)
-        Index(['cpu_p95', 'cpu_p95_lag1', ..., 'cpu_p95_rolling_mean7', ..., 'is_quarter_end'], dtype='object')
     """
     if not isinstance(df.index, pd.DatetimeIndex):
         raise ValueError("DataFrame index must be a DatetimeIndex named 'timestamp'.")
 
     df = df.copy()  # Avoid modifying original
 
+    fe_config = get_feature_engineering_config()
+    
+    # Resolve simple integer lag to list if needed, but config supports list
+    if lag_periods is None:
+        lag_periods = fe_config.get('lags', [1, 7, 30])
+        
+    if rolling_windows is None:
+        rolling_windows = fe_config.get('rolling_windows', [7, 14, 30])
+
     # Lags
     for metric in metrics:
-        for lag in range(1, lag_periods + 1):
+        # lag_periods is now expected to be a list of integers
+        for lag in lag_periods:
             df[f'{metric}_lag{lag}'] = df[metric].shift(lag)
 
     # Rolling statistics (parallelized if large)
@@ -137,12 +152,6 @@ def handle_missing_data(
 
     Raises:
         ValueError: Invalid method.
-
-    Example:
-        >>> df = pd.DataFrame({'cpu_p95': [1, np.nan, 3, np.nan, 5]})
-        >>> cleaned_df = handle_missing_data(df, method='interpolate')
-        >>> print(cleaned_df['cpu_p95'].values)
-        [1. 2. 3. 4. 5.]
     """
     df = df.copy()
 
@@ -155,8 +164,8 @@ def handle_missing_data(
         raise ValueError("Method must be 'interpolate' or 'knn'.")
 
     # Handle remaining NaNs (e.g., at edges)
-    df.fillna(method='bfill', inplace=True)
-    df.fillna(method='ffill', inplace=True)
+    df.bfill(inplace=True)
+    df.ffill(inplace=True)
 
     logger.info(f"Handled missing data using {method}. Remaining NaNs: {df.isnull().sum().sum()}")
     return df
@@ -172,12 +181,6 @@ def check_stationarity(ts: pd.Series) -> Dict[str, Union[float, bool]]:
 
     Returns:
         Dict[str, Union[float, bool]]: {'adf_statistic': float, 'p_value': float, 'is_stationary': bool (p < 0.05)}.
-
-    Example:
-        >>> ts = pd.Series(np.random.rand(100))
-        >>> result = check_stationarity(ts)
-        >>> print(result['is_stationary'])
-        True  # Or False depending on data
     """
     result = adfuller(ts.dropna())
     adf_stat = result[0]
@@ -206,12 +209,6 @@ def train_prophet_model(
 
     Returns:
         Prophet: Fitted model.
-
-    Example:
-        >>> df_prophet = df.reset_index().rename(columns={'timestamp': 'ds', 'cpu_p95': 'y'})
-        >>> model = train_prophet_model(df_prophet)
-        >>> print(model)
-        <prophet.forecaster.Prophet object at ...>
     """
     df_prophet = df.reset_index().rename(columns={'timestamp': 'ds', target: 'y'})
 
@@ -252,18 +249,20 @@ def train_sklearn_model(
 
     Returns:
         BaseEstimator: Fitted model.
-
-    Raises:
-        ValueError: Invalid model_type.
-
-    Example:
-        >>> features = ['cpu_lag1', 'cpu_rolling_mean7']
-        >>> model = train_sklearn_model(df, target='cpu_p95', features=features, model_type='random_forest')
-        >>> print(model)
-        RandomForestRegressor(...)
     """
     X = df[features]
     y = df[target]
+    
+    # Fetch default params from config if not provided
+    if params is None:
+        ml_config = get_ml_config()
+        # Map model_type to config key (e.g. 'random_forest' -> 'RandomForest')
+        models_config = ml_config.get('models', [])
+        # Simple lookup: find the model config dictionary where name matches
+        target_model_cfg = next((m for m in models_config if m['name'].lower().replace(' ', '_') == model_type.lower().replace(' ', '_')), None)
+        if target_model_cfg:
+            params = target_model_cfg.get('params', {})
+
     params = params or {}
 
     if model_type == 'random_forest':
@@ -294,16 +293,6 @@ def generate_forecast(
 
     Returns:
         pd.DataFrame: Forecast DataFrame with predictions and intervals (if applicable).
-
-    Raises:
-        ValueError: If future_df missing for scikit-learn models.
-
-    Example:
-        >>> future = model.make_future_dataframe(periods=30)  # For Prophet
-        >>> forecast = generate_forecast(model, 30, future)
-        >>> print(forecast[['ds', 'yhat']])
-           ds       yhat
-        0  ...     ...
     """
     if isinstance(model, Prophet):
         future = model.make_future_dataframe(periods=future_periods)
@@ -327,7 +316,7 @@ def evaluate_model(
     y_pred: pd.Series
 ) -> Dict[str, float]:
     """
-    Evaluate model performance using common regression metrics. Supports claims like "20-30% accuracy improvement".
+    Evaluate model performance using common regression metrics.
 
     Args:
         y_true (pd.Series): True values.
@@ -335,11 +324,6 @@ def evaluate_model(
 
     Returns:
         Dict[str, float]: {'mae': float, 'rmse': float, 'mape': float}.
-
-    Example:
-        >>> metrics = evaluate_model(y_true, y_pred)
-        >>> print(metrics['mae'])
-        0.5  # Example value
     """
     mae = mean_absolute_error(y_true, y_pred)
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
@@ -361,14 +345,6 @@ def compare_models(
 
     Returns:
         pd.DataFrame: Comparison table (rows: models, columns: metrics).
-
-    Example:
-        >>> results = [{'mae': 0.5, 'rmse': 0.7}, {'mae': 0.4, 'rmse': 0.6}]
-        >>> comparison = compare_models(results)
-        >>> print(comparison)
-           mae  rmse
-        0  0.5   0.7
-        1  0.4   0.6
     """
     df = pd.DataFrame(results)
     logger.info("Model comparison completed.")
@@ -378,69 +354,64 @@ def compare_models(
 def flag_risks(
     df: pd.DataFrame,
     forecast_df: pd.DataFrame,
-    threshold: float = 90.0,
+    threshold: Optional[float] = None,
     percentile: float = 95.0,
     metric: str = 'cpu_p95'
 ) -> pd.DataFrame:
     """
-    Flag at-risk resources based on historical P95 and forecasts. Uses scipy for percentile calculations.
-    Supports seasonal risk analysis from Citi experience.
-
+    Flag at-risk resources based on historical P95 and forecasts.
+    
     Args:
-        df (pd.DataFrame): Historical DataFrame.
-        forecast_df (pd.DataFrame): Forecast DataFrame.
-        threshold (float, optional): Utilization threshold for risk. Defaults to 90.0.
-        percentile (float, optional): Percentile for analysis. Defaults to 95.0.
-        metric (str, optional): Metric to analyze. Defaults to 'cpu_p95'.
+        threshold (float, optional): Utilization threshold. Defaults to config 'high_risk_threshold'.
 
     Returns:
         pd.DataFrame: DataFrame with 'risk_flag' column (1 if at risk).
-
-    Example:
-        >>> risks = flag_risks(df, forecast_df)
-        >>> print(risks['risk_flag'].sum())
-        5  # Number of risky periods
     """
+    if threshold is None:
+        risk_config = get_risk_config()
+        threshold = risk_config.get('high_risk_threshold', 90.0)
+
     combined = pd.concat([df[[metric]], forecast_df.rename(columns={'yhat': metric})], axis=0)
-    p95 = np.percentile(combined[metric], percentile)  # Uses scipy under numpy
-    risks = combined[combined[metric] > threshold]
+    # Note: p95 variable calculated but not used in logic below, mimicking logic to just check threshold
+    # p95 = np.percentile(combined[metric], percentile)
+    
+    risks = combined[combined[metric] > threshold].copy()
     risks['risk_flag'] = 1
 
-    logger.info(f"Flagged {len(risks)} risky periods above {threshold}% (P{percentile}).")
+    logger.info(f"Flagged {len(risks)} risky periods above {threshold}%.")
     return risks
 
 
 def cluster_utilization(
     df: pd.DataFrame,
-    n_clusters: int = 3,
-    features: List[str] = ['cpu_mean', 'mem_mean'],
+    n_clusters: Optional[int] = None,
+    features: Optional[List[str]] = None,
     n_jobs: int = -1
 ) -> pd.DataFrame:
     """
-    Cluster resources based on utilization patterns using K-Means for optimization recommendations.
-    Identifies underutilized groups for consolidation/cost savings.
-
+    Cluster resources based on utilization patterns using K-Means.
+    
     Args:
-        df (pd.DataFrame): DataFrame with features.
-        n_clusters (int, optional): Number of clusters. Defaults to 3.
-        features (List[str], optional): Features for clustering. Defaults to ['cpu_mean', 'mem_mean'].
-        n_jobs (int, optional): For parallel (if applicable). Defaults to -1.
-
-    Returns:
-        pd.DataFrame: Original df with 'cluster' column.
-
-    Example:
-        >>> clustered = cluster_utilization(df)
-        >>> print(clustered['cluster'].value_counts())
-        0    50
-        1    30
-        2    20
-        Name: cluster, dtype: int64
+        n_clusters (int, optional): Defaults to config.
+        features (List[str], optional): Defaults to config.
     """
+    risk_config = get_risk_config()
+    clustering_cfg = risk_config.get('clustering', {})
+    
+    if n_clusters is None:
+        n_clusters = clustering_cfg.get('n_clusters', 3)
+        
+    if features is None:
+        features = clustering_cfg.get('features', ['cpu_mean', 'mem_mean'])
+
+    # Validate features exist in df
+    missing = [f for f in features if f not in df.columns]
+    if missing:
+        logger.warning(f"Clustering features {missing} not found in columns. Using available or failing.")
+        
     X = df[features]
     kmeans = KMeans(n_clusters=n_clusters, n_init=10)
     df['cluster'] = kmeans.fit_predict(X)
 
-    # Optional: parallel if large, but KMeans is fast
     logger.info(f"Clustered into {n_clusters} groups based on {features}.")
     return df
