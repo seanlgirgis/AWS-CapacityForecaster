@@ -3,7 +3,7 @@
 **AWS-CapacityForecaster Project**
 **Date:** 2026-01-22
 **Status:** Complete
-**Author:** Sean L. Girgis with Claude Sonnet 4.5
+**Author:** Sean L. Girgis
 
 ---
 
