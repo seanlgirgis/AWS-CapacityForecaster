@@ -13,12 +13,20 @@ Usage:
 
     web_server = get_archetype('web')
     metrics = web_server.generate_baseline_metrics()
+
+Log files:
+    When used as standalone, logs to: logs/server_archetypes_YYYYMMDD_HHMMSS.log
+    When imported, uses parent logger configuration.
 """
 
+import logging
 import numpy as np
 from typing import Dict, List, Tuple
 from dataclasses import dataclass
 from enum import Enum
+
+# Setup module-level logger (uses parent's file handler if configured)
+logger = logging.getLogger(__name__)
 
 
 class ServerType(Enum):
@@ -227,6 +235,8 @@ class ServerArchetype:
         self.seed = hash(server_id) % (2**32)
         self.rng = np.random.RandomState(self.seed)
 
+        logger.debug(f"Initialized {archetype_type.value} archetype for {server_id} (seed={self.seed})")
+
     def generate_correlated_metrics(
         self,
         timestamp,
@@ -364,11 +374,13 @@ def get_archetype(server_type: str, server_id: str) -> ServerArchetype:
 
     server_type_lower = server_type.lower()
     if server_type_lower not in type_map:
+        logger.error(f"Unknown server type '{server_type}'. Valid types: {list(type_map.keys())}")
         raise ValueError(
             f"Unknown server type '{server_type}'. "
             f"Valid types: {list(type_map.keys())}"
         )
 
+    logger.debug(f"Creating {server_type} archetype for {server_id}")
     return ServerArchetype(type_map[server_type_lower], server_id)
 
 
@@ -384,6 +396,8 @@ def assign_archetypes_to_fleet(num_servers: int, distribution: Dict[str, float] 
     Returns:
         Dictionary mapping server_id -> archetype_type
     """
+    logger.info(f"Assigning archetypes to fleet of {num_servers} servers")
+
     if distribution is None:
         # Default enterprise distribution (based on typical infrastructure)
         distribution = {
@@ -392,10 +406,12 @@ def assign_archetypes_to_fleet(num_servers: int, distribution: Dict[str, float] 
             'database': 0.15,
             'batch': 0.10,
         }
+        logger.debug(f"Using default distribution: {distribution}")
 
     # Validate distribution sums to 1.0
     total = sum(distribution.values())
     if not np.isclose(total, 1.0):
+        logger.error(f"Distribution must sum to 1.0, got {total}")
         raise ValueError(f"Distribution must sum to 1.0, got {total}")
 
     # Calculate counts per archetype
@@ -410,11 +426,22 @@ def assign_archetypes_to_fleet(num_servers: int, distribution: Dict[str, float] 
             server_idx += 1
 
     # Assign any remaining servers to the most common archetype
+    remainder = num_servers - server_idx
     while server_idx < num_servers:
         server_id = f"server_{server_idx:03d}"
         most_common = max(distribution, key=distribution.get)
         assignments[server_id] = most_common
         server_idx += 1
+
+    if remainder > 0:
+        logger.debug(f"Assigned {remainder} remaining servers to most common archetype")
+
+    # Log summary
+    archetype_counts = {}
+    for archetype in assignments.values():
+        archetype_counts[archetype] = archetype_counts.get(archetype, 0) + 1
+
+    logger.info(f"Fleet assignment complete: {archetype_counts}")
 
     return assignments
 

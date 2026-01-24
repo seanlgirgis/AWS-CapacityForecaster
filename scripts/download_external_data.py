@@ -3,13 +3,20 @@ Download and investigate external public datasets for server/infrastructure metr
 
 This script downloads publicly available datasets and performs initial analysis to
 determine suitability for the AWS-CapacityForecaster project.
+
+Log files:
+    Logs are written to: logs/download_external_data_YYYYMMDD_HHMMSS.log
 """
 
 import os
+import sys
+import time
+import logging
 import requests
 import pandas as pd
 import numpy as np
 from pathlib import Path
+from datetime import datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -17,8 +24,26 @@ import seaborn as sns
 PROJECT_ROOT = Path(__file__).parent.parent
 DATA_DIR = PROJECT_ROOT / "data" / "raw_external"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
+LOG_DIR = PROJECT_ROOT / "logs"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
 
-print(f"Data directory: {DATA_DIR}")
+# Setup logging with file output
+timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+log_file = LOG_DIR / f'download_external_data_{timestamp}.log'
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s | %(levelname)-8s | %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    handlers=[
+        logging.FileHandler(log_file, encoding='utf-8'),
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+logger = logging.getLogger(__name__)
+
+logger.info(f"Log file: {log_file}")
+logger.info(f"Data directory: {DATA_DIR}")
 
 # Dataset sources (publicly accessible URLs)
 DATASETS = {
@@ -41,7 +66,10 @@ def create_sample_server_data():
     Create sample data based on common server monitoring patterns
     to demonstrate the analysis workflow.
     """
-    print("\n=== Creating Sample Server Monitoring Data ===")
+    logger.info("\n" + "=" * 70)
+    logger.info("CREATING SAMPLE SERVER MONITORING DATA")
+    logger.info("=" * 70)
+    start_time = time.time()
 
     # Generate 30 days of hourly data for 10 servers
     date_range = pd.date_range(start='2024-01-01', end='2024-01-31', freq='h')
@@ -99,33 +127,50 @@ def create_sample_server_data():
     df = pd.DataFrame(data)
     output_path = DATA_DIR / 'sample_server_metrics.csv'
     df.to_csv(output_path, index=False)
-    print(f"[OK] Created sample data: {output_path}")
-    print(f"  Shape: {df.shape}")
-    print(f"  Date range: {df['timestamp'].min()} to {df['timestamp'].max()}")
-    print(f"  Servers: {df['server_id'].nunique()}")
+
+    elapsed = time.time() - start_time
+    logger.info(f"\n[OK] Sample data created in {elapsed:.2f}s")
+    logger.info(f"  Output file: {output_path}")
+    logger.info(f"  File size: {output_path.stat().st_size / 1024:.2f} KB")
+    logger.info(f"  Shape: {df.shape[0]:,} rows x {df.shape[1]} columns")
+    logger.info(f"  Date range: {df['timestamp'].min()} to {df['timestamp'].max()}")
+    logger.info(f"  Servers: {df['server_id'].nunique()}")
+    logger.info(f"  Records per server: {len(df) // df['server_id'].nunique():,}")
 
     return df
 
 def analyze_dataset(df, name):
     """Perform initial analysis on a dataset."""
-    print(f"\n=== Analysis: {name} ===")
+    logger.info("\n" + "=" * 70)
+    logger.info(f"DATASET ANALYSIS: {name}")
+    logger.info("=" * 70)
+    analysis_start = time.time()
 
     # Basic info
-    print(f"\nDataset Shape: {df.shape}")
-    print(f"\nColumns: {list(df.columns)}")
-    print(f"\nData Types:\n{df.dtypes}")
+    logger.info(f"\nBasic Information:")
+    logger.info(f"  Shape: {df.shape[0]:,} rows x {df.shape[1]} columns")
+    logger.info(f"  Columns: {list(df.columns)}")
+    logger.info(f"\nData Types:")
+    for col, dtype in df.dtypes.items():
+        logger.info(f"  {col}: {dtype}")
 
     # Missing values
     missing = df.isnull().sum()
     if missing.sum() > 0:
-        print(f"\nMissing Values:\n{missing[missing > 0]}")
+        logger.warning(f"\nMissing Values Found:")
+        for col, count in missing[missing > 0].items():
+            pct = (count / len(df)) * 100
+            logger.warning(f"  {col}: {count:,} ({pct:.2f}%)")
     else:
-        print("\nNo missing values")
+        logger.info("\n[OK] No missing values")
 
     # Numeric columns statistics
     numeric_cols = df.select_dtypes(include=[np.number]).columns
     if len(numeric_cols) > 0:
-        print(f"\nNumeric Statistics:\n{df[numeric_cols].describe()}")
+        logger.info(f"\nNumeric Statistics:")
+        stats = df[numeric_cols].describe()
+        for col in numeric_cols:
+            logger.info(f"  {col}: mean={stats[col]['mean']:.2f}, std={stats[col]['std']:.2f}, min={stats[col]['min']:.2f}, max={stats[col]['max']:.2f}")
 
     # Time range if timestamp exists
     time_cols = df.select_dtypes(include=['datetime64']).columns
@@ -142,10 +187,15 @@ def analyze_dataset(df, name):
 
     if len(time_cols) > 0:
         time_col = time_cols[0]
-        print(f"\nTime Range ({time_col}):")
-        print(f"  Start: {df[time_col].min()}")
-        print(f"  End: {df[time_col].max()}")
-        print(f"  Duration: {df[time_col].max() - df[time_col].min()}")
+        duration = df[time_col].max() - df[time_col].min()
+        logger.info(f"\nTime Range ({time_col}):")
+        logger.info(f"  Start: {df[time_col].min()}")
+        logger.info(f"  End: {df[time_col].max()}")
+        logger.info(f"  Duration: {duration}")
+        logger.info(f"  Duration (days): {duration.days}")
+
+    elapsed = time.time() - analysis_start
+    logger.info(f"\n[OK] Analysis complete in {elapsed:.2f}s")
 
     return {
         'shape': df.shape,
@@ -157,7 +207,10 @@ def analyze_dataset(df, name):
 
 def visualize_sample_data(df):
     """Create visualizations for the sample data."""
-    print("\n=== Creating Visualizations ===")
+    logger.info("\n" + "=" * 70)
+    logger.info("CREATING VISUALIZATIONS")
+    logger.info("=" * 70)
+    viz_start = time.time()
 
     # Setup plot style
     sns.set_style("whitegrid")
@@ -209,12 +262,18 @@ def visualize_sample_data(df):
     # Save plot
     output_path = DATA_DIR / 'sample_data_analysis.png'
     plt.savefig(output_path, dpi=150, bbox_inches='tight')
-    print(f"[OK] Saved visualization: {output_path}")
     plt.close()
+
+    elapsed = time.time() - viz_start
+    logger.info(f"\n[OK] Visualization saved in {elapsed:.2f}s")
+    logger.info(f"  Output file: {output_path}")
+    logger.info(f"  File size: {output_path.stat().st_size / 1024:.2f} KB")
 
 def compare_with_project_requirements(analysis_results):
     """Compare dataset characteristics with project requirements."""
-    print("\n=== Compatibility with Project Requirements ===")
+    logger.info("\n" + "=" * 70)
+    logger.info("COMPATIBILITY CHECK WITH PROJECT REQUIREMENTS")
+    logger.info("=" * 70)
 
     requirements = {
         'min_servers': 50,
@@ -225,52 +284,70 @@ def compare_with_project_requirements(analysis_results):
         'optional_metrics': ['disk', 'network']
     }
 
-    print("\nProject Requirements:")
-    print(f"  Servers: {requirements['min_servers']}-{requirements['ideal_servers']}+")
-    print(f"  Duration: {requirements['min_duration_days']}-{requirements['ideal_duration_days']}+ days")
-    print(f"  Required metrics: {', '.join(requirements['required_metrics'])}")
-    print(f"  Optional metrics: {', '.join(requirements['optional_metrics'])}")
+    logger.info("\nProject Requirements:")
+    logger.info(f"  Servers: {requirements['min_servers']}-{requirements['ideal_servers']}+")
+    logger.info(f"  Duration: {requirements['min_duration_days']}-{requirements['ideal_duration_days']}+ days")
+    logger.info(f"  Required metrics: {', '.join(requirements['required_metrics'])}")
+    logger.info(f"  Optional metrics: {', '.join(requirements['optional_metrics'])}")
 
-    print("\nDataset Characteristics:")
-    print(f"  Rows: {analysis_results['shape'][0]:,}")
-    print(f"  Columns: {analysis_results['shape'][1]}")
-    print(f"  Numeric columns: {len(analysis_results['numeric_cols'])}")
-    print(f"  Has timestamp: {analysis_results['has_timestamp']}")
-    print(f"  Missing data: {analysis_results['missing_pct']:.2f}%")
+    logger.info("\nDataset Characteristics:")
+    logger.info(f"  Rows: {analysis_results['shape'][0]:,}")
+    logger.info(f"  Columns: {analysis_results['shape'][1]}")
+    logger.info(f"  Numeric columns: {len(analysis_results['numeric_cols'])}")
+    logger.info(f"  Has timestamp: {analysis_results['has_timestamp']}")
+    logger.info(f"  Missing data: {analysis_results['missing_pct']:.2f}%")
 
     # Score the dataset
     score = 0
     max_score = 5
 
+    logger.info("\nScoring:")
     if analysis_results['shape'][0] > 1000:
         score += 1
-        print("  [OK] Sufficient data points")
+        logger.info("  [+1] Sufficient data points (>1000 rows)")
+    else:
+        logger.info("  [+0] Insufficient data points (<1000 rows)")
 
     if analysis_results['has_timestamp']:
         score += 1
-        print("  [OK] Has timestamp column")
+        logger.info("  [+1] Has timestamp column")
+    else:
+        logger.info("  [+0] Missing timestamp column")
 
     if len(analysis_results['numeric_cols']) >= 2:
         score += 1
-        print("  [OK] Has multiple metrics")
+        logger.info("  [+1] Has multiple metrics (>=2 numeric columns)")
+    else:
+        logger.info("  [+0] Insufficient metrics (<2 numeric columns)")
 
     if analysis_results['missing_pct'] < 5:
         score += 1
-        print("  [OK] Low missing data")
+        logger.info("  [+1] Low missing data (<5%)")
+    else:
+        logger.warning(f"  [+0] High missing data ({analysis_results['missing_pct']:.2f}%)")
 
     if analysis_results['shape'][0] > 10000:
         score += 1
-        print("  [OK] Large dataset")
+        logger.info("  [+1] Large dataset (>10000 rows)")
+    else:
+        logger.info("  [+0] Small dataset (<10000 rows)")
 
-    print(f"\nCompatibility Score: {score}/{max_score}")
+    is_compatible = score >= 3
+    status = "PASS" if is_compatible else "NEEDS REVIEW"
+    logger.info(f"\nFinal Score: {score}/{max_score}")
+    logger.info(f"Compatibility Status: {status}")
 
-    return score >= 3  # At least 3 out of 5
+    return is_compatible
 
 def main():
     """Main execution function."""
-    print("="*70)
-    print("External Data Investigation for AWS-CapacityForecaster")
-    print("="*70)
+    main_start = time.time()
+
+    logger.info("=" * 70)
+    logger.info("EXTERNAL DATA INVESTIGATION - AWS-CapacityForecaster")
+    logger.info("=" * 70)
+    logger.info(f"Start time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    logger.info(f"Log file: {log_file}")
 
     # Create sample data
     df_sample = create_sample_server_data()
@@ -284,21 +361,29 @@ def main():
     # Compare with requirements
     is_compatible = compare_with_project_requirements(analysis)
 
-    print("\n" + "="*70)
-    print("Summary")
-    print("="*70)
-    print(f"[OK] Sample data created and analyzed")
-    print(f"[OK] Visualizations generated")
-    print(f"[OK] Compatibility check: {'PASS' if is_compatible else 'NEEDS REVIEW'}")
+    total_elapsed = time.time() - main_start
 
-    print("\nNext Steps:")
-    print("1. Review the generated visualizations in data/raw_external/")
-    print("2. Download real datasets from:")
-    print("   - Google Cluster Data: https://github.com/google/cluster-data")
-    print("   - Alibaba Cluster Data: https://github.com/alibaba/clusterdata")
-    print("   - Kaggle datasets (requires API key)")
-    print("3. Run this script on downloaded datasets for comparison")
-    print("4. Formulate final data strategy based on findings")
+    logger.info("\n" + "=" * 70)
+    logger.info("EXECUTION SUMMARY")
+    logger.info("=" * 70)
+    logger.info(f"[OK] Sample data created and analyzed")
+    logger.info(f"[OK] Visualizations generated")
+    logger.info(f"[OK] Compatibility check: {'PASS' if is_compatible else 'NEEDS REVIEW'}")
+    logger.info(f"\nTotal execution time: {total_elapsed:.2f}s")
+    logger.info(f"Log file: {log_file}")
+
+    logger.info("\nNext Steps:")
+    logger.info("1. Review the generated visualizations in data/raw_external/")
+    logger.info("2. Download real datasets from:")
+    logger.info("   - Google Cluster Data: https://github.com/google/cluster-data")
+    logger.info("   - Alibaba Cluster Data: https://github.com/alibaba/clusterdata")
+    logger.info("   - Kaggle datasets (requires API key)")
+    logger.info("3. Run this script on downloaded datasets for comparison")
+    logger.info("4. Formulate final data strategy based on findings")
+
+    logger.info("\n" + "=" * 70)
+    logger.info("[OK] INVESTIGATION COMPLETE")
+    logger.info("=" * 70)
 
     return df_sample, analysis
 
