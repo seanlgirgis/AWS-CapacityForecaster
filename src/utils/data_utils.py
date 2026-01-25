@@ -537,3 +537,54 @@ def save_processed_data(
             
         logger.info(f"Saved locally to {output_path}")
         return str(output_path)
+        return str(output_path)
+
+def save_to_s3_or_local(
+    content: str,
+    config: dict,
+    prefix: str,
+    filename: str
+) -> str:
+    """
+    Save string content (JSON, raw text, CSV string) to S3 or local path.
+    
+    Parameters:
+    - content: The string content to write.
+    - config: Configuration dict.
+    - prefix: Output prefix/subdir (e.g. 'reports/').
+    - filename: Output filename.
+    
+    Returns:
+    - Path or URI where file was saved.
+    """
+    mode = config.get('execution', {}).get('mode', 'local')
+    use_s3 = mode in ['sagemaker_processing', 'sagemaker_training', 'lambda']
+    
+    if use_s3:
+        bucket_name = config.get('aws', {}).get('bucket_name')
+        if not bucket_name:
+            raise ValueError("AWS bucket_name not configured for S3 mode")
+            
+        key = f"{prefix.strip('/')}/{filename}"
+        temp_path = f"/tmp/{filename}"
+        
+        with open(temp_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+            
+        uri = upload_to_s3(temp_path, bucket_name, key)
+        
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+        return uri
+        
+    else:
+        local_base = config.get('paths', {}).get('local_data_dir', 'data/scratch')
+        output_dir = Path(local_base) / prefix.strip('/')
+        output_dir.mkdir(parents=True, exist_ok=True)
+        
+        output_path = output_dir / filename
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+            
+        logger.info(f"Saved content to {output_path}")
+        return str(output_path)

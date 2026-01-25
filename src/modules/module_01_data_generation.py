@@ -1,239 +1,307 @@
+# =============================================================================
+# src/modules/module_01_data_generation.py
+#
+# PURPOSE:
+#   This is the FIRST module in the modular pipeline of AWS-CapacityForecaster.
+#   It generates completely synthetic but highly realistic enterprise server
+#   performance metrics — mimicking the kind of daily P95 telemetry data
+#   that would come from thousands of servers in a large financial institution
+#   (inspired by Citi's TrueSight / BMC monitoring feeds during 2017–2025).
+#
+#   The goal is to create training data that contains:
+#   • Realistic utilization patterns (CPU, memory, disk, network)
+#   • Weekly business rhythm (lower weekends)
+#   • Annual seasonality
+#   • End-of-quarter (EOQ) spikes — very characteristic of banking workloads
+#   • US banking holidays effect (usually lower utilization)
+#   • Gradual long-term growth
+#   • Server-specific bias
+#   • Random missing values & rare outliers — just like real monitoring data
+#
+# ROLE IN THE PIPELINE:
+#   → Produces raw data → saved as Parquet in S3/local "raw/" prefix
+#   → module_02_data_load.py will read exactly this file/format
+#
+# OUTPUT GUARANTEES:
+#   • Parquet file: raw_server_metrics_YYYYMMDD_to_YYYYMMDD.parquet
+#   • Columns: server_id, timestamp, business_unit, region, criticality,
+#              cpu_p95, mem_p95, disk_p95, net_in_p95, net_out_p95
+#   • DataFrame is sorted by server_id + timestamp
+#   • Missing values are introduced randomly (configurable rate)
+#   • Values clipped to realistic business ranges
+#
+# CONFIGURATION DRIVEN:
+#   Almost everything is controlled via config.yaml → makes experiments easy
+#   (number of servers, date range, seasonality strength, EOQ parameters, etc.)
+#
+# DESIGN DECISIONS:
+#   • Vectorized numpy/pandas operations → fast even for 500+ servers × 5 years
+#   • Normal distribution for base noise → more realistic than uniform
+#   • Per-server random bias → simulates hardware/usage differences
+#   • Holidays via python-holidays library → accurate US federal + banking-relevant
+#   • EOQ window uses last N calendar days (simplified but effective)
+#
+# USAGE:
+#   cd C:\pyproj\AWS-CapacityForecaster
+#   python src\modules\module_01_data_generation.py --env local
+#
+# =============================================================================
 
-"""
-module_01_data_generation.py
-
-Reliable starting point of the modular pipeline.
-Responsibility: Generate high-fidelity synthetic enterprise server metrics.
-Patterns: Config-driven, Citi-style telemetry (P95, seasonality, holidays, metadata).
-Output: Raw Parquet file saved to Local or S3.
-"""
-
-import argparse
-import logging
-import time
 import sys
-import os
 from pathlib import Path
+import logging
+import argparse
+import json
 from datetime import datetime
+
 import pandas as pd
 import numpy as np
-
-# Ensure project root is in path to import utils
-current_file = Path(__file__).resolve()
-project_root = current_file.parent.parent.parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
+import holidays
 
 from src.utils.config import load_config, validate_config
-from src.utils.data_utils import (
-    save_processed_data,
-    generate_server_metadata
-)
-# We might need to import more specific generation functions if they aren't fully modularized in data_utils yet.
-# For this module, we will implement the core generation logic here, using config as the driver, 
-# similar to how src/data_generation.py did it, but cleaner and focused on the module contract.
+from src.utils.data_utils import save_processed_data, save_to_s3_or_local
 
 logger = logging.getLogger(__name__)
 
+
 def generate_synthetic_data(config: dict) -> pd.DataFrame:
     """
-    Core logic to generate synthetic server metrics based on configuration.
-    Returns a pandas DataFrame.
-    """
-    logger.info("Starting synthetic data generation...")
-    start_time = time.time()
+    Core function: generates the synthetic Citi-like server metrics DataFrame.
 
-    # 1. Unpack Config
-    data_config = config.get('data', {})
-    num_servers = data_config.get('num_servers', 120)
-    start_date = data_config.get('start_date', '2022-01-01')
-    end_date = data_config.get('end_date', '2025-12-31')
-    granularity = data_config.get('granularity', 'daily')
-    random_seed = config.get('execution', {}).get('random_seed', 42)
-    
+    Uses configuration to control scale, patterns, realism elements.
+    Returns clean panel data ready for ETL / feature engineering.
+    """
+    # ────────────────────────────────────────────────
+    #  Extract configuration sections
+    # ────────────────────────────────────────────────
+    data_cfg       = config.get('data', {})
+    seasonality    = data_cfg.get('seasonality', {})
+    p95_ranges     = data_cfg.get('p95_ranges', {})
+    metadata_cfg   = data_cfg.get('metadata', {})
+    aws_cfg        = config.get('aws', {})
+    exec_cfg       = config.get('execution', {})
+
+    # Core scale parameters
+    num_servers    = data_cfg.get('num_servers', 120)
+    start_date     = data_cfg.get('start_date', '2022-01-01')
+    end_date       = data_cfg.get('end_date', '2025-12-31')
+    granularity    = data_cfg.get('granularity', 'daily')      # 'daily' or 'hourly'
+    random_seed    = exec_cfg.get('random_seed', 42)
+
+    # Metadata lists & probabilities
+    business_units     = metadata_cfg.get('business_units', ['Retail', 'Investment', 'Wealth', 'Corporate'])
+    regions            = metadata_cfg.get('regions', ['us-east-1', 'us-west-2', 'eu-west-1', 'ap-southeast-1'])
+    criticalities      = metadata_cfg.get('criticalities', ['High', 'Medium', 'Low'])
+    criticality_probs  = metadata_cfg.get('criticality_probs', [0.2, 0.5, 0.3])
+
+    # Seasonality & realism controls
+    amplitude          = seasonality.get('amplitude', 0.10)
+    growth_rate        = seasonality.get('growth_rate', 0.10)
+    eoq_multiplier     = seasonality.get('eoq_multiplier', 1.25)
+    eoq_window_days    = seasonality.get('eoq_window_days', 7)
+    use_holidays       = seasonality.get('use_holidays', True)
+    holiday_multiplier = seasonality.get('holiday_multiplier', 0.85)   # usually dip
+    missing_rate       = seasonality.get('missing_rate', 0.01)
+    outlier_rate       = seasonality.get('outlier_rate', 0.005)
+
+    # Set seed for reproducibility across runs
     np.random.seed(random_seed)
 
-    logger.info(f"Configuration: {num_servers} servers, {start_date} to {end_date}, {granularity}")
+    logger.info(f"Generating synthetic data | {num_servers} servers | {start_date} → {end_date} | seed={random_seed}")
 
-    # 2. Generate Server Metadata (Server IDs, BU, Region, etc.)
-    # We can reuse the utility function or implement simplified logic here if dependency logic is complex.
-    # For robust modularity, we'll keep the core panel generation self-contained but use helpers where appropriate.
-    
-    # Generate Server IDs
-    server_ids = [f"srv-{i:04d}" for i in range(1, num_servers + 1)]
-    
-    # Metadata (Simplified for module independence, or call data_utils)
-    # Let's simple-gen here to ensure self-containment or use metadata config if detailed
-    business_units = ['Retail', 'Investment', 'Wealth', 'Corporate']
-    regions = ['us-east-1', 'us-west-2', 'eu-west-1', 'ap-southeast-1']
-    criticalities = ['High', 'Medium', 'Low']
-    
-    server_meta = []
-    for sid in server_ids:
-        server_meta.append({
-            'server_id': sid,
-            'business_unit': np.random.choice(business_units),
-            'region': np.random.choice(regions),
-            'criticality': np.random.choice(criticalities, p=[0.2, 0.5, 0.3])
-        })
-    df_meta = pd.DataFrame(server_meta)
-
-    # 3. Create Time Dimension
-    if granularity == 'daily':
-        dates = pd.date_range(start=start_date, end=end_date, freq='D')
-    elif granularity == 'hourly':
-        dates = pd.date_range(start=start_date, end=end_date, freq='H')
-    else:
-        raise ValueError(f"Unsupported granularity: {granularity}")
-    
-    logger.info(f"Time dimension created: {len(dates)} periods.")
-
-    # 4. Cross Join (Servers x Time) -> Base Panel
-    # Using efficient multi-index creation
-    idx = pd.MultiIndex.from_product([server_ids, dates], names=['server_id', 'timestamp'])
-    df = pd.DataFrame(index=idx).reset_index()
-    
-    # Merge Metadata to Panel
-    df = df.merge(df_meta, on='server_id', how='left')
-    
-    # 5. Generate Metrics with Seasonality & Patterns
-    # Base ranges from config
-    p95_ranges = data_config.get('p95_ranges', {
-        'cpu': [10.0, 95.0],
-        'memory': [15.0, 92.0],
-        'disk': [5.0, 85.0],
-        'network_in': [20.0, 500.0]
+    # ────────────────────────────────────────────────
+    # 1. Create server metadata table (one row per server)
+    # ────────────────────────────────────────────────
+    servers = pd.DataFrame({
+        'server_id':      [f"SRV-{i:04d}" for i in range(1, num_servers + 1)],
+        'business_unit':  np.random.choice(business_units, num_servers),
+        'region':         np.random.choice(regions, num_servers),
+        'criticality':    np.random.choice(criticalities, num_servers, p=criticality_probs)
     })
-    
-    # Pre-compute time features for vectorization
-    df['day_of_week'] = df['timestamp'].dt.dayofweek
-    df['day_of_year'] = df['timestamp'].dt.dayofyear
-    df['month'] = df['timestamp'].dt.month
-    df['is_weekend'] = df['day_of_week'] >= 5
-    
-    # Helper to generate metric
-    def generate_metric(name, min_val, max_val):
-        # Base random noise
-        base = np.random.uniform(min_val, max_val, size=len(df))
-        
-        # Weekly Pattern (dip on weekends)
-        if data_config.get('seasonality', {}).get('weekly', True):
-            weekend_factor = np.where(df['is_weekend'], 0.8, 1.0)
-            base = base * weekend_factor
-            
-        # Annual Seasonality (Sine wave)
-        # Peak around mid-year or end-year depending on "banking cycles" simulation
-        # Let's simulate a simple sine wave
-        seasonality_factor = 1 + 0.1 * np.sin(2 * np.pi * df['day_of_year'] / 365.25)
-        base = base * seasonality_factor
-        
-        # Trend (Linear growth)
-        # Small random trend per server to simulate growth
-        # For simplicity in vectorization, we apply a global slight trend
-        # Real-world: merge server-specific trend slopes. 
-        # Here: (date_index / total_days) * growth_factor
-        # Simplified:
-        total_days = (dates[-1] - dates[0]).days
+
+    # Small random offset per server → simulates different baseline load / hardware variance
+    server_biases = np.random.uniform(-8, 8, num_servers)
+
+    # ────────────────────────────────────────────────
+    # 2. Create time index
+    # ────────────────────────────────────────────────
+    freq = 'D' if granularity == 'daily' else 'H'
+    dates = pd.date_range(start=start_date, end=end_date, freq=freq)
+    df_dates = pd.DataFrame({'timestamp': dates})
+
+    # ────────────────────────────────────────────────
+    # 3. Build full panel (server × time) using cross join
+    # ────────────────────────────────────────────────
+    df = df_dates.assign(key=1).merge(servers.assign(key=1), on='key').drop(columns='key')
+    df = df.sort_values(['server_id', 'timestamp']).reset_index(drop=True)
+
+    # ────────────────────────────────────────────────
+    # 4. Generate each P95 metric independently
+    # ────────────────────────────────────────────────
+    metrics = ['cpu_p95', 'mem_p95', 'disk_p95', 'net_in_p95', 'net_out_p95']
+
+    for metric in metrics:
+        rng = p95_ranges.get(metric, {'min': 0, 'max': 100})
+        min_val, max_val = rng['min'], rng['max']
+        mean_val = (min_val + max_val) / 2
+        std_val  = (max_val - min_val) / 6   # ~99.7% within range for normal
+
+        # Base signal: normal distribution centered in realistic range
+        base = np.random.normal(loc=mean_val, scale=std_val, size=len(df))
+
+        # ───── Weekly business pattern ─────
+        day_of_week = df['timestamp'].dt.dayofweek
+        weekly_factor = np.where(day_of_week >= 5, 0.80, 1.00)          # weekends lower
+
+        # ───── Annual seasonality (sine wave) ─────
+        day_of_year = df['timestamp'].dt.dayofyear
+        seasonal = 1 + amplitude * np.sin(2 * np.pi * day_of_year / 365.25)
+
+        # ───── Long-term linear growth ─────
         days_from_start = (df['timestamp'] - pd.to_datetime(start_date)).dt.days
-        trend = 1 + (days_from_start / total_days) * 0.1 # 10% growth over period
-        base = base * trend
+        growth = 1 + growth_rate * (days_from_start / days_from_start.max())
 
-        # EOQ Spikes (March, June, Sept, Dec)
-        if data_config.get('seasonality', {}).get('quarterly_peaks', True):
-            is_eoq_month = df['month'].isin([3, 6, 9, 12])
-            # Last 7 days of EOQ months
-            is_eoq_window = is_eoq_month & (df['timestamp'].dt.day > 23)
-            base = np.where(is_eoq_window, base * 1.25, base) # 25% spike
+        # ───── End-of-Quarter spikes ─────
+        eoq_factor = np.ones(len(df))
+        if seasonality.get('use_eoq_spikes', True):
+            month = df['timestamp'].dt.month
+            day   = df['timestamp'].dt.day
+            q_ends = [3,6,9,12]
+            for m in q_ends:
+                # Rough approximation: last N days of quarter-end month
+                mask = (month == m) & (day >= (31 - eoq_window_days + 1))
+                eoq_factor = np.where(mask, eoq_multiplier, eoq_factor)
 
-        # Clipping
-        return np.clip(base, min_val, max_val)
+        # ───── Holiday effect ─────
+        holiday_factor = np.ones(len(df))
+        if use_holidays:
+            us_holidays = holidays.US(years=range(int(start_date[:4]), int(end_date[:4])+1))
+            is_holiday = df['timestamp'].dt.date.isin(us_holidays)
+            holiday_factor = np.where(is_holiday, holiday_multiplier, 1.0)
 
-    logger.info("Generating metrics (CPU, Memory, Disk, Net)...")
-    
-    df['cpu_p95'] = generate_metric('cpu', p95_ranges['cpu'][0], p95_ranges['cpu'][1])
-    df['mem_p95'] = generate_metric('memory', p95_ranges['memory'][0], p95_ranges['memory'][1])
-    df['disk_p95'] = generate_metric('disk', p95_ranges['disk'][0], p95_ranges['disk'][1])
-    
-    # Network might have higher variance
-    df['net_in_p95'] = generate_metric('network_in', p95_ranges['network_in'][0], p95_ranges['network_in'][1])
-    df['net_out_p95'] = generate_metric('network_out', p95_ranges.get('network_out', [10,300])[0], p95_ranges.get('network_out', [10,300])[1])
+        # ───── Combine all factors ─────
+        utilization = base * weekly_factor * seasonal * growth * eoq_factor * holiday_factor
 
-    # Cleanup temporary cols if desired, or keep them as basic features
-    # Keeping them helps module 03 (ETL) know context, but usually we strictly generate raw metrics here.
-    # We'll drop derived features to keep it "Raw"
-    drop_cols = ['day_of_week', 'day_of_year', 'month', 'is_weekend']
-    df.drop(columns=drop_cols, inplace=True)
+        # Apply per-server bias
+        server_idx = df.index // len(dates)   # which server this row belongs to
+        utilization += server_biases[server_idx]
 
-    generation_time = time.time() - start_time
-    logger.info(f"Data generation complete. Rows: {len(df)}. Time: {generation_time:.2f}s")
-    
+        # Final clipping to valid business range
+        utilization = np.clip(utilization, min_val, max_val)
+
+        # ───── Introduce realism defects ─────
+        # Random missing values (typical in monitoring feeds)
+        missing_mask = np.random.rand(len(df)) < missing_rate
+        utilization = np.where(missing_mask, np.nan, utilization)
+
+        # Rare extreme outliers (spikes/dips)
+        outlier_mask = np.random.rand(len(df)) < outlier_rate
+        utilization = np.where(outlier_mask, np.clip(utilization * 1.60, min_val, max_val), utilization)
+
+        df[metric] = utilization
+
+    # Keep only final columns (raw data should not have engineered features yet)
+    final_cols = ['server_id', 'timestamp', 'business_unit', 'region', 'criticality'] + metrics
+    df = df[final_cols]
+
     return df
 
-def main(config):
-    logger.info("=== Module 01: Data Generation ===")
-    
-    # 1. Generate
-    df = generate_synthetic_data(config)
-    
-    # 2. Quality Checks
-    if df.empty:
-        logger.error("Generated dataframe is empty!")
-        sys.exit(1)
-        
-    required_cols = ['server_id', 'timestamp', 'cpu_p95']
-    if not all(col in df.columns for col in required_cols):
-        logger.error(f"Missing required columns. Found: {df.columns.tolist()}")
-        sys.exit(1)
-        
-    logger.info("Sample generated data:")
-    logger.info("\n" + str(df.head()))
 
-    # 3. Save Output
-    # Filename pattern: raw_server_metrics_{YYYYMMDD}.parquet
-    timestamp_str = datetime.now().strftime("%Y%m%d")
-    filename = f"raw_server_metrics_{timestamp_str}.parquet"
-    
-    # Use config-defined prefix or default "raw/"
-    raw_prefix = config.get('aws', {}).get('raw_prefix', 'raw/')
-    
-    # Using shared utility to save (handles S3 vs Local logic)
-    output_path = save_processed_data(df, config, prefix=raw_prefix, filename=filename)
-    
-    if output_path:
-        logger.info(f"SUCCESS: Data saved to {output_path}")
-    else:
-        logger.error("Failed to save data.")
-        sys.exit(1)
+def main_process(config: dict):
+    """Orchestrates data generation, quality checks, saving & summary creation."""
+    logger.info("=== MODULE 01 : Synthetic Data Generation ===")
+
+    df = generate_synthetic_data(config)
+
+    # ─── Basic quality gates ───
+    if df.empty:
+        raise ValueError("Generated DataFrame is empty — check config")
+
+    expected_rows = len(pd.date_range(
+        config['data']['start_date'],
+        config['data']['end_date'],
+        freq='D' if config['data'].get('granularity','daily')=='daily' else 'H'
+    )) * config['data']['num_servers']
+
+    if abs(len(df) - expected_rows) > 100:
+        logger.warning(f"Row count off: expected ~{expected_rows:,}, got {len(df):,}")
+
+    missing_pct = df['cpu_p95'].isna().mean() * 100
+    if missing_pct > 5:
+        logger.warning(f"High missing rate on cpu_p95: {missing_pct:.2f}%")
+
+    # ─── Logging summary statistics ───
+    logger.info(f"Generated shape: {df.shape}")
+    logger.info(f"Missing rate (cpu_p95): {missing_pct:.2f}%")
+    logger.info("\n" + df.describe(percentiles=[0.05,0.25,0.5,0.75,0.95]).round(2).to_string())
+
+    # ─── Save main output ───
+    start_str = config['data']['start_date'].replace('-','')
+    end_str   = config['data']['end_date'].replace('-','')
+    filename  = f"raw_server_metrics_{start_str}_to_{end_str}.parquet"
+
+    output_path = save_processed_data(
+        df=df,
+        config=config,
+        prefix="raw/",
+        filename=filename
+    )
+
+    # ─── Create JSON summary for debugging / reporting ───
+    summary = {
+        "module": "01_data_generation",
+        "generated_at": datetime.now().isoformat(),
+        "rows": len(df),
+        "unique_servers": df['server_id'].nunique(),
+        "date_range": f"{start_str} → {end_str}",
+        "granularity": config['data'].get('granularity','daily'),
+        "missing_rate_cpu": round(missing_pct, 2),
+        "mean_cpu_p95": round(df['cpu_p95'].mean(), 2),
+        "mean_mem_p95": round(df['mem_p95'].mean(), 2),
+        "p95_cpu_p95": round(df['cpu_p95'].quantile(0.95), 2)
+    }
+
+    summary_path = save_to_s3_or_local(
+        content=json.dumps(summary, indent=2),
+        config=config,
+        prefix="reports/summaries/",
+        filename="module_01_summary.json"
+    )
+
+    # ─── Optional quick-look sample ───
+    sample_path = save_to_s3_or_local(
+        content=df.head(200).to_csv(index=False),
+        config=config,
+        prefix="samples/",
+        filename="module_01_sample_200rows.csv"
+    )
+
+    logger.info("✔ Module 01 completed successfully")
+    logger.info(f"   Main output → {output_path}")
+    logger.info(f"   Summary    → {summary_path}")
+    logger.info(f"   Sample CSV → {sample_path}")
+
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Module 01: Data Generation")
-    parser.add_argument("--config", type=str, default="config/config.yaml", help="Path to config file")
-    parser.add_argument("--env", type=str, default="local", choices=["local", "sagemaker", "lambda"], help="Execution environment")
-    
+    parser = argparse.ArgumentParser(description="Module 01 — Generate synthetic Citi-like server metrics")
+    parser.add_argument("--config", default="config/config.yaml", help="Config file path")
+    parser.add_argument("--env",    default="local", choices=["local", "sagemaker", "lambda"])
     args = parser.parse_args()
-    
-    # Setup Logging
+
     logging.basicConfig(
         level=logging.INFO,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        format='%(asctime)s | %(levelname)-7s | %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
     )
+
+    config = load_config(Path(args.config))
     
-    try:
-        # Load Config
-        # Config loader doesn't take 'env' direct arg, so we load base then override
-        config = load_config(Path(args.config))
+    # Manually override env via args since load_config doesn't take it directly anymore
+    if args.env:
+        if 'execution' not in config:
+            config['execution'] = {}
+        config['execution']['mode'] = args.env
         
-        # Override execution mode from CLI if provided
-        if args.env:
-            if 'execution' not in config:
-                config['execution'] = {}
-            config['execution']['mode'] = args.env
-            
-        validate_config(config)
-        
-        # Run Module
-        main(config)
-        
-    except Exception as e:
-        logger.exception(f"Module execution failed: {e}")
-        sys.exit(1)
+    validate_config(config)
+
+    main_process(config)
