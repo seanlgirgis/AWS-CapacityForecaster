@@ -31,6 +31,9 @@ from typing import Optional, Tuple, Dict, List
 import logging
 import holidays  # For US banking holidays; install via requirements.txt if needed
 from src.utils.config import get_aws_config, get_data_config
+from src.utils.aws_utils import upload_to_s3
+from pathlib import Path
+import os
 
 # Set up logging for debugging (configurable via environment vars in production)
 logger = logging.getLogger(__name__)
@@ -466,3 +469,71 @@ def get_date_range(
     - pd.DatetimeIndex
     """
     return pd.date_range(start=start_date, end=end_date, freq=freq)
+
+def save_processed_data(
+    df: pd.DataFrame,
+    config: dict,
+    prefix: str = 'processed/',
+    filename: Optional[str] = None,
+    file_type: str = 'parquet'
+) -> str:
+    """
+    Save DataFrame to S3 or local path based on config.
+    Returns the path where data was saved.
+    
+    Parameters:
+    - df: DataFrame to save.
+    - config: Application configuration dict.
+    - prefix: S3 prefix or subdirectory (e.g., 'raw/', 'processed/').
+    - filename: Name of the file. If None, auto-generated based on timestamp.
+    - file_type: 'parquet' or 'csv'.
+    """
+    if filename is None:
+        timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"data_{timestamp_str}.{file_type}"
+    
+    # Determine mode (local vs AWS)
+    # Checks specific execution mode or fallbacks
+    mode = config.get('execution', {}).get('mode', 'local')
+    use_s3 = mode in ['sagemaker_processing', 'sagemaker_training', 'lambda']
+    
+    # Override if local dir explicitly requested or S3 not configured?
+    # For now, simplistic check: if bucket exists in config, we might try S3, 
+    # but strictly following 'mode' is safer for local dev.
+    
+    if use_s3:
+        bucket_name = config.get('aws', {}).get('bucket_name')
+        if not bucket_name:
+            raise ValueError("AWS bucket_name not configured but mode requires S3.")
+            
+        key = f"{prefix.strip('/')}/{filename}"
+        
+        # Save to temp local first then upload
+        temp_path = f"/tmp/{filename}"
+        if file_type == 'parquet':
+            df.to_parquet(temp_path, index=False)
+        else:
+            df.to_csv(temp_path, index=False)
+            
+        s3_uri = upload_to_s3(temp_path, bucket_name, key)
+        # Clean up temp ??? In lambda /tmp is limited, good practice to clean.
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+            
+        return s3_uri
+        
+    else:
+        # Local Mode
+        local_base = config.get('paths', {}).get('local_data_dir', 'data/scratch')
+        output_dir = Path(local_base) / prefix.strip('/')
+        output_dir.mkdir(parents=True, exist_ok=True)
+        
+        output_path = output_dir / filename
+        
+        if file_type == 'parquet':
+            df.to_parquet(output_path, index=False)
+        else:
+            df.to_csv(output_path, index=False)
+            
+        logger.info(f"Saved locally to {output_path}")
+        return str(output_path)
