@@ -69,7 +69,7 @@ terraform.tfstate.backup
 data/
 raw/
 processed/
-notebooks/data/
+#notebooks/data/
 
 # IDEs & editors
 .vscode/
