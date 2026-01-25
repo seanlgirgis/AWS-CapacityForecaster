@@ -46,3 +46,13 @@ This project simulates and analyzes server capacity metrics (CPU, Memory, Disk, 
 - `docs/`: Detailed design documentation.
 - `tests/`: Unit tests.
 - `demos/`: Example scripts.
+
+
+
+### Current Pipeline Status
+- **Module 01 – Data Generation** : Complete & tested
+  - Generates Citi-like daily P95 metrics for 120 servers (2022–2025)
+  - Features: weekly dips, annual seasonality, EOQ spikes, US holidays, per-server bias, ~1% missing, rare outliers
+  - Output: `data/scratch/raw/raw_server_metrics_20220101_to_20251231.parquet`
+  - Run: `python -m src.modules.module_01_data_generation --env local`
+
