@@ -237,6 +237,8 @@ class ServerArchetype:
 
         logger.debug(f"Initialized {archetype_type.value} archetype for {server_id} (seed={self.seed})")
 
+
+
     def generate_correlated_metrics(
         self,
         timestamp,
@@ -319,6 +321,9 @@ class ServerArchetype:
             'net_in_p95': round(network_in, 2),
             'net_out_p95': round(network_out, 2),
         }
+
+
+
 
     def get_time_factor(self, timestamp) -> float:
         """
