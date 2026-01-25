@@ -352,7 +352,9 @@ def save_dataset(
 
     if format == 'csv':
         if compress:
-            output_path = output_path.with_suffix('.csv.gz')
+            # Avoid double suffixing (e.g., .csv.csv.gz)
+            if not str(output_path).endswith('.csv.gz'):
+                output_path = output_path.with_suffix('.csv.gz')
             logger.info(f"  Writing compressed CSV to: {output_path}")
             df.to_csv(output_path, compression='gzip')
         else:
@@ -382,8 +384,8 @@ def main():
     parser.add_argument(
         '--output',
         type=str,
-        default='data/synthetic/server_metrics.csv',
-        help='Output file path'
+        default=None,  # Defaults to config.data.generated_data_path
+        help='Output file path (default: configured in config.yaml)'
     )
     parser.add_argument(
         '--servers',
@@ -437,6 +439,15 @@ def main():
 
     args = parser.parse_args()
 
+    # Load configuration to get default path and settings
+    config = get_data_config()
+    output_path = args.output if args.output else config.get('generated_data_path', 'data/synthetic/server_metrics.csv')
+    
+    # logic to deduce compression from args OR config
+    # If args.compress is present (True), use it.
+    # If not, check config.
+    should_compress = args.compress or config.get('compression', False)
+
     # Generate dataset
     df = generate_full_dataset(
         num_servers=args.servers,
@@ -450,15 +461,15 @@ def main():
     # Save dataset
     save_dataset(
         df=df,
-        output_path=args.output,
+        output_path=output_path,
         format=args.format,
-        compress=args.compress
+        compress=should_compress
     )
 
     logger.info("\n" + "=" * 70)
     logger.info("[OK] DATA GENERATION PIPELINE COMPLETE")
     logger.info("=" * 70)
-    logger.info(f"Output file: {args.output}")
+    logger.info(f"Output file: {output_path}")
     logger.info(f"Log file: {get_log_file_path(logger)}")
 
 

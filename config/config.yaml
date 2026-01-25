@@ -9,7 +9,7 @@ project:
 
 aws:
   region: us-east-1
-  profile: default                        # boto3 profile name (optional)
+  profile: study                          # boto3 profile name (optional)
   bucket_name: sean-capacity-forecast-data
   raw_prefix: raw/server_metrics/
   processed_prefix: processed/server_metrics/
@@ -25,6 +25,8 @@ data:
   granularity: daily                      # daily / hourly (future)
   start_date: "2022-01-01"
   end_date: "2025-12-31"
+  generated_data_path: data/synthetic/server_metrics.csv.gz  # Centralized output path
+  compression: true                       # GZIP compression for S3 efficiency
   seasonality:
     weekly: true
     quarterly_peaks: true                 # end-of-quarter banking peaks

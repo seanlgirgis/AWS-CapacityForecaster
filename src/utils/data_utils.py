@@ -98,7 +98,8 @@ def generate_synthetic_server_metrics(
     n_days = len(dates)
     
     # Generate server IDs and metadata (for realism)
-    server_ids = [f'server_{i:04d}' for i in range(1, n_servers + 1)]
+    # Note: Uses :03d and starts from 0 to match server_archetypes.py format
+    server_ids = [f'server_{i:03d}' for i in range(n_servers)]
     
     # Expand to long format: one row per server-date
     df = pd.DataFrame({
@@ -167,10 +168,11 @@ def generate_server_metadata(
     Useful for Capacity Prioritization: Weight forecasts by criticality/business unit.
     """
     np.random.seed(seed)
-    server_ids = [f'server_{i:04d}' for i in range(1, n_servers + 1)]
+    # Note: Uses :03d and starts from 0 to match server_archetypes.py format
+    server_ids = [f'server_{i:03d}' for i in range(n_servers)]
     df = pd.DataFrame({
         'server_id': server_ids,
-        'app_name': [f'app_{i:04d}' for i in range(1, n_servers + 1)],
+        'app_name': [f'app_{i:03d}' for i in range(n_servers)],
         'business_unit': np.random.choice(business_units, n_servers),
         'criticality': np.random.choice(criticalities, n_servers),
         'region': np.random.choice(regions, n_servers)
