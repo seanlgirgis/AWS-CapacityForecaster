@@ -588,3 +588,43 @@ def save_to_s3_or_local(
             
         logger.info(f"Saved content to {output_path}")
         return str(output_path)
+        return str(output_path)
+
+def load_from_s3_or_local(
+    config: dict,
+    prefix: str,
+    filename: str,
+    file_type: str = 'parquet'
+) -> pd.DataFrame:
+    """
+    Load data from S3 or local path based on execution mode.
+    
+    Parameters:
+    - config: Configuration dict.
+    - prefix: Input prefix/subdir (e.g. 'raw/').
+    - filename: Input filename.
+    - file_type: 'parquet' or 'csv'.
+    """
+    mode = config.get('execution', {}).get('mode', 'local')
+    use_s3 = mode in ['sagemaker_processing', 'sagemaker_training', 'lambda']
+    
+    if use_s3:
+        bucket_name = config.get('aws', {}).get('bucket_name')
+        if not bucket_name:
+            raise ValueError("AWS bucket_name not configured for S3 mode")
+            
+        key = f"{prefix.strip('/')}/{filename}"
+        return load_from_s3(bucket=bucket_name, key=key, file_type=file_type)
+        
+    else:
+        # Local Mode
+        local_base = config.get('paths', {}).get('local_data_dir', 'data/scratch')
+        input_path = Path(local_base) / prefix.strip('/') / filename
+        
+        if not input_path.exists():
+            return None
+            
+        if file_type == 'parquet':
+            return pd.read_parquet(input_path)
+        else:
+            return pd.read_csv(input_path)
