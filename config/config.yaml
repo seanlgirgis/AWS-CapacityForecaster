@@ -70,11 +70,14 @@ ml:
     cross_validation_folds: 5
 
 feature_engineering:
-  lags: [1, 7, 30]                        # 1-day, weekly, monthly lags
-  rolling_windows: [7, 14, 30]            # rolling means/std
-  external_regressors:
-    - is_end_of_quarter
-    - is_month_end
+  lags_days: [1, 3, 7, 14, 30]           # 1-day, weekly, monthly lags
+  rolling_windows_days: [7, 30, 90]      # rolling means/std
+  impute_method: "linear"                # or "knn", "median", "forward_fill"
+  outlier_z_threshold: 4.0               # flag or cap values > Z from rolling mean
+  encode_metadata: true                  # one-hot business_unit/region/criticality
+  add_eoq_flag: true                     # binary is_eoq_window
+  add_holiday_flag: true                 # binary is_holiday (US banking)
+  add_trend_features: true               # days_since_start, cumulative_cpu etc.
   anomaly_detection:
     z_score_threshold: 3.0
     knn_neighbors: 5
