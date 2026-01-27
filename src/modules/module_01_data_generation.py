@@ -240,10 +240,11 @@ def main_process(config: dict):
     end_str   = config['data']['end_date'].replace('-','')
     filename  = f"raw_server_metrics_{start_str}_to_{end_str}.parquet"
 
+    raw_dir = config.get('paths', {}).get('raw_dir', 'raw/')
     output_path = save_processed_data(
         df=df,
         config=config,
-        prefix="raw/",
+        prefix=raw_dir,
         filename=filename
     )
 
@@ -261,18 +262,20 @@ def main_process(config: dict):
         "p95_cpu_p95": round(df['cpu_p95'].quantile(0.95), 2)
     }
 
+    summaries_dir = config.get('paths', {}).get('summaries_dir', 'reports/summaries/')
     summary_path = save_to_s3_or_local(
         content=json.dumps(summary, indent=2),
         config=config,
-        prefix="reports/summaries/",
+        prefix=summaries_dir,
         filename="module_01_summary.json"
     )
 
     # ─── Optional quick-look sample ───
+    samples_dir = config.get('paths', {}).get('samples_dir', 'samples/')
     sample_path = save_to_s3_or_local(
         content=df.head(200).to_csv(index=False),
         config=config,
-        prefix="samples/",
+        prefix=samples_dir,
         filename="module_01_sample_200rows.csv"
     )
 

@@ -71,14 +71,15 @@ def main_process(config):
     logger.info("=== MODULE 02 : Data Loading & Basic Validation ===")
 
     # Load latest raw file dynamically
-    raw_dir = Path(config.get('paths', {}).get('local_data_dir', 'data/scratch')) / "raw"
+    raw_dir_name = config.get('paths', {}).get('raw_dir', 'raw')
+    raw_dir = Path(config.get('paths', {}).get('local_data_dir', 'data/scratch')) / raw_dir_name
     parquet_files = list(raw_dir.glob("*.parquet"))
     if not parquet_files:
-        raise FileNotFoundError("No raw parquet files found in data/scratch/raw/")
+        raise FileNotFoundError(f"No raw parquet files found in {raw_dir}")
     latest_file = max(parquet_files, key=os.path.getmtime)
     logger.info(f"Loading latest raw data: {latest_file.name}")
 
-    df = load_from_s3_or_local(config, prefix="raw/", filename=latest_file.name)
+    df = load_from_s3_or_local(config, prefix=raw_dir_name, filename=latest_file.name)
     if df is None:
         raise FileNotFoundError(f"Failed to load {latest_file.name}")
 
@@ -105,10 +106,17 @@ def main_process(config):
     logger.info("Data stats:\n" + stats.to_string())
 
     # Save validated data
+    intermediate_dir = config.get('paths', {}).get('intermediate_dir', 'intermediate/')
+    
+    # Generate dynamic filename with date range
+    min_date = df['timestamp'].min().strftime('%Y%m%d')
+    max_date = df['timestamp'].max().strftime('%Y%m%d')
+    output_filename = f"validated_server_metrics_{min_date}_to_{max_date}.parquet"
+
     save_path = save_processed_data(
         df, config,
-        prefix="intermediate/",
-        filename="validated_server_metrics.parquet"
+        prefix=intermediate_dir,
+        filename=output_filename
     )
     logger.info(f"Saved validated data to {save_path}")
 
@@ -126,10 +134,11 @@ def main_process(config):
         "duplicates_removed": int(duplicates)
     }
 
+    summaries_dir = config.get('paths', {}).get('summaries_dir', 'reports/summaries/')
     save_to_s3_or_local(
         json.dumps(summary, indent=2),
         config,
-        prefix="reports/summaries/",
+        prefix=summaries_dir,
         filename="module_02_summary.json"
     )
     logger.info("✔ Module 02 completed successfully")

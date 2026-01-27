@@ -92,6 +92,11 @@ risk_analysis:
 
 paths:
   local_data_dir: data/scratch/           # For local testing only
+  raw_dir: raw/
+  intermediate_dir: intermediate/
+  processed_dir: processed/
+  summaries_dir: reports/summaries/
+  samples_dir: samples/
   reports_dir: reports/
   model_artifacts_dir: models/
 

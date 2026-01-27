@@ -46,6 +46,7 @@ from logging.handlers import TimedRotatingFileHandler
 import pandas as pd
 import numpy as np
 import holidays
+import os
 
 from src.utils.config import load_config, validate_config
 from src.utils.data_utils import load_from_s3_or_local, save_to_s3_or_local, save_processed_data
@@ -200,9 +201,21 @@ def main_process(config: dict):
     logger.info("=== MODULE 03 : ETL & Feature Engineering ===")
 
     # Load validated data from module_02
-    source_filename = "validated_server_metrics_20220101_to_20251231.parquet"
+    intermediate_dir_name = config.get('paths', {}).get('intermediate_dir', 'intermediate/')
+    # Resolve local path for globbing (since load_from_s3_or_local handles the loading abstractly, we need to find the file first)
+    local_data_dir = Path(config.get('paths', {}).get('local_data_dir', 'data/scratch'))
+    intermediate_path = local_data_dir / intermediate_dir_name
+    
+    # Dynamic file finding (latest parquet)
+    parquet_files = list(intermediate_path.glob("*.parquet"))
+    if not parquet_files:
+        raise FileNotFoundError(f"No validated parquet files found in {intermediate_path}. Run Module 02 first.")
+    
+    latest_file = max(parquet_files, key=os.path.getmtime)
+    source_filename = latest_file.name
     logger.info(f"Loading validated data: {source_filename}")
-    df = load_from_s3_or_local(config, prefix="staged/", filename=source_filename)
+    
+    df = load_from_s3_or_local(config, prefix=intermediate_dir_name, filename=source_filename)
 
     if df is None or df.empty:
         raise FileNotFoundError(f"Could not load staged file: {source_filename}. Run Module 02 first.")
@@ -218,7 +231,7 @@ def main_process(config: dict):
     save_path = save_processed_data(
         df=df_features,
         config=config,
-        prefix="processed/",
+        prefix=config.get('paths', {}).get('processed_dir', 'processed/'),
         filename=output_filename
     )
 
@@ -238,7 +251,7 @@ def main_process(config: dict):
     summary_path = save_to_s3_or_local(
         content=json.dumps(summary, indent=2),
         config=config,
-        prefix="reports/summaries/",
+        prefix=config.get('paths', {}).get('summaries_dir', 'reports/summaries/'),
         filename="module_03_summary.json"
     )
 
