@@ -394,12 +394,12 @@ def main_process(config):
         return
 
     metrics_df = pd.DataFrame(all_metrics)
-    summary = metrics_df.groupby('model')['MAPE'].describe()
-    logger.info("Model Performance Summary (MAPE):\n" + str(summary))
-    
-    avg_mape = metrics_df.groupby('model')['MAPE'].mean().sort_values()
-    best_model = avg_mape.idxmin()
-    logger.info(f"🏆 Best Model (AVG MAPE): {best_model} ({avg_mape[best_model]:.2f}%)")
+    summary = metrics_df.groupby('model')['sMAPE'].describe()
+    logger.info("Model Performance Summary (sMAPE):\n" + summary.to_string())
+
+    avg_smape = metrics_df.groupby('model')['sMAPE'].mean().sort_values()
+    best_model = avg_smape.idxmin()
+    logger.info(f"🏆 Best Model (AVG sMAPE): {best_model} ({avg_smape[best_model]:.2f}%)")
     
     # Save forecasts
     if all_forecasts:
