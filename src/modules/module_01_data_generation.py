@@ -93,6 +93,8 @@ def generate_synthetic_data(config: dict) -> pd.DataFrame:
     regions            = metadata_cfg.get('regions', ['us-east-1', 'us-west-2', 'eu-west-1', 'ap-southeast-1'])
     criticalities      = metadata_cfg.get('criticalities', ['High', 'Medium', 'Low'])
     criticality_probs  = metadata_cfg.get('criticality_probs', [0.2, 0.5, 0.3])
+    server_prefix      = metadata_cfg.get('server_prefix', 'SRV-')
+    server_width       = metadata_cfg.get('server_id_width', 4)
 
     # Seasonality & realism controls
     amplitude          = seasonality.get('amplitude', 0.10)
@@ -113,7 +115,7 @@ def generate_synthetic_data(config: dict) -> pd.DataFrame:
     # 1. Create server metadata table (one row per server)
     # ────────────────────────────────────────────────
     servers = pd.DataFrame({
-        'server_id':      [f"SRV-{i:04d}" for i in range(1, num_servers + 1)],
+        'server_id':      [f"{server_prefix}{i:0{server_width}d}" for i in range(1, num_servers + 1)],
         'business_unit':  np.random.choice(business_units, num_servers),
         'region':         np.random.choice(regions, num_servers),
         'criticality':    np.random.choice(criticalities, num_servers, p=criticality_probs)
@@ -138,7 +140,7 @@ def generate_synthetic_data(config: dict) -> pd.DataFrame:
     # ────────────────────────────────────────────────
     # 4. Generate each P95 metric independently
     # ────────────────────────────────────────────────
-    metrics = ['cpu_p95', 'mem_p95', 'disk_p95', 'net_in_p95', 'net_out_p95']
+    metrics = data_cfg.get('metrics', ['cpu_p95', 'mem_p95', 'disk_p95', 'net_in_p95', 'net_out_p95'])
 
     for metric in metrics:
         rng = p95_ranges.get(metric, {'min': 0, 'max': 100})
@@ -151,7 +153,8 @@ def generate_synthetic_data(config: dict) -> pd.DataFrame:
 
         # ───── Weekly business pattern ─────
         day_of_week = df['timestamp'].dt.dayofweek
-        weekly_factor = np.where(day_of_week >= 5, 0.80, 1.00)          # weekends lower
+        weekend_factor = seasonality.get('weekend_factor', 0.80)
+        weekly_factor = np.where(day_of_week >= 5, weekend_factor, 1.00)          # weekends lower
 
         # ───── Annual seasonality (sine wave) ─────
         day_of_year = df['timestamp'].dt.dayofyear
@@ -166,7 +169,7 @@ def generate_synthetic_data(config: dict) -> pd.DataFrame:
         if seasonality.get('use_eoq_spikes', True):
             month = df['timestamp'].dt.month
             day   = df['timestamp'].dt.day
-            q_ends = [3,6,9,12]
+            q_ends = seasonality.get('eoq_months', [3, 6, 9, 12])
             for m in q_ends:
                 # Rough approximation: last N days of quarter-end month
                 mask = (month == m) & (day >= (31 - eoq_window_days + 1))
@@ -223,11 +226,13 @@ def main_process(config: dict):
         freq='D' if config['data'].get('granularity','daily')=='daily' else 'H'
     )) * config['data']['num_servers']
 
-    if abs(len(df) - expected_rows) > 100:
+    row_tol = config.get('data', {}).get('validation', {}).get('row_count_tolerance', 100)
+    if abs(len(df) - expected_rows) > row_tol:
         logger.warning(f"Row count off: expected ~{expected_rows:,}, got {len(df):,}")
 
     missing_pct = df['cpu_p95'].isna().mean() * 100
-    if missing_pct > 5:
+    missing_tol = config.get('data', {}).get('validation', {}).get('max_missing_pct_warning', 5.0)
+    if missing_pct > missing_tol:
         logger.warning(f"High missing rate on cpu_p95: {missing_pct:.2f}%")
 
     # ─── Logging summary statistics ───
@@ -272,8 +277,9 @@ def main_process(config: dict):
 
     # ─── Optional quick-look sample ───
     samples_dir = config.get('paths', {}).get('samples_dir', 'samples/')
+    n_samples = config.get('data', {}).get('samples_count', 200)
     sample_path = save_to_s3_or_local(
-        content=df.head(200).to_csv(index=False),
+        content=df.head(n_samples).to_csv(index=False),
         config=config,
         prefix=samples_dir,
         filename="module_01_sample_200rows.csv"

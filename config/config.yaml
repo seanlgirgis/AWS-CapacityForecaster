@@ -27,10 +27,25 @@ data:
   end_date: "2025-12-31"
   generated_data_path: data/synthetic/server_metrics.csv.gz  # Centralized output path
   compression: true                       # GZIP compression for S3 efficiency
+  metrics: [cpu_p95, mem_p95, disk_p95, net_in_p95, net_out_p95] # Explicit list of metrics to generate
+  metadata:
+    server_prefix: "SRV-"                 # Prefix for server IDs
+    server_id_width: 4                    # Number of digits in server ID
+    business_units: ['Retail', 'Investment', 'Wealth', 'Corporate']
+    regions: ['us-east-1', 'us-west-2', 'eu-west-1', 'ap-southeast-1']
+    criticalities: ['High', 'Medium', 'Low']
+    criticality_probs: [0.2, 0.5, 0.3]
   seasonality:
     weekly: true
+    weekend_factor: 0.80                  # Multiplier for weekends
     quarterly_peaks: true                 # end-of-quarter banking peaks
+    eoq_months: [3, 6, 9, 12]             # Months that end a quarter
     holiday_effect: true
+  validation:
+    max_missing_pct_warning: 5.0          # Warn if missingness exceeds this %
+    row_count_tolerance: 100              # Warn if row count deviates by > N
+    min_history_days: 365                 # Minimum history required per server
+  samples_count: 200                      # Number of rows to save in sample file
   p95_ranges:
     cpu: [10.0, 95.0]
     memory: [15.0, 92.0]
@@ -73,9 +88,13 @@ feature_engineering:
   lags_days: [1, 3, 7, 14, 30]           # 1-day, weekly, monthly lags
   rolling_windows_days: [7, 30, 90]      # rolling means/std
   impute_method: "linear"                # or "knn", "median", "forward_fill"
+  handle_outliers: true                  # Toggle outlier capping
   outlier_z_threshold: 4.0               # flag or cap values > Z from rolling mean
+  outlier_window_days: 30                # Window size for rolling Z-score
   encode_metadata: true                  # one-hot business_unit/region/criticality
+  metadata_columns: [business_unit, region, criticality] # Columns to one-hot encode
   add_eoq_flag: true                     # binary is_eoq_window
+  eoq_window_days: 7                     # Number of days at end of quarter
   add_holiday_flag: true                 # binary is_holiday (US banking)
   add_trend_features: true               # days_since_start, cumulative_cpu etc.
   anomaly_detection:
@@ -99,6 +118,14 @@ paths:
   samples_dir: samples/
   reports_dir: reports/
   model_artifacts_dir: models/
+  forecasts_dir: forecasts/               # ← added (matches your current usage)
+  metrics_dir: metrics/                   # ← added (matches your current usage)
+  risk_analysis_dir: risk_analysis/       # ← added for Module 05 outputs
+
+  # ── Added configurable filenames ──
+  module_03_summary_filename: module_03_summary.json  # ← used by Module 03
+  metrics_summary_filename: model_comparison.json     # ← used by Module 04 for metrics JSON
+  forecasts_summary_filename: all_model_forecasts.parquet  # ← used by Module 04 for forecasts Parquet
 
 visualization:
   theme: darkgrid  # seaborn style (compatible with matplotlib 3.8+)
@@ -158,6 +185,14 @@ model_training:
     min_samples_split: 5
     random_state: 42
     n_jobs: -1                                # use all cores
+    features:
+      - is_eoq_window
+      - is_holiday
+      - is_weekend
+      - quarter
+      - month
+      - month_sin
+      - month_cos
 
 execution:
   mode: local                             # local | sagemaker_processing | sagemaker_training | lambda

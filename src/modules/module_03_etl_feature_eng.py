@@ -93,7 +93,7 @@ def perform_feature_engineering(df: pd.DataFrame, config: dict) -> pd.DataFrame:
     All major behaviors are driven by the 'feature_engineering' section of config.
     """
     feat_cfg = config.get('feature_engineering', {})
-    numeric_metrics = ['cpu_p95', 'mem_p95', 'disk_p95', 'net_in_p95', 'net_out_p95']
+    numeric_metrics = config.get('data', {}).get('metrics', ['cpu_p95', 'mem_p95', 'disk_p95', 'net_in_p95', 'net_out_p95'])
 
     logger.info("Starting Feature Engineering...")
     logger.info(f"Input shape: {df.shape}. Columns: {len(df.columns)}")
@@ -119,11 +119,12 @@ def perform_feature_engineering(df: pd.DataFrame, config: dict) -> pd.DataFrame:
     # 3. Outlier capping — rolling z-score Winsorization (prevents extreme values skewing models)
     if feat_cfg.get('handle_outliers', True):
         z_thresh = feat_cfg.get('outlier_z_threshold', 4.0)
-        logger.info(f"Capping outliers using rolling z-score (threshold={z_thresh})...")
+        window = feat_cfg.get('outlier_window_days', 30)
+        logger.info(f"Capping outliers using rolling z-score (threshold={z_thresh}, window={window})...")
         for col in numeric_metrics:
             grouped = df.groupby('server_id')[col]
-            roll_mean = grouped.transform(lambda x: x.rolling(30, min_periods=1).mean())
-            roll_std  = grouped.transform(lambda x: x.rolling(30, min_periods=1).std())
+            roll_mean = grouped.transform(lambda x: x.rolling(window, min_periods=1).mean())
+            roll_std  = grouped.transform(lambda x: x.rolling(window, min_periods=1).std())
             z_score = (df[col] - roll_mean) / roll_std
             extreme_mask = abs(z_score) > z_thresh
             df.loc[extreme_mask, col] = roll_mean[extreme_mask] + np.sign(z_score[extreme_mask]) * z_thresh * roll_std[extreme_mask]
@@ -134,11 +135,13 @@ def perform_feature_engineering(df: pd.DataFrame, config: dict) -> pd.DataFrame:
     df['month']      = df['timestamp'].dt.month
     df['is_weekend'] = df['day_of_week'].isin([5, 6]).astype(int)
 
-    # EOQ window: last 7 days of Mar/Jun/Sep/Dec — strong signal in financial data
+    # EOQ window: last N days of Mar/Jun/Sep/Dec — strong signal in financial data
     if feat_cfg.get('add_eoq_flag', True):
+        eoq_window = feat_cfg.get('eoq_window_days', 7)
         days_in_month = df['timestamp'].dt.days_in_month
-        is_q_end_month = df['month'].isin([3, 6, 9, 12])
-        is_end_window  = df['timestamp'].dt.day >= (days_in_month - 6)
+        eoq_months = config.get('data', {}).get('seasonality', {}).get('eoq_months', [3, 6, 9, 12])
+        is_q_end_month = df['month'].isin(eoq_months)
+        is_end_window  = df['timestamp'].dt.day >= (days_in_month - eoq_window + 1)
         df['is_eoq_window'] = (is_q_end_month & is_end_window).astype(int)
 
     # US holidays — banking often quieter on federal holidays
@@ -178,9 +181,11 @@ def perform_feature_engineering(df: pd.DataFrame, config: dict) -> pd.DataFrame:
 
     # 8. Metadata one-hot encoding — server heterogeneity
     if feat_cfg.get('encode_metadata', True):
-        logger.info("One-hot encoding metadata...")
-        meta_cols = ['business_unit', 'region', 'criticality']
-        df = pd.get_dummies(df, columns=meta_cols, prefix=['bu', 'reg', 'crit'], dtype=int)
+        meta_cols = feat_cfg.get('metadata_columns', ['business_unit', 'region', 'criticality'])
+        logger.info(f"One-hot encoding metadata: {meta_cols}...")
+        
+        # Safe dummy encoding
+        df = pd.get_dummies(df, columns=meta_cols, prefix=[c[:3] for c in meta_cols], dtype=int)
 
     # 9. Precise warm-up NaN removal — drop initial rows with NaN features per server
     # We take the max lookback from lags + rolling windows
@@ -248,11 +253,12 @@ def main_process(config: dict):
         "source_file": source_filename
     }
 
+    summary_filename = config.get('paths', {}).get('module_03_summary_filename', 'module_03_summary.json')
     summary_path = save_to_s3_or_local(
         content=json.dumps(summary, indent=2),
         config=config,
         prefix=config.get('paths', {}).get('summaries_dir', 'reports/summaries/'),
-        filename="module_03_summary.json"
+        filename=summary_filename
     )
 
     logger.info(f"Features saved: {save_path}")

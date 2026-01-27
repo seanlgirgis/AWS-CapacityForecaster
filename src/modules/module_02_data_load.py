@@ -94,8 +94,9 @@ def main_process(config):
     # Per-server history check
     server_counts = df.groupby('server_id')['timestamp'].count()
     min_history = server_counts.min()
-    if min_history < 365:
-        logger.warning(f"Shortest server history: {min_history} days — check data generation.")
+    min_history_req = config.get('data', {}).get('validation', {}).get('min_history_days', 365)
+    if min_history < min_history_req:
+        logger.warning(f"Shortest server history: {min_history} days (required: {min_history_req}) — check data generation.")
 
     # Missing rates per metric
     missing_rates = df.isnull().mean() * 100

@@ -73,7 +73,6 @@ logger.addHandler(file_handler)
 
 logger.info("Logging initialized — console + file (logs/module_04_model_training.log)")
 
-
 # =============================================================================
 # Helper: Generate Calendar Regressors for Future Dates
 # =============================================================================
@@ -88,9 +87,7 @@ def generate_calendar_features(dates: pd.Series) -> pd.DataFrame:
     df['month'] = df['ds'].dt.month
     df['month_sin'] = np.sin(2 * np.pi * df['month'] / 12)
     df['month_cos'] = np.cos(2 * np.pi * df['month'] / 12)
-    # Add more as needed (fiscal quarter, etc.)
     return df.drop(columns=['ds', 'timestamp'])
-
 
 # =============================================================================
 # Metric Calculation
@@ -107,35 +104,29 @@ def calculate_metrics(y_true, y_pred):
                      0.0)  # avoid div-by-zero
     smape = np.mean(smape) * 200  # *200 to get % scale (standard sMAPE)
 
-    # Optional: add WAPE (weighted absolute percentage error) if desired later
-    # wape = np.sum(np.abs(y_true - y_pred)) / (np.sum(np.abs(y_true)) + 1e-8) * 100
-
     return {
         "MAE": round(mae, 4),
         "RMSE": round(rmse, 4),
         "sMAPE": round(smape, 2)
     }
+
 # =============================================================================
 # Baseline: Day-of-Week Average (Improved)
 # =============================================================================
 def train_predict_naive_seasonal(train_df, test_df, horizon_days, target_col, period=7):
-    """Improved baseline: average by day-of-week from training history."""
     train_df = train_df.copy()
     train_df['dow'] = train_df['timestamp'].dt.dayofweek
     dow_means = train_df.groupby('dow')[target_col].mean().to_dict()
     
-    # Test period predictions (using actual test dates' day-of-week)
     test_dows = test_df['timestamp'].dt.dayofweek
     test_preds = np.array([dow_means.get(dow, np.nan) for dow in test_dows])
     
-    # Future predictions
     last_date = train_df['timestamp'].max()
     future_dates = pd.date_range(start=last_date + timedelta(days=1), periods=horizon_days, freq='D')
     future_dows = future_dates.dayofweek
     future_preds = np.array([dow_means.get(dow, np.nan) for dow in future_dows])
     
     return test_preds, future_preds
-
 
 # =============================================================================
 # Prophet Model (with true forward forecasting + uncertainty)
@@ -144,8 +135,6 @@ def train_predict_prophet(train_df, test_df, future_dates, target_col, config):
     p_cfg = config.get('model_training', {}).get('prophet', {})
     regressors_config = p_cfg.get('regressor_columns', [])
     
-    # Determine which regressors are valid (exist in train_df AND can be generated for future)
-    # We generate a dummy future row to see what columns generate_calendar_features provides
     dummy_dates = pd.Series([train_df['timestamp'].iloc[0]]) 
     available_future_features = generate_calendar_features(dummy_dates).columns
     
@@ -154,7 +143,6 @@ def train_predict_prophet(train_df, test_df, future_dates, target_col, config):
         if r in train_df.columns and r in available_future_features
     ]
     
-    # Prepare training data
     pf_train = train_df[['timestamp', target_col] + regressors].rename(columns={'timestamp': 'ds', target_col: 'y'})
     
     m = Prophet(
@@ -173,12 +161,10 @@ def train_predict_prophet(train_df, test_df, future_dates, target_col, config):
     logging.getLogger('cmdstanpy').setLevel(logging.WARNING)
     m.fit(pf_train)
     
-    # Future dataframe for BOTH test period + horizon
     all_future_ds = pd.concat([test_df[['timestamp']], future_dates[['timestamp']]])
-    future = m.make_future_dataframe(periods=0)  # Start empty
+    future = m.make_future_dataframe(periods=0)
     future = pd.concat([pf_train[['ds']], all_future_ds.rename(columns={'timestamp': 'ds'})]).drop_duplicates().sort_values('ds')
     
-    # Add regressors for the entire future period
     future_reg = generate_calendar_features(future['ds'])
     for reg in regressors:
         if reg in future_reg.columns:
@@ -186,7 +172,6 @@ def train_predict_prophet(train_df, test_df, future_dates, target_col, config):
     
     forecast = m.predict(future)
     
-    # Split back: test predictions + forward predictions
     test_mask = forecast['ds'].isin(test_df['timestamp'])
     future_mask = forecast['ds'].isin(future_dates['timestamp'])
     
@@ -195,16 +180,14 @@ def train_predict_prophet(train_df, test_df, future_dates, target_col, config):
     
     return test_preds, future_preds, m, forecast
 
-
 # =============================================================================
-# Random Forest (Recursive multi-step forecasting)
+# Random Forest (Batch prediction — no recursion needed for exogenous features)
 # =============================================================================
 def train_predict_rf(train_df, test_df, future_dates, target_col, config):
     rf_cfg = config.get('model_training', {}).get('random_forest', {})
     
-    # Safe exogenous features only (no leakage)
-    safe_features = ['eoq_flag', 'is_holiday', 'is_weekend', 'quarter', 'month', 'month_sin', 'month_cos']
-    # You can expand this list from config or add more non-lagged features later
+    # Safe exogenous features from config
+    safe_features = rf_cfg.get('features', ['is_eoq_window', 'is_holiday', 'is_weekend', 'quarter', 'month', 'month_sin', 'month_cos'])
     feature_cols = [c for c in safe_features if c in train_df.columns]
     
     if not feature_cols:
@@ -223,26 +206,16 @@ def train_predict_rf(train_df, test_df, future_dates, target_col, config):
     )
     model.fit(X_train, y_train)
     
-    # Test period — keep as DataFrame
     X_test = test_df[feature_cols].select_dtypes(include=[np.number]).fillna(0)
-    test_preds = model.predict(X_test)  # ← named DataFrame → no warning
+    test_preds = model.predict(X_test)
     
-    # Future period — batch predict using the prepared future_dates DataFrame
-    # (already has calendar features from earlier in the code)
     X_future = future_dates[feature_cols].select_dtypes(include=[np.number]).fillna(0)
-    future_preds = model.predict(X_future)  # ← named DataFrame → no warning
-    
-    # If you really need step-by-step recursion later (e.g., when adding autoregressive features),
-    # do it like this instead:
-    # current_features = X_future.iloc[[0]].copy()  # first row as DataFrame
-    # for i in range(len(X_future)):
-    #     pred = model.predict(current_features)[0]
-    #     # ... update current_features if needed ...
+    future_preds = model.predict(X_future)
     
     return test_preds, future_preds, model
 
 # =============================================================================
-# Main Logic
+# Per-server processing
 # =============================================================================
 def process_server_group(server_id, df_group, config):
     mt_cfg = config.get('model_training', {})
@@ -257,6 +230,7 @@ def process_server_group(server_id, df_group, config):
     if len(train_df) < mt_cfg.get('min_history_days', 365):
         logger.warning(f"Server {server_id}: Insufficient history ({len(train_df)} days). Skipping.")
         return None
+    
     if len(test_df) == 0:
         logger.warning(f"Server {server_id}: No test data after {split_date}.")
         return None
@@ -272,12 +246,18 @@ def process_server_group(server_id, df_group, config):
     results = []
     forecasts_list = []
 
+    # Models directory from config
+    local_base = Path(config['paths']['local_data_dir'])
+    models_dir = local_base / config['paths']['model_artifacts_dir']
+    models_dir.mkdir(parents=True, exist_ok=True)
+
     # 1. Baseline
     if 'baseline_naive_seasonal' in mt_cfg.get('enabled_models', []):
-        test_preds, future_preds = train_predict_naive_seasonal(train_df, test_df, horizon_days, target_col)
+        period = mt_cfg.get('baseline_naive_seasonal', {}).get('period_days', 7)
+        test_preds, future_preds = train_predict_naive_seasonal(train_df, test_df, horizon_days, target_col, period=period)
         metrics = calculate_metrics(test_df[target_col].values, test_preds)
         results.append({'server_id': server_id, 'model': 'baseline', 'metrics': metrics, 'preds_test': test_preds, 'preds_future': future_preds})
-        # Store forecast rows (test + future)
+        
         test_rows = pd.DataFrame({
             'server_id': server_id, 'model': 'baseline', 'timestamp': test_df['timestamp'],
             'actual': test_df[target_col].values, 'predicted': test_preds,
@@ -295,16 +275,13 @@ def process_server_group(server_id, df_group, config):
         metrics = calculate_metrics(test_df[target_col].values, test_preds)
         results.append({'server_id': server_id, 'model': 'prophet', 'metrics': metrics})
         
-        # Save model
-        models_dir = Path(config.get('paths', {}).get('local_data_dir', 'data/scratch')) / "models"
         with open(models_dir / f"prophet_{server_id}.pkl", 'wb') as f:
             pickle.dump(model, f)
         
-        # Enriched forecast rows
         test_rows = pd.DataFrame({
             'server_id': server_id, 'model': 'prophet', 'timestamp': test_df['timestamp'],
             'actual': test_df[target_col].values, 'predicted': test_preds,
-            'yhat_lower': np.nan, 'yhat_upper': np.nan, 'is_future': False  # extend with actual intervals if needed
+            'yhat_lower': np.nan, 'yhat_upper': np.nan, 'is_future': False
         })
         future_rows = pd.DataFrame({
             'server_id': server_id, 'model': 'prophet', 'timestamp': future_dates['timestamp'],
@@ -313,14 +290,12 @@ def process_server_group(server_id, df_group, config):
         })
         forecasts_list.append(pd.concat([test_rows, future_rows]))
 
-    # 3. Random Forest (recursive)
+    # 3. Random Forest
     if 'random_forest' in mt_cfg.get('enabled_models', []):
         preds_test, preds_future, model = train_predict_rf(train_df, test_df, future_dates, target_col, config)
         metrics = calculate_metrics(test_df[target_col].values, preds_test)
         results.append({'server_id': server_id, 'model': 'random_forest', 'metrics': metrics})
         
-        # Save model
-        models_dir = Path(config.get('paths', {}).get('local_data_dir', 'data/scratch')) / "models"
         with open(models_dir / f"rf_{server_id}.pkl", 'wb') as f:
             pickle.dump(model, f)
         
@@ -342,26 +317,26 @@ def process_server_group(server_id, df_group, config):
 def main_process(config):
     logger.info("=== MODULE 04 : Model Training & Forward Forecasting ===")
     
-    # Load latest processed file dynamically
-    processed_dir = Path(config.get('paths', {}).get('local_data_dir', 'data/scratch')) / "processed"
-    parquet_files = list(processed_dir.glob("*.parquet"))
+    # Processed data dir from config
+    processed_base = Path(config['paths']['local_data_dir']) / config['paths']['processed_dir']
+    parquet_files = list(processed_base.glob("*.parquet"))
     if not parquet_files:
         raise FileNotFoundError("No processed parquet files found.")
     latest_file = max(parquet_files, key=os.path.getmtime)
     logger.info(f"Loading latest feature data: {latest_file.name}")
     
-    df = load_from_s3_or_local(config, prefix="processed/", filename=latest_file.name)
+    df = load_from_s3_or_local(config, prefix=config['paths']['processed_dir'], filename=latest_file.name)
     if df is None:
         raise FileNotFoundError(f"Failed to load {latest_file.name}")
         
     df['timestamp'] = pd.to_datetime(df['timestamp'])
     df = df.sort_values(['server_id', 'timestamp'])
     
-    # Setup dirs
-    local_base = Path(config.get('paths', {}).get('local_data_dir', 'data/scratch'))
-    models_dir = local_base / "models"
-    forecasts_dir = local_base / "forecasts"
-    metrics_dir = local_base / "metrics"
+    # Output directories from config
+    local_base = Path(config['paths']['local_data_dir'])
+    models_dir    = local_base / config['paths']['model_artifacts_dir']
+    forecasts_dir = local_base / config['paths']['forecasts_dir']
+    metrics_dir   = local_base / config['paths']['metrics_dir']
     for d in [models_dir, forecasts_dir, metrics_dir]:
         d.mkdir(parents=True, exist_ok=True)
     
@@ -401,21 +376,32 @@ def main_process(config):
     best_model = avg_smape.idxmin()
     logger.info(f"🏆 Best Model (AVG sMAPE): {best_model} ({avg_smape[best_model]:.2f}%)")
     
-    # Save forecasts
+    # Save forecasts — configurable filename
     if all_forecasts:
         forecasts_combined = pd.concat(all_forecasts, ignore_index=True)
-        save_path_f = save_processed_data(forecasts_combined, config, prefix="forecasts/", filename="all_model_forecasts.parquet")
+        forecasts_filename = config['paths'].get('forecasts_summary_filename', 'all_model_forecasts.parquet')
+        save_path_f = save_processed_data(
+            forecasts_combined, config,
+            prefix=config['paths']['forecasts_dir'],
+            filename=forecasts_filename
+        )
         logger.info(f"Saved enriched forecasts to {save_path_f}")
     
-    # Save metrics
+    # Save metrics — configurable filename
+    metrics_filename = config['paths'].get('metrics_summary_filename', 'model_comparison.json')
     metrics_summary = {
         "processed_at": datetime.now().isoformat(),
         "total_servers": len(servers),
-        "models_evaluated": avg_mape.to_dict(),
+        "models_evaluated": avg_smape.to_dict(),
         "best_model": best_model,
         "details_by_server": metrics_df.to_dict(orient='records')
     }
-    save_to_s3_or_local(json.dumps(metrics_summary, indent=2), config, prefix="metrics/", filename="model_comparison.json")
+    save_to_s3_or_local(
+        json.dumps(metrics_summary, indent=2),
+        config,
+        prefix=config['paths']['metrics_dir'],
+        filename=metrics_filename
+    )
     
     logger.info("✔ Module 04 completed successfully")
 

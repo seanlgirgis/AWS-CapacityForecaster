@@ -231,8 +231,13 @@ def load_from_s3(
         obj = s3.get_object(Bucket=bucket, Key=key)
         if file_type == 'csv':
             df = pd.read_csv(obj['Body'])
+            return df
         elif file_type == 'parquet':
             df = pd.read_parquet(obj['Body'])
+            return df
+        elif file_type == 'json':
+            content = obj['Body'].read().decode('utf-8')
+            return content
         else:
             raise ValueError(f"Unsupported file_type: {file_type}")
         logger.info(f"Loaded {file_type.upper()} from s3://{bucket}/{key}")
@@ -626,5 +631,9 @@ def load_from_s3_or_local(
             
         if file_type == 'parquet':
             return pd.read_parquet(input_path)
-        else:
+        elif file_type == 'csv':
             return pd.read_csv(input_path)
+        elif file_type == 'json':
+            return input_path.read_text(encoding='utf-8')
+        else:
+            raise ValueError(f"Unsupported file_type: {file_type}")
