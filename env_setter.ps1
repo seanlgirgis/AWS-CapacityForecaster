@@ -12,7 +12,8 @@ if (Test-Path $activateScript) {
     # Add project root to PYTHONPATH so imports work from anywhere
     if ($env:PYTHONPATH) {
         $env:PYTHONPATH = "$scriptDir;$env:PYTHONPATH"
-    } else {
+    }
+    else {
         $env:PYTHONPATH = $scriptDir
     }
 
@@ -23,4 +24,14 @@ if (Test-Path $activateScript) {
 }
 else {
     Write-Host "Activation script not found! Check the path:" $activateScript -ForegroundColor Red
+}
+
+$kbInboxPath = "C:\KB\00_Inbox"
+if (Test-Path $kbInboxPath) {
+    $env:KB_INBOX_PATH = $kbInboxPath
+    $global:kbInboxPath = $kbInboxPath
+    Write-Host "KB Inbox Path set: $env:KB_INBOX_PATH" -ForegroundColor Green
+}
+else {
+    Write-Host "KB Inbox Path not found: $kbInboxPath" -ForegroundColor Yellow
 }

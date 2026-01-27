@@ -106,6 +106,54 @@ logging:
   format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
   file: logs/capacity_forecaster.log
 
+model_training:
+  # Core settings
+  target_metric: cpu_p95                      # column to forecast (later: mem_p95, disk_p95_write, etc.)
+  horizon_days: 90                            # forecast 3 months ahead (Citi typical)
+  test_split_date: "2024-01-01"               # fixed date split (or fraction: 0.80)
+  min_history_days: 365                       # skip servers with too little data
+  forecast_quantiles: [0.05, 0.50, 0.95]      # for uncertainty bands (Prophet + others later)
+
+  # Which models to run (add/remove easily)
+  enabled_models:
+    - baseline_naive_seasonal
+    - prophet
+    - random_forest
+    # - xgboost           # uncomment when ready
+    # - lightgbm
+
+  baseline_naive_seasonal:
+    period_days: 7                            # weekly repeating pattern (most servers)
+
+  prophet:
+    growth: linear
+    yearly_seasonality: true
+    weekly_seasonality: true
+    daily_seasonality: false
+    changepoint_prior_scale: 0.05
+    seasonality_prior_scale: 10.0
+    holidays_prior_scale: 10.0
+    # Which features to use as regressors (must exist in data)
+    regressor_columns:
+      - is_eoq_window
+      - is_holiday
+      - is_weekend
+      # - quarter
+      # month encoded by seasonality usually, but can add explicit
+      - cpu_p95_lag_1d
+      - cpu_p95_lag_7d
+      # Rolling stats are powerful but handle with care in recursive forecasting
+      # For direct multi-step, we use them directly. Prophet handles them if we provide future values (we don't have them easily)
+      # Simpler V1: Use only calendar regressors for Prophet
+      # Advanced V2: Use lagged features but requires recursive loop
+
+  random_forest:
+    n_estimators: 150
+    max_depth: 12
+    min_samples_split: 5
+    random_state: 42
+    n_jobs: -1                                # use all cores
+
 execution:
   mode: local                             # local | sagemaker_processing | sagemaker_training | lambda
   parallel_workers: 4                     # joblib/multiprocessing

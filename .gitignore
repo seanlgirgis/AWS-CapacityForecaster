@@ -122,3 +122,9 @@ cache/
 tmp/
 scratch/
 experiments/
+
+# AI Agent Configuration
+!.agent/
+
+# Editor Configuration
+!.vscode/

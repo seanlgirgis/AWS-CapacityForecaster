@@ -2,57 +2,73 @@
 
 A cloud-native, enterprise-grade capacity forecasting and optimization tool inspired by large-scale banking systems.
 
+- **GitHub**: [https://github.com/seanlgirgis/AWS-CapacityForecaster](https://github.com/seanlgirgis/AWS-CapacityForecaster)
+- **Contact**: seanlgirgis@gmail.com
+
 ## Overview
 
 This project simulates and analyzes server capacity metrics (CPU, Memory, Disk, Network) to forecast future resource needs and identify risks. It is designed to run on AWS (SageMaker, Lambda, Athena) but includes a robust local development environment.
 
 ## Key Components
 
-### 1. Configuration (`src/utils/config.py`)
-- Centralized configuration management using `config/config.yaml` and `.env` files.
-- Supports environment variable overrides for flexible deployment across Local, SageMaker, and Lambda environments.
-- Strict validation ensures data integrity and fail-fast behavior.
+### 1. The Pipeline (`src/modules/`)
+The core logic is divided into sequential modules:
+-   **Module 01 - Data Generation**: Creates realistic "Citi-style" enterprise monitoring data (seasonality, trends, holidays) for 120+ servers (2022–2025).
+-   **Module 02 - Data Load**: Ingests raw metrics coverage for downstream processing.
+-   **Module 03 - ETL & Feature Engineering**: Cleans data, imputes missing values, and generates ML-ready features (lags, rolling stats, fiscal calendar flags).
+-   **Module 04 - Model Training**: Trains and evaluates predictive models to forecast capacity usage.
 
-### 2. Data Utilities (`src/utils/data_utils.py`)
-- **Synthetic Data Generation**: Creates realistic "Citi-style" enterprise monitoring data, including seasonality, trends, and banking holidays.
-- **S3 Integration**: Seamlessly loads data from AWS S3 using `boto3`.
-- **Quality Checks**: Validates data against enterprise standards (missing values, outliers, negative utilization).
-- **Feature Engineering**: Adds calendar-based features (EOQ, holidays) for ML models.
+### 2. Utilities (`src/utils/`)
+-   **Configuration**: Centralized management (`config.py`) using YAML and environment variables.
+-   **Data Utils**: robust tools for data generation, validation, and manipulation (`data_utils.py`).
+-   **AWS Integration**: S3 and cloud resource management wrappers (`aws_utils.py`).
+-   **ML Tools**: Helpers for metrics, splitting strategies, and evaluation (`ml_utils.py`).
 
 ## Getting Started
 
-1.  **Environment Setup**:
+### Prerequisites
+-   Python 3.12+
+-   Windows (Powershell)
+
+### Setup
+1.  **Initialize Environment**:
+    Use the provided setup script to activate the virtual environment and set necessary path variables.
     ```powershell
-    # Install dependencies
+    . .\env_setter.ps1
+    ```
+
+2.  **Install Dependencies**:
+    ```powershell
     pip install -r requirements.txt
-    
-    # Set up environment variables (windows)
-    .\env_setter.ps1
     ```
 
-2.  **Run Tests**:
+### Running the Code
+-   **Run a specific module**:
     ```powershell
-    pytest tests/
+    python -m src.modules.module_01_data_generation --env local
     ```
-
-3.  **Run Demo**:
+-   **Run Demos**:
+    Check the `demos/` directory for example usages of the utility libraries.
     ```powershell
     python demos/demo_config.py
     ```
 
+### Testing
+Run the test suite to verify system integrity:
+```powershell
+pytest tests/
+```
+
 ## Project Structure
-- `src/`: Source code (utils, models, pipelines).
-- `config/`: Configuration files.
-- `docs/`: Detailed design documentation.
-- `tests/`: Unit tests.
-- `demos/`: Example scripts.
-
-
-
-### Current Pipeline Status
-- **Module 01 – Data Generation** : Complete & tested
-  - Generates Citi-like daily P95 metrics for 120 servers (2022–2025)
-  - Features: weekly dips, annual seasonality, EOQ spikes, US holidays, per-server bias, ~1% missing, rare outliers
-  - Output: `data/scratch/raw/raw_server_metrics_20220101_to_20251231.parquet`
-  - Run: `python -m src.modules.module_01_data_generation --env local`
-
+```text
+C:\pyproj\AWS-CapacityForecaster\
+├── .agent/             # AI Context & Rules
+├── .vscode/            # Editor Configuration
+├── config/             # YAML configurations
+├── demos/              # Usage examples
+├── src/
+│   ├── modules/        # Core execution pipeline (01-04)
+│   └── utils/          # Shared libraries (AWS, Data, XML, Config)
+├── tests/              # Unit tests
+└── env_setter.ps1      # Environment activation script
+```

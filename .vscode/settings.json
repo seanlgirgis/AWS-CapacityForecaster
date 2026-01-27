@@ -1,0 +1,7 @@
+{
+    "python.defaultInterpreterPath": "c:\\py_venv\\AWS-CapacityForecaster\\Scripts\\python.exe",
+    "python.terminal.activateEnvironment": true,
+    "python.analysis.extraPaths": [
+        "./"
+    ]
+}
