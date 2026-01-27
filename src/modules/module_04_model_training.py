@@ -96,14 +96,25 @@ def generate_calendar_features(dates: pd.Series) -> pd.DataFrame:
 # Metric Calculation
 # =============================================================================
 def calculate_metrics(y_true, y_pred):
-    """Calculate MAE, RMSE, MAPE (with epsilon)."""
+    """Robust metrics for capacity forecasting (handles zeros/low values)."""
     mae = mean_absolute_error(y_true, y_pred)
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
-    epsilon = 1e-6
-    mape = np.mean(np.abs((y_true - y_pred) / (y_true + epsilon))) * 100
-    return {"MAE": round(mae, 4), "RMSE": round(rmse, 4), "MAPE": round(mape, 2)}
+    
+    # sMAPE: symmetric mean absolute percentage error (best for utilization data)
+    denominator = np.abs(y_true) + np.abs(y_pred)
+    smape = np.where(denominator > 1e-8,
+                     np.abs(y_true - y_pred) / denominator,
+                     0.0)  # avoid div-by-zero
+    smape = np.mean(smape) * 200  # *200 to get % scale (standard sMAPE)
 
+    # Optional: add WAPE (weighted absolute percentage error) if desired later
+    # wape = np.sum(np.abs(y_true - y_pred)) / (np.sum(np.abs(y_true)) + 1e-8) * 100
 
+    return {
+        "MAE": round(mae, 4),
+        "RMSE": round(rmse, 4),
+        "sMAPE": round(smape, 2)
+    }
 # =============================================================================
 # Baseline: Day-of-Week Average (Improved)
 # =============================================================================
