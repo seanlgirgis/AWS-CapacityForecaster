@@ -1,0 +1,48 @@
+2026-01-25 20:42:47,353 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-25 20:42:47,355 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-25 20:42:47,355 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-25 20:42:47,361 | INFO    | === MODULE 02 : Data Loading & Validation ===
+2026-01-25 20:42:47,361 | INFO    | === MODULE 02 : Data Loading & Validation ===
+2026-01-25 20:42:47,361 | INFO    | Loading local Parquet: data\scratch\raw\raw_server_metrics_20220101_to_20251231.parquet
+2026-01-25 20:42:47,361 | INFO    | Loading local Parquet: data\scratch\raw\raw_server_metrics_20220101_to_20251231.parquet
+2026-01-25 20:42:47,667 | INFO    | Saved locally to data\scratch\staged\validated_server_metrics_20220101_to_20251231.parquet
+2026-01-25 20:42:47,667 | INFO    | Saved locally to data\scratch\staged\validated_server_metrics_20220101_to_20251231.parquet
+2026-01-25 20:42:47,674 | INFO    | Validated shape: (175320, 10) | Servers: 120
+2026-01-25 20:42:47,674 | INFO    | Validated shape: (175320, 10) | Servers: 120
+2026-01-25 20:42:47,675 | INFO    | Date range: 2022-01-01 00:00:00 → 2025-12-31 00:00:00
+2026-01-25 20:42:47,675 | INFO    | Date range: 2022-01-01 00:00:00 → 2025-12-31 00:00:00
+2026-01-25 20:42:47,676 | INFO    | Missing rates:
+cpu_p95        0.970
+mem_p95        1.036
+disk_p95       1.021
+net_in_p95     1.008
+net_out_p95    0.965
+2026-01-25 20:42:47,676 | INFO    | Missing rates:
+cpu_p95        0.970
+mem_p95        1.036
+disk_p95       1.021
+net_in_p95     1.008
+net_out_p95    0.965
+2026-01-25 20:42:47,676 | INFO    | Staged file saved successfully
+2026-01-25 20:42:47,676 | INFO    | Staged file saved successfully
+2026-01-25 20:42:47,677 | INFO    | Summary: data\scratch\reports\summaries\module_02_summary.json
+2026-01-25 20:42:47,677 | INFO    | Summary: data\scratch\reports\summaries\module_02_summary.json
+2026-01-25 20:42:47,677 | INFO    | ✔ Module 02 completed successfully
+2026-01-25 20:42:47,677 | INFO    | ✔ Module 02 completed successfully
+2026-01-25 20:44:51,336 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-25 20:44:51,341 | INFO    | === MODULE 02 : Data Loading & Validation ===
+2026-01-25 20:44:51,341 | INFO    | Loading local Parquet: data\scratch\raw\raw_server_metrics_20220101_to_20251231.parquet
+2026-01-25 20:46:04,772 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-25 20:46:04,779 | INFO    | === MODULE 02 : Data Loading & Validation ===
+2026-01-25 20:46:04,779 | INFO    | Loading local Parquet: data\scratch\raw\raw_server_metrics_20220101_to_20251231.parquet
+2026-01-25 20:46:05,078 | INFO    | Staged file saved successfully
+2026-01-25 20:46:05,083 | INFO    | Validated shape: (175320, 10) | Servers: 120
+2026-01-25 20:46:05,084 | INFO    | Date range: 2022-01-01 00:00:00 → 2025-12-31 00:00:00
+2026-01-25 20:46:05,085 | INFO    | Missing rates:
+cpu_p95        0.970
+mem_p95        1.036
+disk_p95       1.021
+net_in_p95     1.008
+net_out_p95    0.965
+2026-01-25 20:46:05,086 | INFO    | Summary saved: data/scratch/reports/summaries/module_02_summary.json
+2026-01-25 20:46:05,086 | INFO    | ✔ Module 02 completed successfully

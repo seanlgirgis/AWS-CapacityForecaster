@@ -1,0 +1,62 @@
+2026-01-25 21:14:44,848 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-25 21:14:44,855 | INFO    | === MODULE 04 : Model Training ===
+2026-01-25 21:14:44,855 | INFO    | Loading feature data: processed_features_20220401_to_20251231.parquet
+2026-01-25 21:14:44,988 | INFO    | Training on 120 servers...
+2026-01-25 21:16:40,782 | INFO    | Model Performance Summary (MAPE):
+               count          mean  ...           75%          max
+model                               ...                           
+baseline       120.0  8.650421e+06  ...  1.337844e+07  53595462.98
+prophet        120.0  7.522311e+06  ...  1.328637e+07  44331500.23
+random_forest  120.0  6.265524e+06  ...  1.079416e+07  37724058.89
+
+[3 rows x 8 columns]
+2026-01-25 21:16:40,793 | INFO    | 🏆 Best Model (AVG MAPE): random_forest (6265524.33%)
+2026-01-25 21:16:40,903 | INFO    | Saved forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-25 21:16:40,909 | INFO    | ✔ Module 04 completed successfully
+2026-01-25 21:18:13,383 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-25 21:18:13,391 | INFO    | === MODULE 04 : Model Training ===
+2026-01-25 21:18:13,391 | INFO    | Loading feature data: processed_features_20220401_to_20251231.parquet
+2026-01-25 21:18:13,572 | INFO    | Training on 120 servers...
+2026-01-25 21:20:02,101 | INFO    | Model Performance Summary (MAPE):
+               count          mean  ...           75%          max
+model                               ...                           
+baseline       120.0  8.650421e+06  ...  1.337844e+07  53595462.98
+prophet        120.0  7.522311e+06  ...  1.328637e+07  44331500.23
+random_forest  120.0  6.265524e+06  ...  1.079416e+07  37724058.89
+
+[3 rows x 8 columns]
+2026-01-25 21:20:02,103 | INFO    | 🏆 Best Model (AVG MAPE): random_forest (6265524.33%)
+2026-01-25 21:20:02,252 | INFO    | Saved forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-25 21:20:02,260 | INFO    | ✔ Module 04 completed successfully
+2026-01-25 21:31:50,355 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-25 21:31:50,362 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-25 21:31:50,362 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-25 21:31:50,545 | INFO    | Training on 120 servers...
+2026-01-25 21:40:19,325 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-25 21:40:19,332 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-25 21:40:19,335 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-25 21:40:19,503 | INFO    | Training on 120 servers...
+2026-01-25 21:46:33,085 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-25 21:46:33,095 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-25 21:46:33,095 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-25 21:46:33,270 | INFO    | Training on 120 servers...
+2026-01-25 21:49:27,806 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-25 21:49:27,819 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-25 21:49:27,819 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-25 21:49:28,139 | INFO    | Training on 120 servers...
+2026-01-25 21:51:42,355 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-25 21:51:42,372 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-25 21:51:42,372 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-25 21:51:42,718 | INFO    | Training on 120 servers...
+2026-01-25 21:52:15,081 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-25 21:52:15,099 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-25 21:52:15,099 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-25 21:52:15,396 | INFO    | Training on 120 servers...
+2026-01-25 21:57:25,006 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-25 21:57:25,038 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-25 21:57:25,043 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-25 21:57:30,717 | INFO    | Training on 120 servers...
+2026-01-25 22:00:22,215 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-25 22:00:22,231 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-25 22:00:22,234 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-25 22:00:22,599 | INFO    | Training on 120 servers...
