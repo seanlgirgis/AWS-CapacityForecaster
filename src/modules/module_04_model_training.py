@@ -191,12 +191,14 @@ def train_predict_prophet(train_df, test_df, future_dates, target_col, config):
 def train_predict_rf(train_df, test_df, future_dates, target_col, config):
     rf_cfg = config.get('model_training', {}).get('random_forest', {})
     
-    # Use only exogenous/calendar features (avoid leakage from lags computed on actuals)
-    # Expand this list from config if you want more
+    # Safe exogenous features only (no leakage)
     safe_features = ['eoq_flag', 'is_holiday', 'is_weekend', 'quarter', 'month', 'month_sin', 'month_cos']
-    # Add any other non-lagged features you trust for forward prediction
-    
+    # You can expand this list from config or add more non-lagged features later
     feature_cols = [c for c in safe_features if c in train_df.columns]
+    
+    if not feature_cols:
+        logger.warning(f"No valid exogenous features for RF on server {train_df['server_id'].iloc[0]}. Skipping.")
+        return np.array([]), np.array([]), None
     
     X_train = train_df[feature_cols].select_dtypes(include=[np.number]).fillna(0)
     y_train = train_df[target_col]
@@ -210,24 +212,23 @@ def train_predict_rf(train_df, test_df, future_dates, target_col, config):
     )
     model.fit(X_train, y_train)
     
-    # Recursive forecasting
-    preds_test = []
-    current_features = test_df[feature_cols].copy().fillna(0)
-    preds_test = model.predict(current_features)
+    # Test period — keep as DataFrame
+    X_test = test_df[feature_cols].select_dtypes(include=[np.number]).fillna(0)
+    test_preds = model.predict(X_test)  # ← named DataFrame → no warning
     
-    # Forward horizon recursive
-    future_preds = []
-    last_train = train_df.iloc[-1].copy()
-    current_row = last_train[feature_cols].copy()
+    # Future period — batch predict using the prepared future_dates DataFrame
+    # (already has calendar features from earlier in the code)
+    X_future = future_dates[feature_cols].select_dtypes(include=[np.number]).fillna(0)
+    future_preds = model.predict(X_future)  # ← named DataFrame → no warning
     
-    for i in range(len(future_dates)):
-        pred = model.predict(current_row.values.reshape(1, -1))[0]
-        future_preds.append(pred)
-        # Simple shift: update rolling-like features if present (approximation)
-        # For full realism, re-generate rolling features from predicted values
+    # If you really need step-by-step recursion later (e.g., when adding autoregressive features),
+    # do it like this instead:
+    # current_features = X_future.iloc[[0]].copy()  # first row as DataFrame
+    # for i in range(len(X_future)):
+    #     pred = model.predict(current_features)[0]
+    #     # ... update current_features if needed ...
     
-    return np.array(preds_test), np.array(future_preds), model
-
+    return test_preds, future_preds, model
 
 # =============================================================================
 # Main Logic
