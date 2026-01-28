@@ -53,7 +53,7 @@ def run_pipeline(config, selected: Optional[List[str]] = None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AWS-CapacityForecaster Pipeline Runner")
     parser.add_argument("--config", default="config/config.yaml")
-    parser.add_argument("--env", default="local", choices=["local", "sagemaker"])
+    parser.add_argument("--env", default="local", nargs="?", const="local", choices=["local", "sagemaker"])
     parser.add_argument("--only", nargs="+", help="Run only these modules e.g. --only 03 05")
     parser.add_argument("--skip", nargs="+", help="Skip these modules")
     args = parser.parse_args()

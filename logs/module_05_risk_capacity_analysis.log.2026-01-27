@@ -1,0 +1,110 @@
+2026-01-27 16:33:24,467 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 16:33:24,478 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-27 16:33:24,484 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-27 16:35:42,146 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 16:35:42,161 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-27 16:35:42,162 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-27 16:35:42,247 | INFO    | Best model from metrics: random_forest
+2026-01-27 16:35:42,266 | INFO    | Analyzing 120 servers...
+2026-01-27 16:35:42,287 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-27 16:35:42,466 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-27 16:35:42,476 | INFO    | Detected 0 underutilized servers
+2026-01-27 16:35:44,391 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-27 16:37:18,371 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 16:37:18,387 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-27 16:37:18,391 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-27 16:37:18,464 | INFO    | Best model from metrics: random_forest
+2026-01-27 16:37:18,478 | INFO    | Analyzing 120 servers...
+2026-01-27 16:37:18,503 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-27 16:37:18,685 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-27 16:37:18,697 | INFO    | Detected 0 underutilized servers
+2026-01-27 16:37:20,633 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-27 16:38:32,953 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 16:38:32,964 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-27 16:38:32,964 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-27 16:38:33,039 | INFO    | Best model from metrics: random_forest
+2026-01-27 16:38:33,054 | INFO    | Analyzing 120 servers...
+2026-01-27 16:38:33,079 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-27 16:38:33,275 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-27 16:38:33,286 | INFO    | Detected 0 underutilized servers
+2026-01-27 16:38:34,992 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-27 16:38:35,626 | INFO    | Visualizations saved to risk_analysis/
+2026-01-27 16:38:35,748 | INFO    | Saved risk-flagged forecasts to data\scratch\risk_analysis\risk_flagged_forecasts.parquet
+2026-01-27 16:38:35,751 | INFO    | ✔ Module 05 completed successfully
+2026-01-27 16:40:22,911 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 16:40:22,920 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-27 16:40:22,920 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-27 16:40:22,991 | INFO    | Best model from metrics: random_forest
+2026-01-27 16:40:23,007 | INFO    | Analyzing 120 servers...
+2026-01-27 16:40:23,029 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-27 16:40:23,210 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-27 16:40:23,219 | INFO    | Detected 0 underutilized servers
+2026-01-27 16:40:24,915 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-27 16:40:25,556 | INFO    | Visualizations saved to risk_analysis/
+2026-01-27 16:40:25,677 | INFO    | Saved risk-flagged forecasts to data\scratch\risk_analysis\risk_flagged_forecasts.parquet
+2026-01-27 16:40:25,681 | INFO    | ✔ Module 05 completed successfully
+2026-01-27 17:13:15,145 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 17:14:46,319 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-27 17:14:46,320 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-27 17:14:46,412 | INFO    | Best model from metrics: random_forest
+2026-01-27 17:14:46,438 | INFO    | Analyzing 120 servers...
+2026-01-27 17:14:46,476 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-27 17:14:46,716 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-27 17:14:46,737 | INFO    | Detected 0 underutilized servers
+2026-01-27 17:14:48,813 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-27 17:14:50,021 | INFO    | Visualizations saved to risk_analysis/
+2026-01-27 17:14:50,243 | INFO    | Saved risk-flagged forecasts to data\scratch\risk_analysis\risk_flagged_forecasts.parquet
+2026-01-27 17:14:50,248 | INFO    | ✔ Module 05 completed successfully
+2026-01-27 17:16:09,557 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 17:27:27,592 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 17:28:25,036 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-27 17:28:25,036 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-27 17:28:25,092 | INFO    | Best model from metrics: random_forest
+2026-01-27 17:28:25,107 | INFO    | Analyzing 120 servers...
+2026-01-27 17:28:25,127 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-27 17:28:25,353 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-27 17:28:25,362 | INFO    | Detected 0 underutilized servers
+2026-01-27 17:28:27,073 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-27 17:28:27,761 | INFO    | Visualizations saved to risk_analysis/
+2026-01-27 17:28:27,878 | INFO    | Saved risk-flagged forecasts to data\scratch\risk_analysis\risk_flagged_forecasts.parquet
+2026-01-27 17:28:27,882 | INFO    | ✔ Module 05 completed successfully
+2026-01-27 17:29:45,318 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 17:30:47,238 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-27 17:30:47,239 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-27 17:30:47,295 | INFO    | Best model from metrics: random_forest
+2026-01-27 17:30:47,309 | INFO    | Analyzing 120 servers...
+2026-01-27 17:30:47,337 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-27 17:30:47,498 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-27 17:30:47,514 | INFO    | Detected 0 underutilized servers
+2026-01-27 17:30:49,256 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-27 17:30:49,856 | INFO    | Visualizations saved to risk_analysis/
+2026-01-27 17:30:49,968 | INFO    | Saved risk-flagged forecasts to data\scratch\risk_analysis\risk_flagged_forecasts.parquet
+2026-01-27 17:30:49,971 | INFO    | ✔ Module 05 completed successfully
+2026-01-27 17:31:06,601 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 17:32:08,415 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-27 17:32:08,417 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-27 17:32:08,471 | INFO    | Best model from metrics: random_forest
+2026-01-27 17:32:08,487 | INFO    | Analyzing 120 servers...
+2026-01-27 17:32:08,512 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-27 17:32:08,691 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-27 17:32:08,702 | INFO    | Detected 0 underutilized servers
+2026-01-27 17:32:10,431 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-27 17:32:11,071 | INFO    | Visualizations saved to risk_analysis/
+2026-01-27 17:32:11,192 | INFO    | Saved risk-flagged forecasts to data\scratch\risk_analysis\risk_flagged_forecasts.parquet
+2026-01-27 17:32:11,205 | INFO    | ✔ Module 05 completed successfully
+2026-01-27 17:34:47,632 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 17:35:49,446 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-27 17:35:49,447 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-27 17:35:49,498 | INFO    | Best model from metrics: random_forest
+2026-01-27 17:35:49,512 | INFO    | Analyzing 120 servers...
+2026-01-27 17:35:49,532 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-27 17:35:49,710 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-27 17:35:49,721 | INFO    | Detected 0 underutilized servers
+2026-01-27 17:35:51,587 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-27 17:35:52,159 | INFO    | Visualizations saved to risk_analysis/
+2026-01-27 17:35:52,276 | INFO    | Saved risk-flagged forecasts to data\scratch\risk_analysis\risk_flagged_forecasts.parquet
+2026-01-27 17:35:52,281 | INFO    | ✔ Module 05 completed successfully
+2026-01-27 17:53:33,216 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 21:00:49,315 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 21:02:00,701 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-27 21:06:30,707 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)

@@ -1,0 +1,151 @@
+2026-01-27 12:15:20,507 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 12:15:20,516 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-27 12:15:20,516 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-27 12:15:20,691 | INFO    | Training on 120 servers...
+2026-01-27 12:16:24,057 | INFO    | Model Performance Summary (MAPE):
+               count          mean           std    min      25%          50%           75%          max
+model                                                                                                   
+baseline       120.0  7.180753e+06  8.750116e+06  27.53  36.2400  5413512.215  1.331518e+07  43739262.74
+prophet        120.0  7.485338e+06  9.140004e+06  27.73  38.4275  5235233.010  1.320122e+07  41491812.88
+random_forest  120.0  7.219489e+06  8.800341e+06  27.31  36.5725  5054354.765  1.348659e+07  43719822.57
+2026-01-27 12:16:24,062 | INFO    | 🏆 Best Model (AVG MAPE): baseline (7180753.39%)
+2026-01-27 12:16:24,161 | INFO    | Saved enriched forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-27 12:16:24,166 | INFO    | ✔ Module 04 completed successfully
+2026-01-27 12:32:42,403 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 12:32:42,417 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-27 12:32:42,419 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-27 12:32:42,590 | INFO    | Training on 120 servers...
+2026-01-27 12:35:53,667 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 12:35:53,672 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-27 12:35:53,672 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-27 12:35:53,836 | INFO    | Training on 120 servers...
+2026-01-27 12:36:55,272 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.595083  3.253285  23.87  27.3775  29.220  32.0000  37.65
+2026-01-27 12:36:55,273 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.60%)
+2026-01-27 12:36:55,378 | INFO    | Saved enriched forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-27 12:59:18,355 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 12:59:18,367 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-27 12:59:18,371 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-27 12:59:18,534 | INFO    | Training on 120 servers...
+2026-01-27 13:00:19,866 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.595083  3.253285  23.87  27.3775  29.220  32.0000  37.65
+2026-01-27 13:00:19,867 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.60%)
+2026-01-27 13:00:19,964 | INFO    | Saved enriched forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-27 13:00:20,050 | INFO    | Saved enriched forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-27 13:02:54,214 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 13:02:54,221 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-27 13:02:54,227 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-27 13:02:54,401 | INFO    | Training on 120 servers...
+2026-01-27 13:03:56,171 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.595083  3.253285  23.87  27.3775  29.220  32.0000  37.65
+2026-01-27 13:03:56,171 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.60%)
+2026-01-27 13:03:56,282 | INFO    | Saved enriched forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-27 13:03:56,286 | INFO    | ✔ Module 04 completed successfully
+2026-01-27 16:24:01,008 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 16:24:01,023 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-27 16:24:01,024 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-27 16:24:01,195 | INFO    | Training on 120 servers...
+2026-01-27 16:25:29,163 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+2026-01-27 16:25:29,163 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+2026-01-27 16:25:29,397 | INFO    | Saved enriched forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-27 16:25:29,401 | INFO    | ✔ Module 04 completed successfully
+2026-01-27 16:39:12,501 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 16:39:12,514 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-27 16:39:12,517 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-27 16:39:12,695 | INFO    | Training on 120 servers...
+2026-01-27 16:40:14,607 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+2026-01-27 16:40:14,607 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+2026-01-27 16:40:14,707 | INFO    | Saved enriched forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-27 16:40:14,710 | INFO    | ✔ Module 04 completed successfully
+2026-01-27 17:13:14,789 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 17:13:19,036 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-27 17:13:19,036 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-27 17:13:19,177 | INFO    | Training on 120 servers...
+2026-01-27 17:14:46,122 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+2026-01-27 17:14:46,124 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+2026-01-27 17:14:46,294 | INFO    | Saved enriched forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-27 17:14:46,302 | INFO    | ✔ Module 04 completed successfully
+2026-01-27 17:16:09,218 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 17:27:27,228 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 17:27:27,601 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-27 17:27:27,601 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-27 17:27:27,781 | INFO    | Training on 120 servers...
+2026-01-27 17:28:24,910 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+2026-01-27 17:28:24,912 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+2026-01-27 17:28:25,021 | INFO    | Saved enriched forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-27 17:28:25,023 | INFO    | ✔ Module 04 completed successfully
+2026-01-27 17:29:44,972 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 17:29:49,627 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-27 17:29:49,628 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-27 17:29:49,774 | INFO    | Training on 120 servers...
+2026-01-27 17:30:47,125 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+2026-01-27 17:30:47,125 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+2026-01-27 17:30:47,221 | INFO    | Saved enriched forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-27 17:30:47,226 | INFO    | ✔ Module 04 completed successfully
+2026-01-27 17:31:06,268 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 17:31:06,621 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-27 17:31:06,624 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-27 17:31:06,798 | INFO    | Training on 120 servers...
+2026-01-27 17:32:08,283 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+2026-01-27 17:32:08,287 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+2026-01-27 17:32:08,395 | INFO    | Saved enriched forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-27 17:32:08,404 | INFO    | ✔ Module 04 completed successfully
+2026-01-27 17:34:47,243 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 17:34:47,647 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-27 17:34:47,651 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-27 17:34:47,821 | INFO    | Training on 120 servers...
+2026-01-27 17:35:49,312 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+2026-01-27 17:35:49,317 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+2026-01-27 17:35:49,421 | INFO    | Saved enriched forecasts to data\scratch\forecasts\all_model_forecasts.parquet
+2026-01-27 17:35:49,428 | INFO    | ✔ Module 04 completed successfully
+2026-01-27 17:53:32,753 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 21:00:48,921 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 21:02:00,357 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-27 21:06:30,348 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)

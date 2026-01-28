@@ -32,8 +32,10 @@ import logging
 import holidays  # For US banking holidays; install via requirements.txt if needed
 from src.utils.config import get_aws_config, get_data_config
 from src.utils.aws_utils import upload_to_s3
-from pathlib import Path
+import io
 import os
+from pathlib import Path
+from src.utils.aws_utils import upload_to_s3
 
 # Set up logging for debugging (configurable via environment vars in production)
 logger = logging.getLogger(__name__)
@@ -196,52 +198,37 @@ def merge_metrics_with_metadata(
 def load_from_s3(
     bucket: str,
     key: str,
-    file_type: str = 'csv',  # 'csv' or 'parquet'
+    file_type: str = 'csv',
     profile_name: Optional[str] = None,
     region: Optional[str] = None
 ) -> pd.DataFrame:
     """
-    Load data from S3 into a pandas DataFrame (for AWS integration).
-
-    Handles CSV or Parquet formats. Uses boto3 for secure access.
-
-    Parameters:
-    - bucket: S3 bucket name.
-    - key: Object key (path).
-    - file_type: 'csv' or 'parquet'.
-    - profile_name: AWS profile (optional).
-    - region: AWS region.
-
-    Returns:
-    - pd.DataFrame: Loaded data.
-
-    Raises:
-    - ValueError: If file_type invalid.
-    - ClientError: If S3 access fails.
-
-    Aligns with AWS/Cloud: Enables pulling data from S3 for SageMaker/Athena pipelines.
+    Load data from S3.
     """
     if region is None:
         region = get_aws_config().get("region", "us-east-1")
+    
+    # Allow profile to be passed in, or fall back to config if not provided
+    if profile_name is None:
+        profile_name = get_aws_config().get("profile")
 
     session = boto3.Session(profile_name=profile_name, region_name=region)
     s3 = session.client('s3')
     
     try:
         obj = s3.get_object(Bucket=bucket, Key=key)
+        body = obj['Body'].read()
+        
         if file_type == 'csv':
-            df = pd.read_csv(obj['Body'])
-            return df
+            return pd.read_csv(io.BytesIO(body))
         elif file_type == 'parquet':
-            df = pd.read_parquet(obj['Body'])
-            return df
+            return pd.read_parquet(io.BytesIO(body))
         elif file_type == 'json':
-            content = obj['Body'].read().decode('utf-8')
-            return content
+            return body.decode('utf-8')
         else:
             raise ValueError(f"Unsupported file_type: {file_type}")
+            
         logger.info(f"Loaded {file_type.upper()} from s3://{bucket}/{key}")
-        return df
     except ClientError as e:
         logger.error(f"S3 load error: {e}")
         raise
@@ -475,6 +462,10 @@ def get_date_range(
     """
     return pd.date_range(start=start_date, end=end_date, freq=freq)
 
+def is_s3_mode(config: dict) -> bool:
+    mode = config.get('execution', {}).get('mode', 'local')
+    return mode in ['sagemaker_processing', 'sagemaker_training', 'lambda', 'sagemaker']
+
 def save_processed_data(
     df: pd.DataFrame,
     config: dict,
@@ -484,49 +475,59 @@ def save_processed_data(
 ) -> str:
     """
     Save DataFrame to S3 or local path based on config.
-    Returns the path where data was saved.
-    
-    Parameters:
-    - df: DataFrame to save.
-    - config: Application configuration dict.
-    - prefix: S3 prefix or subdirectory (e.g., 'raw/', 'processed/').
-    - filename: Name of the file. If None, auto-generated based on timestamp.
-    - file_type: 'parquet' or 'csv'.
+    Wrapper around save_to_s3_or_local.
     """
     if filename is None:
         timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"data_{timestamp_str}.{file_type}"
     
-    # Determine mode (local vs AWS)
-    # Checks specific execution mode or fallbacks
-    mode = config.get('execution', {}).get('mode', 'local')
-    use_s3 = mode in ['sagemaker_processing', 'sagemaker_training', 'lambda']
-    
-    # Override if local dir explicitly requested or S3 not configured?
-    # For now, simplistic check: if bucket exists in config, we might try S3, 
-    # but strictly following 'mode' is safer for local dev.
-    
-    if use_s3:
-        bucket_name = config.get('aws', {}).get('bucket_name')
+    return save_to_s3_or_local(df, config, prefix, filename, file_type)
+def save_to_s3_or_local(
+    content,
+    config: dict,
+    prefix: str,
+    filename: str,
+    file_type: str = 'json'
+) -> str:
+    """
+    Save content (DataFrame or String) to S3 or local path.
+    """
+    if is_s3_mode(config):
+        aws_cfg = config.get('aws', {})
+        bucket_name = aws_cfg.get('bucket_name')
+        profile = aws_cfg.get('profile')
+        
         if not bucket_name:
-            raise ValueError("AWS bucket_name not configured but mode requires S3.")
+            raise ValueError("AWS bucket_name not configured for S3 mode")
             
         key = f"{prefix.strip('/')}/{filename}"
         
-        # Save to temp local first then upload
-        temp_path = f"/tmp/{filename}"
-        if file_type == 'parquet':
-            df.to_parquet(temp_path, index=False)
+        if profile:
+            session = boto3.Session(profile_name=profile)
+            s3 = session.client('s3')
         else:
-            df.to_csv(temp_path, index=False)
-            
-        s3_uri = upload_to_s3(temp_path, bucket_name, key)
-        # Clean up temp ??? In lambda /tmp is limited, good practice to clean.
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
-            
-        return s3_uri
+            s3 = boto3.client('s3')
         
+        try:
+            if isinstance(content, pd.DataFrame):
+                buffer = io.BytesIO()
+                if file_type == 'parquet':
+                    content.to_parquet(buffer, index=False)
+                elif file_type == 'csv':
+                    content.to_csv(buffer, index=False)
+                else:
+                    raise ValueError(f"Unsupported DataFrame format: {file_type}")
+                s3.put_object(Bucket=bucket_name, Key=key, Body=buffer.getvalue())
+            else:
+                s3.put_object(Bucket=bucket_name, Key=key, Body=content.encode('utf-8'))
+                
+            uri = f"s3://{bucket_name}/{key}"
+            logger.info(f"Saved to {uri}")
+            return uri
+        except ClientError as e:
+            logger.error(f"Failed to upload to S3: {e}")
+            raise
+            
     else:
         # Local Mode
         local_base = config.get('paths', {}).get('local_data_dir', 'data/scratch')
@@ -535,64 +536,16 @@ def save_processed_data(
         
         output_path = output_dir / filename
         
-        if file_type == 'parquet':
-            df.to_parquet(output_path, index=False)
+        if isinstance(content, pd.DataFrame):
+            if file_type == 'parquet':
+                content.to_parquet(output_path, index=False)
+            elif file_type == 'csv':
+                content.to_csv(output_path, index=False)
         else:
-            df.to_csv(output_path, index=False)
+            with open(output_path, 'w', encoding='utf-8') as f:
+                f.write(content)
             
         logger.info(f"Saved locally to {output_path}")
-        return str(output_path)
-        return str(output_path)
-
-def save_to_s3_or_local(
-    content: str,
-    config: dict,
-    prefix: str,
-    filename: str
-) -> str:
-    """
-    Save string content (JSON, raw text, CSV string) to S3 or local path.
-    
-    Parameters:
-    - content: The string content to write.
-    - config: Configuration dict.
-    - prefix: Output prefix/subdir (e.g. 'reports/').
-    - filename: Output filename.
-    
-    Returns:
-    - Path or URI where file was saved.
-    """
-    mode = config.get('execution', {}).get('mode', 'local')
-    use_s3 = mode in ['sagemaker_processing', 'sagemaker_training', 'lambda']
-    
-    if use_s3:
-        bucket_name = config.get('aws', {}).get('bucket_name')
-        if not bucket_name:
-            raise ValueError("AWS bucket_name not configured for S3 mode")
-            
-        key = f"{prefix.strip('/')}/{filename}"
-        temp_path = f"/tmp/{filename}"
-        
-        with open(temp_path, 'w', encoding='utf-8') as f:
-            f.write(content)
-            
-        uri = upload_to_s3(temp_path, bucket_name, key)
-        
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
-        return uri
-        
-    else:
-        local_base = config.get('paths', {}).get('local_data_dir', 'data/scratch')
-        output_dir = Path(local_base) / prefix.strip('/')
-        output_dir.mkdir(parents=True, exist_ok=True)
-        
-        output_path = output_dir / filename
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(content)
-            
-        logger.info(f"Saved content to {output_path}")
-        return str(output_path)
         return str(output_path)
 
 def load_from_s3_or_local(
@@ -603,23 +556,17 @@ def load_from_s3_or_local(
 ) -> pd.DataFrame:
     """
     Load data from S3 or local path based on execution mode.
-    
-    Parameters:
-    - config: Configuration dict.
-    - prefix: Input prefix/subdir (e.g. 'raw/').
-    - filename: Input filename.
-    - file_type: 'parquet' or 'csv'.
     """
-    mode = config.get('execution', {}).get('mode', 'local')
-    use_s3 = mode in ['sagemaker_processing', 'sagemaker_training', 'lambda']
-    
-    if use_s3:
-        bucket_name = config.get('aws', {}).get('bucket_name')
+    if is_s3_mode(config):
+        aws_cfg = config.get('aws', {})
+        bucket_name = aws_cfg.get('bucket_name')
+        profile = aws_cfg.get('profile')
+        
         if not bucket_name:
             raise ValueError("AWS bucket_name not configured for S3 mode")
             
         key = f"{prefix.strip('/')}/{filename}"
-        return load_from_s3(bucket=bucket_name, key=key, file_type=file_type)
+        return load_from_s3(bucket=bucket_name, key=key, file_type=file_type, profile_name=profile)
         
     else:
         # Local Mode
@@ -637,3 +584,70 @@ def load_from_s3_or_local(
             return input_path.read_text(encoding='utf-8')
         else:
             raise ValueError(f"Unsupported file_type: {file_type}")
+
+def find_latest_file(
+    config: dict,
+    prefix: str,
+    file_pattern: str = "*.parquet"
+) -> str:
+    """
+    Find the latest file in S3 or local directory matching the pattern.
+    Returns the FILENAME (not full path/key) to be passed to load_from_s3_or_local.
+    """
+    if is_s3_mode(config):
+        aws_cfg = config.get('aws', {})
+        bucket_name = aws_cfg.get('bucket_name')
+        profile = aws_cfg.get('profile')
+        
+        if not bucket_name:
+            raise ValueError("AWS bucket_name not configured")
+
+        if profile:
+            session = boto3.Session(profile_name=profile)
+            s3 = session.client('s3')
+        else:
+            s3 = boto3.client('s3')
+            
+        # Clean prefix
+        prefix_clean = prefix.strip('/') + '/'
+        
+        try:
+            response = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix_clean)
+            if 'Contents' not in response:
+                raise FileNotFoundError(f"No objects found in s3://{bucket_name}/{prefix_clean}")
+            
+            # Filter by extension (approximation of glob)
+            ext = file_pattern.replace('*', '')
+            candidates = [
+                obj for obj in response['Contents'] 
+                if obj['Key'].endswith(ext) and '/' not in obj['Key'][len(prefix_clean):] # Ensure generic fit
+            ]
+            
+            # More robust filter: just check endswith
+            candidates = [obj for obj in response['Contents'] if obj['Key'].endswith(ext)]
+            
+            if not candidates:
+                 raise FileNotFoundError(f"No files matching {file_pattern} in s3://{bucket_name}/{prefix_clean}")
+                 
+            latest = max(candidates, key=lambda x: x['LastModified'])
+            # Return just the filename part as required by load functions
+            return latest['Key'].split('/')[-1]
+            
+        except Exception as e:
+            logger.error(f"S3 Listing Failed: {e}")
+            raise
+            
+    else:
+        # Local Mode
+        local_base = config.get('paths', {}).get('local_data_dir', 'data/scratch')
+        target_dir = Path(local_base) / prefix.strip('/')
+        
+        if not target_dir.exists():
+             raise FileNotFoundError(f"Local directory not found: {target_dir}")
+             
+        files = list(target_dir.glob(file_pattern))
+        if not files:
+            raise FileNotFoundError(f"No files matching {file_pattern} in {target_dir}")
+            
+        latest = max(files, key=os.path.getmtime)
+        return latest.name

@@ -39,7 +39,7 @@ import seaborn as sns
 import holidays
 
 from src.utils.config import load_config, validate_config
-from src.utils.data_utils import load_from_s3_or_local, save_to_s3_or_local, save_processed_data
+from src.utils.data_utils import load_from_s3_or_local, save_to_s3_or_local, save_processed_data, find_latest_file
 
 # =============================================================================
 # Logging Setup
@@ -155,16 +155,17 @@ def main_process(config):
     logger.info("=== MODULE 05 : Risk & Capacity Analysis ===")
     
     # Load latest forecasts dynamically
-    forecasts_base = Path(config['paths']['local_data_dir']) / config['paths']['forecasts_dir']
-    parquet_files = list(forecasts_base.glob("*.parquet"))
-    if not parquet_files:
-        raise FileNotFoundError("No forecasts parquet files found.")
-    latest_file = max(parquet_files, key=os.path.getmtime)
-    logger.info(f"Loading latest forecasts: {latest_file.name}")
+    forecasts_prefix = config['paths']['forecasts_dir']
     
-    df = load_from_s3_or_local(config, prefix=config['paths']['forecasts_dir'], filename=latest_file.name)
+    try:
+        filename = find_latest_file(config, prefix=forecasts_prefix)
+        logger.info(f"Loading latest forecasts: {filename}")
+        df = load_from_s3_or_local(config, prefix=forecasts_prefix, filename=filename)
+    except FileNotFoundError as e:
+        logger.error(f"Input data missing: {e}")
+        raise
     if df is None:
-        raise FileNotFoundError(f"Failed to load {latest_file.name}")
+        raise FileNotFoundError(f"Failed to load {filename}")
     df['timestamp'] = pd.to_datetime(df['timestamp'])
     df = df.sort_values(['server_id', 'timestamp'])
     

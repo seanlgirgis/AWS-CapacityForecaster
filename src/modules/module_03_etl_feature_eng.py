@@ -49,7 +49,7 @@ import holidays
 import os
 
 from src.utils.config import load_config, validate_config
-from src.utils.data_utils import load_from_s3_or_local, save_to_s3_or_local, save_processed_data
+from src.utils.data_utils import load_from_s3_or_local, save_to_s3_or_local, save_processed_data, find_latest_file
 
 # =============================================================================
 # Logging Setup
@@ -206,24 +206,18 @@ def main_process(config: dict):
     logger.info("=== MODULE 03 : ETL & Feature Engineering ===")
 
     # Load validated data from module_02
-    intermediate_dir_name = config.get('paths', {}).get('intermediate_dir', 'intermediate/')
-    # Resolve local path for globbing (since load_from_s3_or_local handles the loading abstractly, we need to find the file first)
-    local_data_dir = Path(config.get('paths', {}).get('local_data_dir', 'data/scratch'))
-    intermediate_path = local_data_dir / intermediate_dir_name
+    validated_prefix = config.get('paths', {}).get('intermediate_dir', 'intermediate')
     
-    # Dynamic file finding (latest parquet)
-    parquet_files = list(intermediate_path.glob("*.parquet"))
-    if not parquet_files:
-        raise FileNotFoundError(f"No validated parquet files found in {intermediate_path}. Run Module 02 first.")
-    
-    latest_file = max(parquet_files, key=os.path.getmtime)
-    source_filename = latest_file.name
-    logger.info(f"Loading validated data: {source_filename}")
-    
-    df = load_from_s3_or_local(config, prefix=intermediate_dir_name, filename=source_filename)
+    try:
+        filename = find_latest_file(config, prefix=validated_prefix, file_pattern="*.parquet")
+        logger.info(f"Loading latest validated data: {filename}")
+        df = load_from_s3_or_local(config, prefix=validated_prefix, filename=filename)
+    except FileNotFoundError as e:
+        logger.error(f"Input data missing: {e}")
+        raise
 
     if df is None or df.empty:
-        raise FileNotFoundError(f"Could not load staged file: {source_filename}. Run Module 02 first.")
+        raise FileNotFoundError(f"Could not load staged file: {filename}. Run Module 02 first.")
 
     # Perform feature engineering
     df_features = perform_feature_engineering(df, config)
@@ -250,7 +244,7 @@ def main_process(config: dict):
         "numeric_metrics": ['cpu_p95', 'mem_p95', 'disk_p95', 'net_in_p95', 'net_out_p95'],
         "lag_features_count": len([c for c in df_features.columns if '_lag_' in c]),
         "rolling_features_count": len([c for c in df_features.columns if '_roll_' in c]),
-        "source_file": source_filename
+        "source_file": filename
     }
 
     summary_filename = config.get('paths', {}).get('module_03_summary_filename', 'module_03_summary.json')

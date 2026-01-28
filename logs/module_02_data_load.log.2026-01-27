@@ -1,0 +1,242 @@
+2026-01-27 12:01:04,735 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 12:01:04,753 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-27 12:01:04,765 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-27 12:01:06,873 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-27 12:01:06,919 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-27 12:01:07,055 | INFO    | Saved validated data to data\scratch\intermediate\validated_server_metrics.parquet
+2026-01-27 12:01:07,058 | INFO    | ✔ Module 02 completed successfully
+2026-01-27 12:01:52,447 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 12:01:52,460 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-27 12:01:52,463 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-27 12:01:52,557 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-27 12:01:52,602 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-27 12:01:52,730 | INFO    | Saved validated data to data\scratch\intermediate\validated_server_metrics.parquet
+2026-01-27 12:01:52,734 | INFO    | ✔ Module 02 completed successfully
+2026-01-27 12:11:25,333 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 12:11:25,340 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-27 12:11:25,342 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-27 12:11:25,434 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-27 12:11:25,479 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-27 12:11:25,621 | INFO    | Saved validated data to data\scratch\intermediate\validated_server_metrics_20220101_to_20251231.parquet
+2026-01-27 12:11:25,625 | INFO    | ✔ Module 02 completed successfully
+2026-01-27 12:13:04,971 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 12:13:04,986 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-27 12:13:04,991 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-27 12:13:05,082 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-27 12:13:05,125 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-27 12:13:05,257 | INFO    | Saved validated data to data\scratch\intermediate\validated_server_metrics_20220101_to_20251231.parquet
+2026-01-27 12:13:05,258 | INFO    | ✔ Module 02 completed successfully
+2026-01-27 16:15:35,482 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 16:15:35,490 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-27 16:15:35,491 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-27 16:15:35,585 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-27 16:15:35,631 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-27 16:15:35,769 | INFO    | Saved validated data to data\scratch\intermediate\validated_server_metrics_20220101_to_20251231.parquet
+2026-01-27 16:15:35,771 | INFO    | ✔ Module 02 completed successfully
+2026-01-27 16:15:56,023 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 16:15:56,036 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-27 16:15:56,040 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-27 16:15:56,151 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-27 16:15:56,204 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-27 16:15:56,335 | INFO    | Saved validated data to data\scratch\intermediate\validated_server_metrics_20220101_to_20251231.parquet
+2026-01-27 16:15:56,336 | INFO    | ✔ Module 02 completed successfully
+2026-01-27 16:38:55,219 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 16:38:55,232 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-27 16:38:55,233 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-27 16:38:55,329 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-27 16:38:55,378 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-27 16:38:55,522 | INFO    | Saved validated data to data\scratch\intermediate\validated_server_metrics_20220101_to_20251231.parquet
+2026-01-27 16:38:55,526 | INFO    | ✔ Module 02 completed successfully
+2026-01-27 17:13:13,767 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 17:13:15,809 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-27 17:13:15,810 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-27 17:13:15,892 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-27 17:13:15,939 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-27 17:13:16,083 | INFO    | Saved validated data to data\scratch\intermediate\validated_server_metrics_20220101_to_20251231.parquet
+2026-01-27 17:13:16,085 | INFO    | ✔ Module 02 completed successfully
+2026-01-27 17:16:08,245 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 17:27:26,158 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 17:29:43,905 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 17:29:46,057 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-27 17:29:46,058 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-27 17:29:46,167 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-27 17:29:46,222 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-27 17:29:46,380 | INFO    | Saved validated data to data\scratch\intermediate\validated_server_metrics_20220101_to_20251231.parquet
+2026-01-27 17:29:46,383 | INFO    | ✔ Module 02 completed successfully
+2026-01-27 17:31:05,216 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 17:34:46,206 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 17:53:31,670 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 21:00:47,689 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 21:01:59,283 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-27 21:06:29,312 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)

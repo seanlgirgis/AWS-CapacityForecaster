@@ -44,7 +44,7 @@ from sklearn.ensemble import RandomForestRegressor
 from prophet import Prophet
 
 from src.utils.config import load_config, validate_config
-from src.utils.data_utils import load_from_s3_or_local, save_to_s3_or_local, save_processed_data
+from src.utils.data_utils import load_from_s3_or_local, save_to_s3_or_local, save_processed_data, find_latest_file
 
 # =============================================================================
 # Logging Setup
@@ -318,16 +318,17 @@ def main_process(config):
     logger.info("=== MODULE 04 : Model Training & Forward Forecasting ===")
     
     # Processed data dir from config
-    processed_base = Path(config['paths']['local_data_dir']) / config['paths']['processed_dir']
-    parquet_files = list(processed_base.glob("*.parquet"))
-    if not parquet_files:
-        raise FileNotFoundError("No processed parquet files found.")
-    latest_file = max(parquet_files, key=os.path.getmtime)
-    logger.info(f"Loading latest feature data: {latest_file.name}")
+    processed_prefix = config['paths']['processed_dir']
     
-    df = load_from_s3_or_local(config, prefix=config['paths']['processed_dir'], filename=latest_file.name)
+    try:
+        filename = find_latest_file(config, prefix=processed_prefix)
+        logger.info(f"Loading latest feature data: {filename}")
+        df = load_from_s3_or_local(config, prefix=processed_prefix, filename=filename)
+    except FileNotFoundError as e:
+        logger.error(f"Input data missing: {e}")
+        raise
     if df is None:
-        raise FileNotFoundError(f"Failed to load {latest_file.name}")
+        raise FileNotFoundError(f"Failed to load {filename}")
         
     df['timestamp'] = pd.to_datetime(df['timestamp'])
     df = df.sort_values(['server_id', 'timestamp'])

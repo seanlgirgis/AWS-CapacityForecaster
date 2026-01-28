@@ -10,7 +10,7 @@ project:
 aws:
   region: us-east-1
   profile: study                          # boto3 profile name (optional)
-  bucket_name: sean-capacity-forecast-data
+  bucket_name: aws-capacity-forecaster-sean    # S3 bucket for data/artifacts
   raw_prefix: raw/server_metrics/
   processed_prefix: processed/server_metrics/
   features_prefix: processed/features/

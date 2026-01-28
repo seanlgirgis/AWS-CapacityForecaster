@@ -35,7 +35,7 @@ import os
 import pandas as pd
 
 from src.utils.config import load_config, validate_config
-from src.utils.data_utils import load_from_s3_or_local, save_to_s3_or_local, save_processed_data
+from src.utils.data_utils import load_from_s3_or_local, save_to_s3_or_local, save_processed_data, find_latest_file
 
 # =============================================================================
 # Logging Setup
@@ -72,16 +72,19 @@ def main_process(config):
 
     # Load latest raw file dynamically
     raw_dir_name = config.get('paths', {}).get('raw_dir', 'raw')
-    raw_dir = Path(config.get('paths', {}).get('local_data_dir', 'data/scratch')) / raw_dir_name
-    parquet_files = list(raw_dir.glob("*.parquet"))
-    if not parquet_files:
-        raise FileNotFoundError(f"No raw parquet files found in {raw_dir}")
-    latest_file = max(parquet_files, key=os.path.getmtime)
-    logger.info(f"Loading latest raw data: {latest_file.name}")
-
-    df = load_from_s3_or_local(config, prefix=raw_dir_name, filename=latest_file.name)
+    # Load latest raw file dynamically
+    raw_dir_name = config.get('paths', {}).get('raw_dir', 'raw')
+    
+    try:
+        filename = find_latest_file(config, prefix=raw_dir_name, file_pattern="*.parquet")
+        logger.info(f"Loading latest raw data: {filename}")
+        df = load_from_s3_or_local(config, prefix=raw_dir_name, filename=filename)
+    except FileNotFoundError as e:
+        logger.error(f"Failed to find distinct raw file: {e}")
+        raise
+        
     if df is None:
-        raise FileNotFoundError(f"Failed to load {latest_file.name}")
+        raise FileNotFoundError(f"Failed to load {filename}")
 
     # Basic validation & cleaning
     df['timestamp'] = pd.to_datetime(df['timestamp'])
