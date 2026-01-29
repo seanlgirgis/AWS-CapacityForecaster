@@ -1,0 +1,90 @@
+2026-01-28 08:41:39,573 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 08:42:44,136 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 08:44:31,631 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-28 08:44:32,120 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-28 08:44:33,887 | INFO    | Best model from metrics: random_forest
+2026-01-28 08:44:33,905 | INFO    | Analyzing 120 servers...
+2026-01-28 08:44:33,926 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-28 08:44:34,037 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-28 08:44:34,045 | INFO    | Detected 0 underutilized servers
+2026-01-28 08:44:35,965 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-28 08:44:36,658 | INFO    | Visualizations saved to risk_analysis/
+2026-01-28 08:44:38,280 | INFO    | Saved risk-flagged forecasts to s3://aws-capacity-forecaster-sean/risk_analysis/risk_flagged_forecasts.parquet
+2026-01-28 08:44:40,095 | INFO    | ✔ Module 05 completed successfully
+2026-01-28 08:53:01,097 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 08:55:12,250 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-28 08:55:13,135 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-28 08:55:15,769 | INFO    | Best model from metrics: random_forest
+2026-01-28 08:55:15,798 | INFO    | Analyzing 120 servers...
+2026-01-28 08:55:15,851 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-28 08:55:16,092 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-28 08:55:16,104 | INFO    | Detected 0 underutilized servers
+2026-01-28 08:55:18,128 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-28 08:55:18,722 | INFO    | Visualizations saved to risk_analysis/
+2026-01-28 08:55:19,969 | INFO    | Saved risk-flagged forecasts to s3://aws-capacity-forecaster-sean/risk_analysis/risk_flagged_forecasts.parquet
+2026-01-28 08:55:21,758 | INFO    | ✔ Module 05 completed successfully
+2026-01-28 09:00:14,035 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 09:01:04,890 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 10:22:30,185 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 10:22:56,656 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 10:24:28,763 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 10:25:28,775 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 10:30:44,658 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 10:30:44,666 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-28 10:30:45,460 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-28 10:30:47,848 | INFO    | Best model from metrics: random_forest
+2026-01-28 10:30:47,863 | INFO    | Analyzing 120 servers...
+2026-01-28 10:30:47,884 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-28 10:30:48,064 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-28 10:30:48,072 | INFO    | Detected 0 underutilized servers
+2026-01-28 10:30:49,751 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-28 10:30:50,566 | INFO    | Visualizations saved to risk_analysis/
+2026-01-28 10:30:51,940 | INFO    | Saved risk-flagged forecasts to s3://aws-capacity-forecaster-sean/risk_analysis/risk_flagged_forecasts.parquet
+2026-01-28 10:30:53,684 | INFO    | ✔ Module 05 completed successfully
+2026-01-28 11:03:40,859 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 11:06:33,054 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 11:09:02,281 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 11:53:56,304 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 11:56:14,097 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 11:58:21,417 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 12:18:06,625 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 12:27:17,814 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 12:42:22,045 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 12:43:21,149 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 12:50:55,949 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 12:53:17,099 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 15:14:59,575 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 15:17:20,239 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 15:28:09,294 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 15:42:50,831 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 16:00:45,346 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 16:13:57,628 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 16:13:57,638 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+2026-01-28 16:13:58,405 | INFO    | Loading latest forecasts: all_model_forecasts.parquet
+2026-01-28 16:14:00,130 | INFO    | Best model from metrics: random_forest
+2026-01-28 16:14:00,143 | INFO    | Analyzing 120 servers...
+2026-01-28 16:14:00,164 | INFO    | Risk flags computed: 197 flagged rows
+2026-01-28 16:14:00,390 | INFO    | Seasonal peaks computed for 120 servers
+2026-01-28 16:14:00,401 | INFO    | Detected 0 underutilized servers
+2026-01-28 16:14:02,389 | INFO    | Clustering complete: Savings estimate $1500.0
+2026-01-28 16:14:03,142 | INFO    | Visualizations saved to risk_analysis/
+2026-01-28 16:14:05,094 | INFO    | Saved risk-flagged forecasts to s3://aws-capacity-forecaster-sean/risk_analysis/risk_flagged_forecasts.parquet
+2026-01-28 16:14:06,863 | INFO    | ✔ Module 05 completed successfully
+2026-01-28 16:14:31,586 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 16:21:43,784 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 16:33:34,770 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 16:38:24,425 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 16:46:21,901 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 16:54:09,885 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 17:02:49,722 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 17:10:37,851 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 20:07:07,875 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 20:27:38,216 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 20:32:16,710 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 20:44:57,199 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 20:58:38,753 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 21:15:53,042 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 21:52:25,075 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 22:20:54,182 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 23:19:55,235 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+2026-01-28 23:34:00,178 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)

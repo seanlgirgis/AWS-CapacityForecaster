@@ -1,0 +1,119 @@
+2026-01-28 08:41:38,179 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 08:41:47,409 | INFO    | === MODULE 03 : ETL & Feature Engineering ===
+2026-01-28 08:41:47,889 | INFO    | Loading latest validated data: validated_server_metrics_20220101_to_20251231.parquet
+2026-01-28 08:41:50,369 | INFO    | Starting Feature Engineering...
+2026-01-28 08:41:50,370 | INFO    | Input shape: (175320, 10). Columns: 10
+2026-01-28 08:41:50,389 | INFO    | Imputing missing values using method: linear
+2026-01-28 08:41:50,453 | INFO    | Capping outliers using rolling z-score (threshold=4.0, window=30)...
+2026-01-28 08:41:50,640 | INFO    | Generating calendar features (EOQ, Holidays, DayOfWeek)...
+2026-01-28 08:41:50,692 | INFO    | Generating lags: [1, 3, 7, 14, 30]
+2026-01-28 08:41:50,861 | INFO    | Generating rolling stats (mean, std, min, max): [7, 30, 90]
+2026-01-28 08:41:51,816 | INFO    | One-hot encoding metadata: ['business_unit', 'region', 'criticality']...
+2026-01-28 08:41:52,070 | INFO    | Dropping first 90 rows per server to remove warm-up NaNs...
+2026-01-28 08:41:52,496 | INFO    | Final shape after cleanup: (164520, 114)
+2026-01-28 08:42:42,772 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 08:42:53,329 | INFO    | === MODULE 03 : ETL & Feature Engineering ===
+2026-01-28 08:42:53,805 | INFO    | Loading latest validated data: validated_server_metrics_20220101_to_20251231.parquet
+2026-01-28 08:42:55,046 | INFO    | Starting Feature Engineering...
+2026-01-28 08:42:55,046 | INFO    | Input shape: (175320, 10). Columns: 10
+2026-01-28 08:42:55,063 | INFO    | Imputing missing values using method: linear
+2026-01-28 08:42:55,127 | INFO    | Capping outliers using rolling z-score (threshold=4.0, window=30)...
+2026-01-28 08:42:55,310 | INFO    | Generating calendar features (EOQ, Holidays, DayOfWeek)...
+2026-01-28 08:42:55,362 | INFO    | Generating lags: [1, 3, 7, 14, 30]
+2026-01-28 08:42:55,513 | INFO    | Generating rolling stats (mean, std, min, max): [7, 30, 90]
+2026-01-28 08:42:56,445 | INFO    | One-hot encoding metadata: ['business_unit', 'region', 'criticality']...
+2026-01-28 08:42:56,661 | INFO    | Dropping first 90 rows per server to remove warm-up NaNs...
+2026-01-28 08:42:57,036 | INFO    | Final shape after cleanup: (164520, 114)
+2026-01-28 08:43:09,277 | INFO    | Features saved: s3://aws-capacity-forecaster-sean/processed/processed_features_20220401_to_20251231.parquet
+2026-01-28 08:43:09,278 | INFO    | Summary saved: s3://aws-capacity-forecaster-sean/reports/summaries/module_03_summary.json
+2026-01-28 08:43:09,278 | INFO    | ✔ Module 03 completed successfully
+2026-01-28 08:52:59,806 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 08:53:09,077 | INFO    | === MODULE 03 : ETL & Feature Engineering ===
+2026-01-28 08:53:09,523 | INFO    | Loading latest validated data: validated_server_metrics_20220101_to_20251231.parquet
+2026-01-28 08:53:12,659 | INFO    | Starting Feature Engineering...
+2026-01-28 08:53:12,663 | INFO    | Input shape: (175320, 10). Columns: 10
+2026-01-28 08:53:12,684 | INFO    | Imputing missing values using method: linear
+2026-01-28 08:53:12,746 | INFO    | Capping outliers using rolling z-score (threshold=4.0, window=30)...
+2026-01-28 08:53:12,920 | INFO    | Generating calendar features (EOQ, Holidays, DayOfWeek)...
+2026-01-28 08:53:12,971 | INFO    | Generating lags: [1, 3, 7, 14, 30]
+2026-01-28 08:53:13,116 | INFO    | Generating rolling stats (mean, std, min, max): [7, 30, 90]
+2026-01-28 08:53:14,019 | INFO    | One-hot encoding metadata: ['business_unit', 'region', 'criticality']...
+2026-01-28 08:53:14,265 | INFO    | Dropping first 90 rows per server to remove warm-up NaNs...
+2026-01-28 08:53:14,697 | INFO    | Final shape after cleanup: (164520, 114)
+2026-01-28 08:53:23,427 | INFO    | Features saved: s3://aws-capacity-forecaster-sean/processed/processed_features_20220401_to_20251231.parquet
+2026-01-28 08:53:23,427 | INFO    | Summary saved: s3://aws-capacity-forecaster-sean/reports/summaries/module_03_summary.json
+2026-01-28 08:53:23,427 | INFO    | ✔ Module 03 completed successfully
+2026-01-28 09:00:12,625 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 09:01:03,550 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 10:22:28,769 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 10:22:30,201 | INFO    | === MODULE 03 : ETL & Feature Engineering ===
+2026-01-28 10:22:30,953 | INFO    | Loading latest validated data: validated_server_metrics_20220101_to_20251231.parquet
+2026-01-28 10:22:32,801 | INFO    | Starting Feature Engineering...
+2026-01-28 10:22:32,801 | INFO    | Input shape: (175320, 10). Columns: 10
+2026-01-28 10:22:32,822 | INFO    | Imputing missing values using method: linear
+2026-01-28 10:22:32,885 | INFO    | Capping outliers using rolling z-score (threshold=4.0, window=30)...
+2026-01-28 10:22:33,059 | INFO    | Generating calendar features (EOQ, Holidays, DayOfWeek)...
+2026-01-28 10:22:33,185 | INFO    | Generating lags: [1, 3, 7, 14, 30]
+2026-01-28 10:22:33,337 | INFO    | Generating rolling stats (mean, std, min, max): [7, 30, 90]
+2026-01-28 10:22:34,313 | INFO    | One-hot encoding metadata: ['business_unit', 'region', 'criticality']...
+2026-01-28 10:22:34,497 | INFO    | Dropping first 90 rows per server to remove warm-up NaNs...
+2026-01-28 10:22:34,801 | INFO    | Final shape after cleanup: (164520, 114)
+2026-01-28 10:22:47,446 | INFO    | Features saved: s3://aws-capacity-forecaster-sean/processed/processed_features_20220401_to_20251231.parquet
+2026-01-28 10:22:47,449 | INFO    | Summary saved: s3://aws-capacity-forecaster-sean/reports/summaries/module_03_summary.json
+2026-01-28 10:22:47,450 | INFO    | ✔ Module 03 completed successfully
+2026-01-28 10:22:55,346 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 10:24:27,451 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 10:24:28,779 | INFO    | === MODULE 03 : ETL & Feature Engineering ===
+2026-01-28 10:24:29,285 | INFO    | Loading latest validated data: validated_server_metrics_20220101_to_20251231.parquet
+2026-01-28 10:24:30,691 | INFO    | Starting Feature Engineering...
+2026-01-28 10:24:30,691 | INFO    | Input shape: (175320, 10). Columns: 10
+2026-01-28 10:24:30,713 | INFO    | Imputing missing values using method: linear
+2026-01-28 10:24:30,776 | INFO    | Capping outliers using rolling z-score (threshold=4.0, window=30)...
+2026-01-28 10:24:30,946 | INFO    | Generating calendar features (EOQ, Holidays, DayOfWeek)...
+2026-01-28 10:24:31,075 | INFO    | Generating lags: [1, 3, 7, 14, 30]
+2026-01-28 10:24:31,220 | INFO    | Generating rolling stats (mean, std, min, max): [7, 30, 90]
+2026-01-28 10:24:32,297 | INFO    | One-hot encoding metadata: ['business_unit', 'region', 'criticality']...
+2026-01-28 10:24:32,479 | INFO    | Dropping first 90 rows per server to remove warm-up NaNs...
+2026-01-28 10:24:32,788 | INFO    | Final shape after cleanup: (164520, 114)
+2026-01-28 10:24:45,516 | INFO    | Features saved: s3://aws-capacity-forecaster-sean/processed/processed_features_20220401_to_20251231.parquet
+2026-01-28 10:24:45,525 | INFO    | Summary saved: s3://aws-capacity-forecaster-sean/reports/summaries/module_03_summary.json
+2026-01-28 10:24:45,525 | INFO    | ✔ Module 03 completed successfully
+2026-01-28 10:25:27,421 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 10:30:43,223 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 11:03:39,525 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 11:06:31,728 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 11:09:00,939 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 11:53:54,958 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 11:56:12,778 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 11:58:20,059 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 12:18:05,213 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 12:27:16,408 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 12:42:20,669 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 12:43:19,811 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 12:50:54,604 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 12:53:15,733 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 15:14:58,201 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 15:17:18,847 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 15:28:07,840 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 15:42:49,496 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 16:00:43,976 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 16:13:56,275 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 16:14:30,192 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 16:21:42,420 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 16:31:09,431 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 16:38:22,284 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 16:46:11,276 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 16:54:08,484 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 17:02:48,349 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 17:10:36,504 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 20:07:06,323 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 20:27:36,746 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 20:32:15,316 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 20:44:55,757 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 20:58:37,383 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 21:15:51,699 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 21:52:23,751 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 22:20:52,729 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 23:18:54,034 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 23:19:53,890 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)
+2026-01-28 23:33:58,708 | INFO    | Logging initialized — console + file (logs/module_03_etl_feature_eng.log)

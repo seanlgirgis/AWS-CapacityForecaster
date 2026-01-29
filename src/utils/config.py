@@ -130,7 +130,8 @@ def _apply_env_overrides(config: Dict[str, Any]) -> None:
     }
 
     for env_key, (path, expected_type) in overrides_map.items():
-        if raw_value := os.getenv(env_key):
+        raw_value = os.getenv(env_key)
+        if raw_value:
             try:
                 value = expected_type(raw_value)
                 current = config

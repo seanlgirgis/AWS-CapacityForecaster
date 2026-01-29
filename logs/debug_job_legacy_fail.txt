@@ -1,0 +1,84 @@
+Logs for proc-job-1769653938
+[20:34:34] Installing prophet...
+[20:34:43] ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+[20:34:43] sagemaker-sklearn-container 2.0 requires numpy==1.19.2, but you have numpy 1.21.6 which is incompatible.
+[20:34:43] WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[20:34:43] [notice] A new release of pip is available: 23.0 -> 24.0
+[20:34:43] [notice] To update, run: pip install --upgrade pip
+[20:34:44] Installing PyYAML...
+[20:34:45] WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[20:34:45] [notice] A new release of pip is available: 23.0 -> 24.0
+[20:34:45] [notice] To update, run: pip install --upgrade pip
+[20:34:45] Installing plotly...
+[20:34:55] WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[20:34:55] [notice] A new release of pip is available: 23.0 -> 24.0
+[20:34:55] [notice] To update, run: pip install --upgrade pip
+[20:34:55] Installing python-dotenv...
+[20:34:56] WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[20:34:56] [notice] A new release of pip is available: 23.0 -> 24.0
+[20:34:56] [notice] To update, run: pip install --upgrade pip
+[20:34:58] 2026-01-29 02:34:58,178 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+[20:34:58] INFO:__main__:Logging initialized — console + file (logs/module_04_model_training.log)
+[20:34:58] INFO:src.utils.config:Configuration loaded and validated successfully
+[20:34:58] 2026-01-29 02:34:58,202 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+[20:34:58] INFO:__main__:=== MODULE 04 : Model Training & Forward Forecasting ===
+[20:34:58] 2026-01-29 02:34:58,202 | INFO    | SageMaker Mode: Loading input from /opt/ml/processing/input/data
+[20:34:58] INFO:__main__:SageMaker Mode: Loading input from /opt/ml/processing/input/data
+[20:35:00] 2026-01-29 02:34:59,538 | INFO    | Training on 120 servers...
+[20:35:00] INFO:__main__:Training on 120 servers...
+[20:35:00] INFO:numexpr.utils:NumExpr defaulting to 2 threads.
+[20:35:00] DEBUG:cmdstanpy:input tempfile: /home/model-server/tmp/tmpgypy80yt/2iysdni8.json
+[20:35:00] DEBUG:cmdstanpy:input tempfile: /home/model-server/tmp/tmpgypy80yt/bjg1xmwa.json
+[20:35:00] DEBUG:cmdstanpy:idx 0
+[20:35:00] DEBUG:cmdstanpy:running CmdStan, num_threads: None
+[20:35:00] DEBUG:cmdstanpy:CmdStan args: ['/miniconda3/lib/python3.7/site-packages/prophet/stan_model/prophet_model.bin', 'random', 'seed=70750', 'data', 'file=/home/model-server/tmp/tmpgypy80yt/2iysdni8.json', 'init=/home/model-server/tmp/tmpgypy80yt/bjg1xmwa.json', 'output', 'file=/home/model-server/tmp/tmpgypy80yt/prophet_modelrkghg_c2/prophet_model-20260129023459.csv', 'method=optimize', 'algorithm=lbfgs', 'iter=10000']
+[20:35:00] 02:34:59 - cmdstanpy - INFO - Chain [1] start processing
+[20:35:00] INFO:cmdstanpy:Chain [1] start processing
+[20:35:00] 02:34:59 - cmdstanpy - INFO - Chain [1] done processing
+[20:35:00] INFO:cmdstanpy:Chain [1] done processing
+[20:37:20] 2026-01-29 02:37:20,706 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+[20:37:20] model
+[20:37:20] baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+[20:37:20] prophet        120.0  29.700667  3.152397  23.67  27.2100  29.645  32.0250  37.89
+[20:37:20] random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+[20:37:20] INFO:__main__:Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+[20:37:20] model
+[20:37:20] baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+[20:37:20] prophet        120.0  29.700667  3.152397  23.67  27.2100  29.645  32.0250  37.89
+[20:37:20] random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+[20:37:20] 2026-01-29 02:37:20,708 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+[20:37:20] INFO:__main__:🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+[20:37:20] Traceback (most recent call last):
+  File "/opt/ml/processing/input/code/module_04_model_training.py", line 496, in <module>
+    main_process(config, input_path=args.input_data_path, output_path=args.output_data_path)
+  File "/opt/ml/processing/input/code/module_04_model_training.py", line 435, in main_process
+    forecasts_combined.to_parquet(save_path_f, index=False)
+  File "/miniconda3/lib/python3.7/site-packages/pandas/util/_decorators.py", line 199, in wrapper
+    return func(*args, **kwargs)
+  File "/miniconda3/lib/python3.7/site-packages/pandas/core/frame.py", line 2372, in to_parquet
+    **kwargs,
+  File "/miniconda3/lib/python3.7/site-packages/pandas/io/parquet.py", line 276, in to_parquet
+    **kwargs,
+  File "/miniconda3/lib/python3.7/site-packages/pandas/io/parquet.py", line 101, in write
+    table = self.api.Table.from_pandas(df, **from_pandas_kwargs)
+  File "pyarrow/table.pxi", line 1376, in pyarrow.lib.Table.from_pandas
+  File "/miniconda3/lib/python3.7/site-packages/pyarrow/pandas_compat.py", line 593, in dataframe_to_arrays
+    arrays[i] = maybe_fut.result()
+  File "/miniconda3/lib/python3.7/concurrent/futures/_base.py", line 428, in result
+    return self.__get_result()
+  File "/miniconda3/lib/python3.7/concurrent/futures/_base.py", line 384, in __get_result
+    raise self._exception
+  File "/miniconda3/lib/python3.7/concurrent/futures/thread.py", line 57, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/miniconda3/lib/python3.7/site-packages/pyarrow/pandas_compat.py", line 565, in convert_column
+    raise e
+  File "/miniconda3/lib/python3.7/site-packages/pyarrow/pandas_compat.py", line 559, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 263, in pyarrow.lib.array
+  File "/miniconda3/lib/python3.7/site-packages/pyarrow/pandas_compat.py", line 625, in get_datetimetz_type
+    type_ = pa.from_numpy_dtype(values.dtype)
+  File "pyarrow/types.pxi", line 2591, in pyarrow.lib.from_numpy_dtype
+  File "pyarrow/error.pxi", line 107, in pyarrow.lib.check_status
+[20:37:20] pyarrow.lib.ArrowTypeError: ('Did not pass numpy.dtype object', 'Conversion failed for column timestamp with type datetime64[ns]')

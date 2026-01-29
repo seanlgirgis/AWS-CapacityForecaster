@@ -1,0 +1,94 @@
+2026-01-28 08:41:39,218 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 08:42:43,765 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 08:43:09,289 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-28 08:43:09,904 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-28 08:43:30,555 | INFO    | Training on 120 servers...
+2026-01-28 08:44:29,048 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+2026-01-28 08:44:29,050 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+2026-01-28 08:44:30,947 | INFO    | Saved enriched forecasts to s3://aws-capacity-forecaster-sean/forecasts/all_model_forecasts.parquet
+2026-01-28 08:44:31,620 | INFO    | ✔ Module 04 completed successfully
+2026-01-28 08:53:00,769 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 08:53:23,446 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-28 08:53:24,176 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-28 08:53:45,851 | INFO    | Training on 120 servers...
+2026-01-28 08:55:08,904 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+2026-01-28 08:55:08,904 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+2026-01-28 08:55:10,885 | INFO    | Saved enriched forecasts to s3://aws-capacity-forecaster-sean/forecasts/all_model_forecasts.parquet
+2026-01-28 08:55:12,232 | INFO    | ✔ Module 04 completed successfully
+2026-01-28 09:00:13,691 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 09:01:04,516 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 10:22:29,786 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 10:22:56,308 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 10:22:56,672 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-28 10:22:57,197 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-28 10:23:03,501 | INFO    | Training on 120 servers...
+2026-01-28 10:24:05,004 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+2026-01-28 10:24:05,004 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+2026-01-28 10:24:06,316 | INFO    | Saved enriched forecasts to s3://aws-capacity-forecaster-sean/forecasts/all_model_forecasts.parquet
+2026-01-28 10:24:06,959 | INFO    | ✔ Module 04 completed successfully
+2026-01-28 10:24:28,435 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 10:25:28,419 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 10:25:28,787 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-28 10:25:29,376 | INFO    | Loading latest feature data: processed_features_20220401_to_20251231.parquet
+2026-01-28 10:25:35,426 | INFO    | Training on 120 servers...
+2026-01-28 10:27:10,688 | INFO    | Model Performance Summary (sMAPE):
+               count       mean       std    min      25%     50%      75%    max
+model                                                                            
+baseline       120.0  29.794750  3.214655  24.10  27.2825  29.365  32.1475  37.92
+prophet        120.0  29.700500  3.149573  23.67  27.1800  29.645  32.0175  37.90
+random_forest  120.0  29.515333  3.251471  23.74  27.4675  29.145  31.9150  37.61
+2026-01-28 10:27:10,689 | INFO    | 🏆 Best Model (AVG sMAPE): random_forest (29.52%)
+2026-01-28 10:27:12,313 | INFO    | Saved enriched forecasts to s3://aws-capacity-forecaster-sean/forecasts/all_model_forecasts.parquet
+2026-01-28 10:27:13,000 | INFO    | ✔ Module 04 completed successfully
+2026-01-28 10:30:44,325 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 11:03:40,508 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 11:06:32,698 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 11:09:01,914 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 11:53:55,970 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 11:56:13,746 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 11:58:21,046 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 12:18:06,269 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 12:27:17,439 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 12:42:21,690 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 12:43:20,789 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 12:50:55,578 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 12:53:16,732 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 15:14:59,197 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 15:17:19,851 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 15:28:08,889 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 15:42:50,466 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 16:00:44,975 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 16:13:57,283 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 16:14:31,205 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 16:21:43,411 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 16:31:10,422 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 16:38:23,235 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 16:46:12,251 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 16:54:09,509 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 17:02:49,359 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 17:10:37,521 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 20:07:07,428 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 20:27:37,867 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 20:32:16,343 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 20:44:56,816 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 20:58:38,387 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 21:15:52,698 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 21:52:24,739 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 22:20:53,774 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 23:19:54,865 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+2026-01-28 23:33:59,789 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)

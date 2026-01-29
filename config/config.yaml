@@ -18,6 +18,11 @@ sagemaker:
   instance_count: 1
   # Downgrading to sklearn 0.23-1 to match pandas 1.1.3 requirement and avoid dependency hell
   image_uri: "683313688378.dkr.ecr.us-east-1.amazonaws.com/sagemaker-scikit-learn:0.23-1-cpu-py3"
+  
+  # Module-specific overrides
+  modules:
+    "04":
+      image_uri: "683313688378.dkr.ecr.us-east-1.amazonaws.com/sagemaker-scikit-learn:1.2-1-cpu-py3"
 
 aws_paths:
   raw_prefix: raw/server_metrics/
@@ -85,9 +90,18 @@ ml:
         learning_rate: 0.05
         max_depth: 6
     - name: AmazonForecast
-      enabled: false                        # Optional - toggle on when ready
-      forecast_frequency: D
-      prediction_length: 180
+      enabled: false                        # Deprecated / EOL for new accounts
+      params:
+        dataset_group_name: "capacity_forecaster_dsg"
+        forecast_frequency: "D"
+        horizon: 90                         # days
+        timestamp_format: "yyyy-MM-dd"
+        role_arn: null                      # Use SageMaker Execution Role if null
+    - name: autogluon
+      enabled: true
+      params:
+        presets: "medium_quality"           # fast_training, medium_quality, best_quality
+        time_limit: 300                     # max seconds per model training (5 min)
   evaluation:
     metrics: [MAE, RMSE, MAPE]
     test_split_ratio: 0.2

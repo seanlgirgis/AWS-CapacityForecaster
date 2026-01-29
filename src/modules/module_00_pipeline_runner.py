@@ -13,7 +13,7 @@ from src.utils.config import load_config, validate_config
 from src.modules.module_01_data_generation import main_process as run_data_gen
 from src.modules.module_02_data_load import main_process as run_data_load
 from src.modules.module_03_etl_feature_eng import main_process as run_etl
-from src.modules.module_04_model_training import main_process as run_training
+from src.modules.module_04_inner import main_process as run_training
 from src.modules.module_05_risk_capacity_analysis import main_process as run_risk
 
 logger = logging.getLogger(__name__)
@@ -154,7 +154,7 @@ def run_sagemaker_processing_job(config, module_num):
         arn, job_name = launch_project_processing_job(
             boto_session=boto_session,
             role_arn=role,
-            image_uri=sm_cfg.get('image_uri'),
+            image_uri=sm_cfg.get('modules', {}).get(module_num, {}).get('image_uri', sm_cfg.get('image_uri')),
             instance_type=sm_cfg.get('instance_type', 'ml.t3.medium'),
             instance_count=sm_cfg.get('instance_count', 1),
             bucket_name=bucket,

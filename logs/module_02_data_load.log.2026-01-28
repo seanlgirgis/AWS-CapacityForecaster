@@ -1,0 +1,147 @@
+2026-01-28 08:41:38,175 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 08:41:43,257 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-28 08:41:43,741 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-28 08:41:45,030 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-28 08:41:45,084 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-28 08:41:46,625 | INFO    | Saved validated data to s3://aws-capacity-forecaster-sean/intermediate/validated_server_metrics_20220101_to_20251231.parquet
+2026-01-28 08:41:47,409 | INFO    | ✔ Module 02 completed successfully
+2026-01-28 08:42:42,768 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 08:42:47,684 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-28 08:42:48,190 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-28 08:42:50,775 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-28 08:42:50,818 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-28 08:42:52,556 | INFO    | Saved validated data to s3://aws-capacity-forecaster-sean/intermediate/validated_server_metrics_20220101_to_20251231.parquet
+2026-01-28 08:42:53,326 | INFO    | ✔ Module 02 completed successfully
+2026-01-28 08:52:59,806 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 08:53:04,411 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-28 08:53:04,909 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-28 08:53:06,741 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-28 08:53:06,791 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-28 08:53:08,359 | INFO    | Saved validated data to s3://aws-capacity-forecaster-sean/intermediate/validated_server_metrics_20220101_to_20251231.parquet
+2026-01-28 08:53:09,075 | INFO    | ✔ Module 02 completed successfully
+2026-01-28 09:00:12,625 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 09:01:03,547 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 09:01:04,903 | INFO    | === MODULE 02 : Data Loading & Basic Validation ===
+2026-01-28 09:01:05,453 | INFO    | Loading latest raw data: raw_server_metrics_20220101_to_20251231.parquet
+2026-01-28 09:01:08,487 | INFO    | Missing rates (%):
+server_id        0.000000
+timestamp        0.000000
+business_unit    0.000000
+region           0.000000
+criticality      0.000000
+cpu_p95          0.970226
+mem_p95          1.035820
+disk_p95         1.020990
+net_in_p95       1.007871
+net_out_p95      0.965092
+2026-01-28 09:01:08,549 | INFO    | Data stats:
+                 timestamp        cpu_p95        mem_p95       disk_p95     net_in_p95    net_out_p95
+count               175320  173619.000000  173504.000000  173530.000000  173553.000000  173628.000000
+mean   2024-01-01 00:00:00      50.352471      50.270260      50.249493      50.353173      50.371600
+min    2022-01-01 00:00:00       0.000000       0.000000       0.000000       0.000000       0.000000
+25%    2023-01-01 00:00:00      37.344000      37.313325      37.314289      37.447871      37.395756
+50%    2024-01-01 00:00:00      49.578263      49.447411      49.496760      49.549978      49.611651
+75%    2024-12-31 00:00:00      62.553877      62.417816      62.339249      62.499240      62.552501
+max    2025-12-31 00:00:00     100.000000     100.000000     100.000000     100.000000     100.000000
+std                    NaN      18.688048      18.712019      18.668963      18.665485      18.692420
+2026-01-28 09:01:10,050 | INFO    | Saved validated data to s3://aws-capacity-forecaster-sean/intermediate/validated_server_metrics_20220101_to_20251231.parquet
+2026-01-28 09:01:10,575 | INFO    | ✔ Module 02 completed successfully
+2026-01-28 10:22:28,769 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 10:22:55,346 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 10:24:27,446 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 10:25:27,419 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 10:30:43,222 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 11:03:39,524 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 11:06:31,726 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 11:09:00,939 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 11:53:54,956 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 11:56:12,777 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 11:58:20,059 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 12:18:05,213 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 12:27:16,407 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 12:42:20,668 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 12:43:19,809 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 12:50:54,603 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 12:53:15,726 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 15:14:58,200 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 15:17:18,844 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 15:28:07,840 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 15:42:49,496 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 16:00:43,975 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 16:13:56,274 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 16:14:30,191 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 16:21:42,419 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 16:31:09,429 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 16:38:22,281 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 16:46:11,276 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 16:54:08,484 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 17:02:48,346 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 17:10:36,504 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 20:07:06,322 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 20:27:36,746 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 20:32:15,314 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 20:44:55,756 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 20:58:37,382 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 21:15:51,696 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 21:52:23,749 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 22:20:52,728 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 23:18:54,030 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 23:19:53,889 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
+2026-01-28 23:33:58,707 | INFO    | Logging initialized — console + file (logs/module_02_data_load.log)
