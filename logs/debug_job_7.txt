@@ -1,0 +1,63 @@
+Logs for proc-job-1769641371
+[17:05:35] Installing dependencies: ['seaborn', 'holidays', 'plotly', 'python-dotenv', 'pandas==1.1.3', 'numpy<1.24', 'matplotlib<3.6', 'PyYAML']
+[17:05:45] ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+[17:05:45] sagemaker-sklearn-container 2.0 requires numpy==1.24.1, but you have numpy 1.23.5 which is incompatible.
+[17:05:45] [notice] A new release of pip is available: 25.2 -> 25.3
+[17:05:45] [notice] To update, run: pip install --upgrade pip
+[17:05:47] 2026-01-28 23:05:47,151 | INFO    | Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+[17:05:47] INFO:__main__:Logging initialized — console + file (logs/module_05_risk_capacity_analysis.log)
+[17:05:47] INFO:src.utils.config:Configuration loaded and validated successfully
+[17:05:47] 2026-01-28 23:05:47,174 | INFO    | === MODULE 05 : Risk & Capacity Analysis ===
+[17:05:47] INFO:__main__:=== MODULE 05 : Risk & Capacity Analysis ===
+[17:05:47] 2026-01-28 23:05:47,174 | INFO    | Using SageMaker input mount: /opt/ml/processing/input/data
+[17:05:47] INFO:__main__:Using SageMaker input mount: /opt/ml/processing/input/data
+[17:05:47] 2026-01-28 23:05:47,175 | INFO    | Found input file: all_model_forecasts.parquet
+[17:05:47] INFO:__main__:Found input file: all_model_forecasts.parquet
+[17:05:48] 2026-01-28 23:05:47,883 | INFO    | Loaded 295560 rows from /opt/ml/processing/input/data/all_model_forecasts.parquet
+[17:05:48] INFO:__main__:Loaded 295560 rows from /opt/ml/processing/input/data/all_model_forecasts.parquet
+[17:05:48] 2026-01-28 23:05:47,966 | INFO    | Using SageMaker output mount: /opt/ml/processing/output
+[17:05:48] INFO:__main__:Using SageMaker output mount: /opt/ml/processing/output
+[17:05:48] 2026-01-28 23:05:48,008 | INFO    | Analyzing 120 servers...
+[17:05:48] INFO:__main__:Analyzing 120 servers...
+[17:05:48] 2026-01-28 23:05:48,049 | INFO    | Risk flags computed: 197 flagged rows
+[17:05:48] INFO:__main__:Risk flags computed: 197 flagged rows
+[17:05:48] 2026-01-28 23:05:48,453 | INFO    | Seasonal peaks computed for 120 servers
+[17:05:48] INFO:__main__:Seasonal peaks computed for 120 servers
+[17:05:48] 2026-01-28 23:05:48,495 | INFO    | Detected 0 underutilized servers
+[17:05:48] INFO:__main__:Detected 0 underutilized servers
+[17:05:48] /miniconda3/lib/python3.9/site-packages/sklearn/cluster/_kmeans.py:870: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  warnings.warn(
+[17:05:49] 2026-01-28 23:05:48,686 | INFO    | Clustering complete: Savings estimate $1500.0
+[17:05:49] INFO:__main__:Clustering complete: Savings estimate $1500.0
+[17:05:50] 2026-01-28 23:05:50,520 | INFO    | Visualizations saved to risk_analysis/
+[17:05:50] INFO:__main__:Visualizations saved to risk_analysis/
+[17:05:50] Traceback (most recent call last):
+  File "/opt/ml/processing/input/code/module_05_risk_capacity_analysis.py", line 378, in <module>
+    main_process(config)
+  File "/opt/ml/processing/input/code/module_05_risk_capacity_analysis.py", line 306, in main_process
+    save_path_f = save_processed_data(
+  File "/opt/ml/processing/input/project_root/src/utils/data_utils.py", line 484, in save_processed_data
+    return save_to_s3_or_local(df, config, prefix, filename, file_type)
+  File "/opt/ml/processing/input/project_root/src/utils/data_utils.py", line 506, in save_to_s3_or_local
+    session = boto3.Session(profile_name=profile)
+  File "/miniconda3/lib/python3.9/site-packages/boto3/session.py", line 90, in __init__
+    self._setup_loader()
+  File "/miniconda3/lib/python3.9/site-packages/boto3/session.py", line 131, in _setup_loader
+    self._loader = self._session.get_component('data_loader')
+  File "/miniconda3/lib/python3.9/site-packages/botocore/session.py", line 802, in get_component
+    return self._components.get_component(name)
+  File "/miniconda3/lib/python3.9/site-packages/botocore/session.py", line 1140, in get_component
+    self._components[name] = factory()
+  File "/miniconda3/lib/python3.9/site-packages/botocore/session.py", line 199, in <lambda>
+    lambda: create_loader(self.get_config_variable('data_path')),
+  File "/miniconda3/lib/python3.9/site-packages/botocore/session.py", line 323, in get_config_variable
+    return self.get_component('config_store').get_config_variable(
+  File "/miniconda3/lib/python3.9/site-packages/botocore/configprovider.py", line 459, in get_config_variable
+    return provider.provide()
+  File "/miniconda3/lib/python3.9/site-packages/botocore/configprovider.py", line 665, in provide
+    value = provider.provide()
+  File "/miniconda3/lib/python3.9/site-packages/botocore/configprovider.py", line 755, in provide
+    scoped_config = self._session.get_scoped_config()
+  File "/miniconda3/lib/python3.9/site-packages/botocore/session.py", line 422, in get_scoped_config
+    raise ProfileNotFound(profile=profile_name)
+[17:05:50] botocore.exceptions.ProfileNotFound: The config profile (study) could not be found

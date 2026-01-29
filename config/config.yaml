@@ -11,10 +11,19 @@ aws:
   region: us-east-1
   profile: study                          # boto3 profile name (optional)
   bucket_name: aws-capacity-forecaster-sean    # S3 bucket for data/artifacts
+  sagemaker_role_arn: "arn:aws:iam::357811130281:role/CapacityForecaster-SageMakerRole" # Auto-updated
+  
+sagemaker:
+  instance_type: "ml.t3.medium"
+  instance_count: 1
+  # Downgrading to sklearn 0.23-1 to match pandas 1.1.3 requirement and avoid dependency hell
+  image_uri: "683313688378.dkr.ecr.us-east-1.amazonaws.com/sagemaker-scikit-learn:0.23-1-cpu-py3"
+
+aws_paths:
   raw_prefix: raw/server_metrics/
   processed_prefix: processed/server_metrics/
   features_prefix: processed/features/
-  sagemaker_role_arn: ""                  # Fill from .env or IAM
+  sagemaker_role_arn: "arn:aws:iam::357811130281:role/CapacityForecaster-SageMakerRole" # Auto-updated
   sagemaker_instance_type: ml.t3.medium   # Cheap/small for development
   athena_database: capacity_forecaster_db
   athena_workgroup: primary               # or create custom

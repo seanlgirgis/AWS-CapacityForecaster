@@ -36,6 +36,31 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from logging.handlers import TimedRotatingFileHandler
 import os
+import sys
+import subprocess
+
+# --- Runtime Dependency Installation for SageMaker ---
+def install_dependencies():
+    """Installs required packages if missing (handling SageMaker container environment)"""
+    # Map import name -> pip package name
+    required_packages = {
+        "prophet": "prophet",
+        "holidays": "holidays",
+        "yaml": "PyYAML",
+        "matplotlib": "matplotlib",
+        "plotly": "plotly",
+        "dotenv": "python-dotenv"
+    }
+    
+    for import_name, package_name in required_packages.items():
+        try:
+            __import__(import_name)
+        except ImportError:
+            print(f"Installing {package_name}...")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", package_name, "--quiet"])
+
+install_dependencies()
+# -----------------------------------------------------
 
 import pandas as pd
 import numpy as np
@@ -314,16 +339,36 @@ def process_server_group(server_id, df_group, config):
     return results, pd.concat(forecasts_list, ignore_index=True) if forecasts_list else None
 
 
-def main_process(config):
+def main_process(config: dict, input_path: str = None, output_path: str = None):
     logger.info("=== MODULE 04 : Model Training & Forward Forecasting ===")
     
     # Processed data dir from config
     processed_prefix = config['paths']['processed_dir']
     
     try:
-        filename = find_latest_file(config, prefix=processed_prefix)
-        logger.info(f"Loading latest feature data: {filename}")
-        df = load_from_s3_or_local(config, prefix=processed_prefix, filename=filename)
+        if input_path:
+            # SageMaker Mode: Read specific file from mounted directory
+            logger.info(f"SageMaker Mode: Loading input from {input_path}")
+            # In SM Processing, input_path is a directory containing the file(s)
+            p = Path(input_path)
+            if p.is_file():
+                df = pd.read_parquet(p)
+                filename = p.name
+            else:
+                 # Find parquet in directory
+                 files = list(p.glob("*.parquet"))
+                 if not files:
+                     raise FileNotFoundError(f"No parquet files in {input_path}")
+                 # Pick latest if multiple, or just first
+                 target = sorted(files)[-1]
+                 df = pd.read_parquet(target)
+                 filename = target.name
+        else:
+            # Normal Mode (Local or S3 autoload)
+            filename = find_latest_file(config, prefix=processed_prefix)
+            logger.info(f"Loading latest feature data: {filename}")
+            df = load_from_s3_or_local(config, prefix=processed_prefix, filename=filename)
+            
     except FileNotFoundError as e:
         logger.error(f"Input data missing: {e}")
         raise
@@ -381,28 +426,47 @@ def main_process(config):
     if all_forecasts:
         forecasts_combined = pd.concat(all_forecasts, ignore_index=True)
         forecasts_filename = config['paths'].get('forecasts_summary_filename', 'all_model_forecasts.parquet')
-        save_path_f = save_processed_data(
-            forecasts_combined, config,
-            prefix=config['paths']['forecasts_dir'],
-            filename=forecasts_filename
-        )
-        logger.info(f"Saved enriched forecasts to {save_path_f}")
+        
+        if output_path:
+             # SageMaker Mode: write to local mount point which SM uploads to S3
+             out_dir = Path(output_path)
+             out_dir.mkdir(parents=True, exist_ok=True)
+             save_path_f = out_dir / forecasts_filename
+             forecasts_combined.to_parquet(save_path_f, index=False)
+             logger.info(f"Saved SageMaker artifacts to {save_path_f}")
+        else:
+             # Standard Mode
+             save_path_f = save_processed_data(
+                forecasts_combined, config,
+                prefix=config['paths']['forecasts_dir'],
+                filename=forecasts_filename
+             )
+             logger.info(f"Saved enriched forecasts to {save_path_f}")
     
     # Save metrics — configurable filename
     metrics_filename = config['paths'].get('metrics_summary_filename', 'model_comparison.json')
     metrics_summary = {
         "processed_at": datetime.now().isoformat(),
         "total_servers": len(servers),
-        "models_evaluated": avg_smape.to_dict(),
+        "avg_smape": avg_smape.to_dict(), # Corrected from summary['mean'].to_dict()
         "best_model": best_model,
-        "details_by_server": metrics_df.to_dict(orient='records')
+        "details": metrics_df.to_dict(orient='records')
     }
-    save_to_s3_or_local(
-        json.dumps(metrics_summary, indent=2),
-        config,
-        prefix=config['paths']['metrics_dir'],
-        filename=metrics_filename
-    )
+    
+    if output_path:
+        # SageMaker Mode
+        metrics_save_path = Path(output_path) / metrics_filename
+        with open(metrics_save_path, 'w') as f:
+            json.dump(metrics_summary, f, indent=2)
+        logger.info(f"Saved SageMaker metrics to {metrics_save_path}")
+    else:
+        # Standard Mode
+        save_to_s3_or_local(
+            json.dumps(metrics_summary, indent=2),
+            config,
+            prefix=config['paths']['metrics_dir'],
+            filename=metrics_filename
+        )
     
     logger.info("✔ Module 04 completed successfully")
 
@@ -411,13 +475,22 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Module 04 — Model Training")
     parser.add_argument("--config", default="config/config.yaml")
     parser.add_argument("--env", default="local", choices=["local", "sagemaker", "lambda"])
+    
+    # SageMaker Processing Job arguments (S3 inputs mapped to local paths)
+    parser.add_argument("--input_data_path", help="Path to input data (SageMaker mounted)")
+    parser.add_argument("--output_data_path", help="Path to output data (SageMaker mounted)")
+    
     args = parser.parse_args()
     
-    config = load_config(Path(args.config))
+    config_path = Path(args.config)
+    # In SageMaker, config might be passed as a file argument or we might need to load it different
+    # For now, assume config is available or we load standard one
+    config = load_config(config_path)
     if args.env:
         if 'execution' not in config:
             config['execution'] = {}
         config['execution']['mode'] = args.env
     validate_config(config)
     
-    main_process(config)
+    # Pass SageMaker paths if present
+    main_process(config, input_path=args.input_data_path, output_path=args.output_data_path)

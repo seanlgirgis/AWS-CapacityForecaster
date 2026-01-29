@@ -1,0 +1,11 @@
+data/
+logs/
+.git/
+.env
+__pycache__/
+*.pyc
+.vscode/
+my_Docs/
+reports/
+jupyter_notebooks/
+tmp/
