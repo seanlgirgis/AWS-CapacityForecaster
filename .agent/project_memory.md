@@ -1,26 +1,34 @@
 # Project Memory
 
-**Current Stage:** EXECUTION
-**Current Task:** Debugging AutoGluon Installation
+**Current Stage:** EXECUTION (Debugging & Documentation)
+**Current Task:** Resolving AutoGluon Dependencies & Documenting Progress
 **Last Updated:** 2026-01-31
 
-## Context
-We are currently working on getting the AutoGluon AutoML comparator to run correctly in a SageMaker environment. We have encountered `ModuleNotFoundError` and version conflicts with `numpy`, `pandas`, and `scikit-learn`.
+## 1. Project Status
+We have successfully implemented the core modular pipeline (Modules 00-05) and are currently focused on stabilizing the Model Training module (04) against dependency conflicts.
 
-## Active Work
-- **CONSTITUTION IMPLEMENTATION**: Created `.agent/constitution.md` to establish project laws.
-- **Dependency Resolution**: Edited `src/modules/module_04_model_training.py` to add a runtime dependency installer.
-- **Pinned Versions**: Specifically pinned the following to resolve conflicts:
-    - `pandas==2.1.4` (for numpy compat)
-    - `scikit-learn<1.5.0`
+**Key Documents:**
+- [Implemented Features & Architecture](file:///C:/pyproj/AWS-CapacityForecaster/progress/0001.Progress_so_Far.md)
+- [Current Challenge: AutoGluon Crash](file:///C:/pyproj/AWS-CapacityForecaster/progress/0002.Current_Challenge_AutoGluon_Deps.md)
+
+## 2. Environment & Configuration
+- **VS Code**: Configured to use `python.defaultInterpreterPath` in `.vscode/settings.json`.
+    - **Policy**: We track this file in git.
+    - **Behavior**: Auto-activates `Activate.ps1` on terminal launch.
+    - **Strategy**: Keeps local venv outside the project (`c:\py_venv\AWS-CapacityForecaster`) to save OneDrive space, while syncing the path config via git.
+- **PowerShell**: Validated that `$PROFILE` is clean; auto-activation is handled purely by VS Code settings.
+
+## 3. Active Technical Challenge (Module 04)
+**Issue:** `autogluon.tabular` fails to import due to conflicts with `numpy>=2.0.0` and `pandas>=2.2.0`.
+**Solution In-Progress:**
+- **Wrapper Script**: `src/modules/module_04_model_training.py` now acts as a dependency guard.
+- **Runtime Installation**: The wrapper installs a specific "Goldilocks" dependency set before launching the inner training logic.
+- **Pinned Versions**:
     - `numpy<2.0.0`
-    - `scipy<1.13.0`
+    - `pandas==2.1.4`
     - `autogluon>=1.1.0`
-- **Logic**: Added distinction between Local and SageMaker execution paths in `run_inner_script`.
 
-## Protocol
-- **READ THE CONSTITUTION**: Refer to `.agent/constitution.md` for governing rules.
-
-## Next Steps
-- Verify the `install_dependencies` wrapper works in the target environment.
-- Run the full pipeline to ensure the AutoGluon model trains successfully.
+## 4. Next Steps
+1. Run `src/modules/module_04_model_training.py` to test the wrapper.
+2. Verify that `module_04_inner.py` runs without `ModuleNotFoundError`.
+3. If successful, deploy to SageMaker.
