@@ -343,7 +343,7 @@ def main_process(config: dict, input_path: str = None, output_path: str = None):
             # In SM Processing, input_path is a directory containing the file(s)
             p = Path(input_path)
             if p.is_file():
-                df = pd.read_parquet(p)
+                df = pd.read_parquet(p, engine='pyarrow')
                 filename = p.name
             else:
                  # Find parquet in directory
@@ -352,13 +352,13 @@ def main_process(config: dict, input_path: str = None, output_path: str = None):
                      raise FileNotFoundError(f"No parquet files in {input_path}")
                  # Pick latest if multiple, or just first
                  target = sorted(files)[-1]
-                 df = pd.read_parquet(target)
+                 df = pd.read_parquet(target, engine='pyarrow')
                  filename = target.name
         else:
             # Normal Mode (Local or S3 autoload)
             filename = find_latest_file(config, prefix=processed_prefix)
             logger.info(f"Loading latest feature data: {filename}")
-            df = load_from_s3_or_local(config, prefix=processed_prefix, filename=filename)
+            df = load_from_s3_or_local(config, prefix=processed_prefix, filename=filename) # logic inside utils might need check
             
     except FileNotFoundError as e:
         logger.error(f"Input data missing: {e}")
@@ -604,7 +604,7 @@ def main_process(config: dict, input_path: str = None, output_path: str = None):
              out_dir = Path(output_path)
              out_dir.mkdir(parents=True, exist_ok=True)
              save_path_f = out_dir / forecasts_filename
-             forecasts_combined.to_parquet(save_path_f, index=False)
+             forecasts_combined.to_parquet(save_path_f, index=False, engine='pyarrow')
              logger.info(f"Saved SageMaker artifacts to {save_path_f}")
         else:
              # Standard Mode
@@ -617,10 +617,15 @@ def main_process(config: dict, input_path: str = None, output_path: str = None):
     
     # Save metrics — configurable filename
     metrics_filename = config['paths'].get('metrics_summary_filename', 'model_comparison.json')
+    # Calculate aggregate metrics
+    metrics_df = pd.DataFrame(all_metrics)
+    avg_smape = metrics_df.groupby('model')['sMAPE'].mean()
+    best_model = avg_smape.idxmin()
+
     metrics_summary = {
         "processed_at": datetime.now().isoformat(),
         "total_servers": len(servers),
-        "avg_smape": avg_smape.to_dict(), # Corrected from summary['mean'].to_dict()
+        "avg_smape": avg_smape.to_dict(), 
         "best_model": best_model,
         "details": metrics_df.to_dict(orient='records')
     }

@@ -83,13 +83,6 @@ def run_sagemaker_processing_job(config, module_num):
     """
     Launches a SageMaker Processing Job for the specified module.
     """
-    try:
-        import sagemaker
-        from sagemaker.processing import ScriptProcessor, ProcessingInput, ProcessingOutput
-    except ImportError:
-        logger.error("sagemaker SDK not installed. Please install with: pip install sagemaker")
-        raise
-
     logger.info(f"🚀 Launching SageMaker Processing Job for Module {module_num}...")
     
     aws_cfg = config.get('aws', {})
@@ -105,7 +98,7 @@ def run_sagemaker_processing_job(config, module_num):
     
     # Initialize boto3 session with credentials
     boto_session = boto3.Session(profile_name=profile, region_name=region)
-    sm_session = sagemaker.Session(boto_session=boto_session)
+    sm_client = boto_session.client('sagemaker')
 
     # Initialize Processor
     # --- Launch Job using Shared Utility ---
@@ -121,9 +114,7 @@ def run_sagemaker_processing_job(config, module_num):
         input_prefix = config['paths']['forecasts_dir'].strip('/')
         output_prefix = config['paths']['risk_analysis_dir'].strip('/')
         script_path = "src/modules/module_05_risk_capacity_analysis.py"
-        input_name = 'forecasts_data' # Will need to match arg parser in mod 05? 
-        # Wait, mod 05 arg parser might expect something else or we standardise
-        # Let's check mod 05 args later, but standardizing to --input_data_path is best.
+        input_name = 'forecasts_data' 
     else:
         raise ValueError(f"Module {module_num} not supported on SageMaker yet.")
 
@@ -155,7 +146,7 @@ def run_sagemaker_processing_job(config, module_num):
             boto_session=boto_session,
             role_arn=role,
             image_uri=sm_cfg.get('modules', {}).get(module_num, {}).get('image_uri', sm_cfg.get('image_uri')),
-            instance_type=sm_cfg.get('instance_type', 'ml.t3.medium'),
+            instance_type=sm_cfg.get('modules', {}).get(module_num, {}).get('instance_type', sm_cfg.get('instance_type', 'ml.t3.medium')),
             instance_count=sm_cfg.get('instance_count', 1),
             bucket_name=bucket,
             project_root_local=".",
@@ -171,7 +162,7 @@ def run_sagemaker_processing_job(config, module_num):
         # Polling for completion
         logger.info("Waiting for job to complete...")
         while True:
-            desc = sm_session.sagemaker_client.describe_processing_job(ProcessingJobName=job_name)
+            desc = sm_client.describe_processing_job(ProcessingJobName=job_name)
             status = desc['ProcessingJobStatus']
             if status in ['Completed', 'Failed', 'Stopped']:
                 logger.info(f"Job finished with status: {status}")

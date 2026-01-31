@@ -18,8 +18,8 @@ def install_dependencies():
         "scikit-learn<1.5.0", # Pin to ensure compatibility with legacy environment
         "numpy<2.0.0",        # Pin for stability
         "scipy<1.13.0",       # Pin for fitpack compatibility
-        "pyarrow>=14.0.0",    # Modern arrow for Pandas 2.x
-        "fastparquet",        # Fallback engine
+        "pyarrow==14.0.1",    # Pin to match container expectations (avoid v21 conflict)
+        "fastparquet==2023.10.1", # Pin stable version
         "autogluon>=1.1.0"    # Modern AutoML
     ]
     
@@ -29,12 +29,20 @@ def install_dependencies():
         return
 
     try:
-        # Install all at once
-        subprocess.check_call([sys.executable, "-m", "pip", "install"] + required_packages + ["--quiet"])
+        # Install all at once (VERBOSE)
+        print(f"Wrapper: Installing packages: {required_packages}")
+        subprocess.check_call([sys.executable, "-m", "pip", "install"] + required_packages)
         print("Wrapper: Dependencies installed successfully.")
+        
+        # --- VERIFY INSTALLATION ---
+        print("Wrapper: Verifying imports...")
+        verify_cmd = [sys.executable, "-c", "import pandas; import pyarrow; import fastparquet; import autogluon.tabular; print('Imports successful')"]
+        subprocess.check_call(verify_cmd)
+        
     except subprocess.CalledProcessError as e:
-        print(f"Wrapper: Dependency installation failed: {e}")
-        # We don't exit here, we try to run anyway in case they are pre-installed
+        print(f"Wrapper: Dependency installation or verification failed with code {e.returncode}")
+        # Fail fast!
+        sys.exit(e.returncode)
         
 def run_inner_script():
     """Launches the actual logic script in a fresh process"""

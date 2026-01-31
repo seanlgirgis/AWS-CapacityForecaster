@@ -1,0 +1,858 @@
+Collecting autogluon.core==1.1.1 (from autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading autogluon.core-1.1.1-py3-none-any.whl.metadata (11 kB)
+Collecting autogluon.features==1.1.1 (from autogluon>=1.1.0)
+  Downloading autogluon.features-1.1.1-py3-none-any.whl.metadata (11 kB)
+Collecting autogluon.tabular==1.1.1 (from autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading autogluon.tabular-1.1.1-py3-none-any.whl.metadata (13 kB)
+Collecting autogluon.multimodal==1.1.1 (from autogluon>=1.1.0)
+  Downloading autogluon.multimodal-1.1.1-py3-none-any.whl.metadata (12 kB)
+Collecting autogluon.timeseries==1.1.1 (from autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading autogluon.timeseries-1.1.1-py3-none-any.whl.metadata (12 kB)
+Collecting scikit-learn<1.5.0
+  Downloading scikit_learn-1.4.0-1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+Collecting networkx<4,>=3.0 (from autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading networkx-3.2.1-py3-none-any.whl.metadata (5.2 kB)
+Requirement already satisfied: requests in /miniconda3/lib/python3.9/site-packages (from autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (2.32.3)
+Requirement already satisfied: boto3<2,>=1.10 in /miniconda3/lib/python3.9/site-packages (from autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (1.28.57)
+Collecting autogluon.common==1.1.1 (from autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading autogluon.common-1.1.1-py3-none-any.whl.metadata (11 kB)
+Collecting psutil<6,>=5.7.3 (from autogluon.common==1.1.1->autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading psutil-5.9.8-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (21 kB)
+Requirement already satisfied: setuptools in /miniconda3/lib/python3.9/site-packages (from autogluon.common==1.1.1->autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (80.9.0)
+Collecting ray<2.11,>=2.10.0 (from ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading ray-2.10.0-cp39-cp39-manylinux2014_x86_64.whl.metadata (13 kB)
+Collecting hyperopt<0.2.8,>=0.2.7 (from autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading hyperopt-0.2.7-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting pillow>=8 (from matplotlib)
+  Downloading pillow-10.4.0-cp39-cp39-manylinux_2_28_x86_64.whl.metadata (9.2 kB)
+Collecting torch<2.4,>=2.2 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading torch-2.3.1-cp39-cp39-manylinux1_x86_64.whl.metadata (26 kB)
+Collecting lightning<2.4,>=2.2 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading lightning-2.3.3-py3-none-any.whl.metadata (35 kB)
+Collecting transformers<4.41.0,>=4.38.0 (from transformers[sentencepiece]<4.41.0,>=4.38.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading transformers-4.40.2-py3-none-any.whl.metadata (137 kB)
+Collecting accelerate<0.22.0,>=0.21.0 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading accelerate-0.21.0-py3-none-any.whl.metadata (17 kB)
+Collecting jsonschema<4.22,>=4.18 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading jsonschema-4.21.1-py3-none-any.whl.metadata (7.8 kB)
+Collecting seqeval<1.3.0,>=1.2.2 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading seqeval-1.2.2.tar.gz (43 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting evaluate<0.5.0,>=0.4.0 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading evaluate-0.4.6-py3-none-any.whl.metadata (9.5 kB)
+Collecting timm<0.10.0,>=0.9.5 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading timm-0.9.16-py3-none-any.whl.metadata (38 kB)
+Collecting torchvision<0.19.0,>=0.16.0 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading torchvision-0.18.1-cp39-cp39-manylinux1_x86_64.whl.metadata (6.6 kB)
+Collecting scikit-image<0.21.0,>=0.19.1 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading scikit_image-0.20.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (16 kB)
+Collecting text-unidecode<1.4,>=1.3 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading text_unidecode-1.3-py2.py3-none-any.whl.metadata (2.4 kB)
+Collecting torchmetrics<1.3.0,>=1.2.0 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading torchmetrics-1.2.1-py3-none-any.whl.metadata (20 kB)
+Collecting nptyping<2.5.0,>=1.4.4 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nptyping-2.4.1-py3-none-any.whl.metadata (7.7 kB)
+Collecting omegaconf<2.3.0,>=2.1.1 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading omegaconf-2.2.3-py3-none-any.whl.metadata (3.9 kB)
+Collecting pytorch-metric-learning<2.4,>=1.3.0 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading pytorch_metric_learning-2.3.0-py3-none-any.whl.metadata (17 kB)
+Collecting nlpaug<1.2.0,>=1.1.10 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nlpaug-1.1.11-py3-none-any.whl.metadata (14 kB)
+Collecting nltk<4.0.0,>=3.4.5 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nltk-3.9.2-py3-none-any.whl.metadata (3.2 kB)
+Collecting openmim<0.4.0,>=0.3.7 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading openmim-0.3.9-py2.py3-none-any.whl.metadata (16 kB)
+Collecting defusedxml<0.7.2,>=0.7.1 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading defusedxml-0.7.1-py2.py3-none-any.whl.metadata (32 kB)
+Requirement already satisfied: jinja2<3.2,>=3.0.3 in /miniconda3/lib/python3.9/site-packages (from autogluon.multimodal==1.1.1->autogluon>=1.1.0) (3.0.3)
+Collecting tensorboard<3,>=2.9 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading tensorboard-2.20.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting pytesseract<0.3.11,>=0.3.9 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading pytesseract-0.3.10-py3-none-any.whl.metadata (11 kB)
+Collecting nvidia-ml-py3==7.352.0 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia-ml-py3-7.352.0.tar.gz (19 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting pdf2image<1.19,>=1.17.0 (from autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading pdf2image-1.17.0-py3-none-any.whl.metadata (6.2 kB)
+Collecting xgboost<2.1,>=1.6 (from autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading xgboost-2.0.3-py3-none-manylinux2014_x86_64.whl.metadata (2.0 kB)
+Collecting fastai<2.8,>=2.3.1 (from autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading fastai-2.7.19-py3-none-any.whl.metadata (9.2 kB)
+Collecting lightgbm<4.4,>=3.3 (from autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading lightgbm-4.3.0-py3-none-manylinux_2_28_x86_64.whl.metadata (19 kB)
+Collecting catboost<1.3,>=1.1 (from autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading catboost-1.2.8-cp39-cp39-manylinux2014_x86_64.whl.metadata (1.2 kB)
+Collecting pytorch-lightning<2.4,>=2.2 (from autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading pytorch_lightning-2.3.3-py3-none-any.whl.metadata (21 kB)
+Collecting gluonts==0.15.1 (from autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading gluonts-0.15.1-py3-none-any.whl.metadata (9.9 kB)
+Collecting statsforecast<1.5,>=1.4.0 (from autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading statsforecast-1.4.0-py3-none-any.whl.metadata (19 kB)
+Collecting mlforecast<0.10.1,>=0.10.0 (from autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading mlforecast-0.10.0-py3-none-any.whl.metadata (11 kB)
+Collecting utilsforecast<0.0.11,>=0.0.10 (from autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading utilsforecast-0.0.10-py3-none-any.whl.metadata (7.0 kB)
+Collecting orjson~=3.9 (from autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading orjson-3.11.5-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (41 kB)
+Collecting optimum<1.19,>=1.17 (from optimum[onnxruntime]<1.19,>=1.17; extra == "all"->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading optimum-1.18.1-py3-none-any.whl.metadata (18 kB)
+Collecting pydantic<3,>=1.7 (from gluonts==0.15.1->autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading pydantic-2.12.5-py3-none-any.whl.metadata (90 kB)
+Collecting toolz~=0.10 (from gluonts==0.15.1->autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading toolz-0.12.1-py3-none-any.whl.metadata (5.1 kB)
+Collecting typing-extensions~=4.0 (from gluonts==0.15.1->autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Requirement already satisfied: botocore<1.32.0,>=1.31.57 in /miniconda3/lib/python3.9/site-packages (from boto3<2,>=1.10->autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (1.31.85)
+Requirement already satisfied: jmespath<2.0.0,>=0.7.1 in /miniconda3/lib/python3.9/site-packages (from boto3<2,>=1.10->autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (1.0.1)
+Requirement already satisfied: s3transfer<0.8.0,>=0.7.0 in /miniconda3/lib/python3.9/site-packages (from boto3<2,>=1.10->autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (0.7.0)
+Requirement already satisfied: urllib3<1.27,>=1.25.4 in /miniconda3/lib/python3.9/site-packages (from botocore<1.32.0,>=1.31.57->boto3<2,>=1.10->autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (1.26.17)
+Collecting graphviz (from catboost<1.3,>=1.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading graphviz-0.21-py3-none-any.whl.metadata (12 kB)
+Requirement already satisfied: six in /miniconda3/lib/python3.9/site-packages (from catboost<1.3,>=1.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0) (1.15.0)
+Collecting datasets>=2.0.0 (from evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading datasets-4.5.0-py3-none-any.whl.metadata (19 kB)
+Collecting dill (from evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading dill-0.4.1-py3-none-any.whl.metadata (10 kB)
+Collecting xxhash (from evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading xxhash-3.6.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (13 kB)
+Collecting multiprocess (from evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading multiprocess-0.70.19-py39-none-any.whl.metadata (7.5 kB)
+Collecting huggingface-hub>=0.7.0 (from evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading huggingface_hub-1.3.5-py3-none-any.whl.metadata (13 kB)
+Requirement already satisfied: pip in /miniconda3/lib/python3.9/site-packages (from fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0) (25.2)
+Collecting fastdownload<2,>=0.0.5 (from fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading fastdownload-0.0.7-py3-none-any.whl.metadata (5.5 kB)
+Collecting fastcore<1.8,>=1.5.29 (from fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading fastcore-1.7.29-py3-none-any.whl.metadata (3.6 kB)
+Collecting fastprogress>=0.2.4 (from fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading fastprogress-1.0.5-py3-none-any.whl.metadata (5.8 kB)
+Collecting spacy<4 (from fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading spacy-3.8.11.tar.gz (1.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 64.5 MB/s  0:00:00
+  Installing build dependencies: started
+  Installing build dependencies: still running...
+  Installing build dependencies: still running...
+  Installing build dependencies: still running...
+  Installing build dependencies: still running...
+  Installing build dependencies: still running...
+  Installing build dependencies: still running...
+  Installing build dependencies: still running...
+  Installing build dependencies: still running...
+  Installing build dependencies: still running...
+  Installing build dependencies: still running...
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: still running...
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: future in /miniconda3/lib/python3.9/site-packages (from hyperopt<0.2.8,>=0.2.7->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (1.0.0)
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))': /simple/cloudpickle/
+Collecting cloudpickle (from hyperopt<0.2.8,>=0.2.7->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))': /packages/88/39/799be3f2f0f38cc727ee3b4f1445fe6d5e4133064ec2e4115069418a5bb6/cloudpickle-3.1.2-py3-none-any.whl.metadata
+  Downloading cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+Collecting py4j (from hyperopt<0.2.8,>=0.2.7->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading py4j-0.10.9.9-py2.py3-none-any.whl.metadata (1.3 kB)
+Requirement already satisfied: MarkupSafe>=2.0 in /miniconda3/lib/python3.9/site-packages (from jinja2<3.2,>=3.0.3->autogluon.multimodal==1.1.1->autogluon>=1.1.0) (2.1.1)
+Collecting attrs>=22.2.0 (from jsonschema<4.22,>=4.18->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading attrs-25.4.0-py3-none-any.whl.metadata (10 kB)
+Collecting jsonschema-specifications>=2023.03.6 (from jsonschema<4.22,>=4.18->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)
+Collecting referencing>=0.28.4 (from jsonschema<4.22,>=4.18->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading referencing-0.36.2-py3-none-any.whl.metadata (2.8 kB)
+Collecting rpds-py>=0.7.1 (from jsonschema<4.22,>=4.18->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading rpds_py-0.27.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.2 kB)
+Collecting lightning-utilities<2.0,>=0.10.0 (from lightning<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading lightning_utilities-0.15.2-py3-none-any.whl.metadata (5.7 kB)
+Collecting aiohttp!=4.0.0a0,!=4.0.0a1 (from fsspec[http]>=2021.05.0->evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading aiohttp-3.13.3-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.1 kB)
+Collecting numba (from mlforecast<0.10.1,>=0.10.0->autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading numba-0.60.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.7 kB)
+Collecting window-ops (from mlforecast<0.10.1,>=0.10.0->autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading window_ops-0.0.15-py3-none-any.whl.metadata (6.8 kB)
+Collecting gdown>=4.0.0 (from nlpaug<1.2.0,>=1.1.10->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading gdown-5.2.1-py3-none-any.whl.metadata (5.8 kB)
+Requirement already satisfied: click in /miniconda3/lib/python3.9/site-packages (from nltk<4.0.0,>=3.4.5->autogluon.multimodal==1.1.1->autogluon>=1.1.0) (8.1.8)
+Collecting regex>=2021.8.3 (from nltk<4.0.0,>=3.4.5->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading regex-2026.1.15-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+Collecting antlr4-python3-runtime==4.9.* (from omegaconf<2.3.0,>=2.1.1->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading antlr4-python3-runtime-4.9.3.tar.gz (117 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting colorama (from openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+Collecting model-index (from openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading model_index-0.1.11-py3-none-any.whl.metadata (3.9 kB)
+Collecting opendatalab (from openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading opendatalab-0.0.10-py3-none-any.whl.metadata (6.4 kB)
+Collecting rich (from openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading rich-14.3.1-py3-none-any.whl.metadata (18 kB)
+Collecting tabulate (from openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading tabulate-0.9.0-py3-none-any.whl.metadata (34 kB)
+Collecting coloredlogs (from optimum<1.19,>=1.17->optimum[onnxruntime]<1.19,>=1.17; extra == "all"->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading coloredlogs-15.0.1-py2.py3-none-any.whl.metadata (12 kB)
+Collecting sympy (from optimum<1.19,>=1.17->optimum[onnxruntime]<1.19,>=1.17; extra == "all"->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+Collecting transformers<4.41.0,>=4.38.0 (from transformers[sentencepiece]<4.41.0,>=4.38.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading transformers-4.39.3-py3-none-any.whl.metadata (134 kB)
+Collecting onnx (from optimum[onnxruntime]<1.19,>=1.17; extra == "all"->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading onnx-1.19.1-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (7.0 kB)
+Collecting onnxruntime>=1.11.0 (from optimum[onnxruntime]<1.19,>=1.17; extra == "all"->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading onnxruntime-1.19.2-cp39-cp39-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (4.5 kB)
+Requirement already satisfied: protobuf>=3.20.1 in /miniconda3/lib/python3.9/site-packages (from optimum[onnxruntime]<1.19,>=1.17; extra == "all"->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0) (3.20.2)
+Collecting annotated-types>=0.6.0 (from pydantic<3,>=1.7->gluonts==0.15.1->autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Using cached annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.41.5 (from pydantic<3,>=1.7->gluonts==0.15.1->autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Using cached pydantic_core-2.41.5-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
+Collecting typing-inspection>=0.4.2 (from pydantic<3,>=1.7->gluonts==0.15.1->autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Using cached typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting filelock (from ray<2.11,>=2.10.0->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading filelock-3.19.1-py3-none-any.whl.metadata (2.1 kB)
+Collecting msgpack<2.0.0,>=1.0.0 (from ray<2.11,>=2.10.0->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading msgpack-1.1.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.1 kB)
+Collecting aiosignal (from ray<2.11,>=2.10.0->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+Collecting frozenlist (from ray<2.11,>=2.10.0->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading frozenlist-1.8.0-cp39-cp39-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (20 kB)
+Collecting aiohttp-cors (from ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading aiohttp_cors-0.8.1-py3-none-any.whl.metadata (20 kB)
+Collecting colorful (from ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading colorful-0.5.8-py2.py3-none-any.whl.metadata (17 kB)
+Collecting py-spy>=0.2.0 (from ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading py_spy-0.4.1-py2.py3-none-manylinux_2_5_x86_64.manylinux1_x86_64.whl.metadata (510 bytes)
+Collecting opencensus (from ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading opencensus-0.11.4-py2.py3-none-any.whl.metadata (12 kB)
+Collecting prometheus-client>=0.7.1 (from ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading prometheus_client-0.24.1-py3-none-any.whl.metadata (2.1 kB)
+Collecting smart-open (from ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading smart_open-7.5.0-py3-none-any.whl.metadata (24 kB)
+Collecting virtualenv!=20.21.1,>=20.0.24 (from ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading virtualenv-20.36.1-py3-none-any.whl.metadata (4.7 kB)
+Collecting grpcio>=1.32.0 (from ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading grpcio-1.76.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.7 kB)
+Collecting tensorboardX>=1.9 (from ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading tensorboardx-2.6.4-py3-none-any.whl.metadata (6.2 kB)
+Requirement already satisfied: charset-normalizer<4,>=2 in /miniconda3/lib/python3.9/site-packages (from requests->autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (3.3.2)
+Requirement already satisfied: idna<4,>=2.5 in /miniconda3/lib/python3.9/site-packages (from requests->autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (3.7)
+Requirement already satisfied: certifi>=2017.4.17 in /miniconda3/lib/python3.9/site-packages (from requests->autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (2025.8.3)
+Collecting imageio>=2.4.1 (from scikit-image<0.21.0,>=0.19.1->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading imageio-2.37.2-py3-none-any.whl.metadata (9.7 kB)
+Collecting tifffile>=2019.7.26 (from scikit-image<0.21.0,>=0.19.1->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading tifffile-2024.8.30-py3-none-any.whl.metadata (31 kB)
+Collecting PyWavelets>=1.1.1 (from scikit-image<0.21.0,>=0.19.1->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading pywavelets-1.6.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.0 kB)
+Collecting lazy_loader>=0.1 (from scikit-image<0.21.0,>=0.19.1->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading lazy_loader-0.4-py3-none-any.whl.metadata (7.6 kB)
+Collecting spacy-legacy<3.1.0,>=3.0.11 (from spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading spacy_legacy-3.0.12-py2.py3-none-any.whl.metadata (2.8 kB)
+Collecting spacy-loggers<2.0.0,>=1.0.0 (from spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading spacy_loggers-1.0.5-py3-none-any.whl.metadata (23 kB)
+Collecting murmurhash<1.1.0,>=0.28.0 (from spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Using cached murmurhash-1.0.15-cp39-cp39-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl.metadata (2.3 kB)
+Collecting cymem<2.1.0,>=2.0.2 (from spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Using cached cymem-2.0.13-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (9.7 kB)
+Collecting preshed<3.1.0,>=3.0.2 (from spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Using cached preshed-3.0.12-cp39-cp39-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl.metadata (2.5 kB)
+Collecting thinc<8.4.0,>=8.3.4 (from spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Using cached thinc-8.3.9-cp39-cp39-linux_x86_64.whl
+Collecting wasabi<1.2.0,>=0.9.1 (from spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Using cached wasabi-1.1.3-py3-none-any.whl.metadata (28 kB)
+Collecting srsly<3.0.0,>=2.4.3 (from spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Using cached srsly-2.5.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (19 kB)
+Collecting catalogue<2.1.0,>=2.0.6 (from spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Using cached catalogue-2.0.10-py3-none-any.whl.metadata (14 kB)
+Collecting weasel<0.5.0,>=0.4.2 (from spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading weasel-0.4.3-py3-none-any.whl.metadata (4.6 kB)
+Collecting typer-slim<1.0.0,>=0.3.0 (from spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading typer_slim-0.21.1-py3-none-any.whl.metadata (16 kB)
+Collecting statsmodels>=0.13.2 (from statsforecast<1.5,>=1.4.0->autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading statsmodels-0.14.6-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (9.5 kB)
+Collecting absl-py>=0.4 (from tensorboard<3,>=2.9->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading absl_py-2.3.1-py3-none-any.whl.metadata (3.3 kB)
+Collecting markdown>=2.6.8 (from tensorboard<3,>=2.9->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading markdown-3.9-py3-none-any.whl.metadata (5.1 kB)
+Collecting tensorboard-data-server<0.8.0,>=0.7.0 (from tensorboard<3,>=2.9->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading tensorboard_data_server-0.7.2-py3-none-manylinux_2_31_x86_64.whl.metadata (1.1 kB)
+Requirement already satisfied: werkzeug>=1.0.1 in /miniconda3/lib/python3.9/site-packages (from tensorboard<3,>=2.9->autogluon.multimodal==1.1.1->autogluon>=1.1.0) (2.0.3)
+Collecting blis<1.4.0,>=1.3.0 (from thinc<8.4.0,>=8.3.4->spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Using cached blis-1.3.3-cp39-cp39-linux_x86_64.whl
+Collecting confection<1.0.0,>=0.0.1 (from thinc<8.4.0,>=8.3.4->spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Using cached confection-0.1.5-py3-none-any.whl.metadata (19 kB)
+Collecting safetensors (from timm<0.10.0,>=0.9.5->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading safetensors-0.7.0-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+Collecting nvidia-cuda-nvrtc-cu12==12.1.105 (from torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia_cuda_nvrtc_cu12-12.1.105-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+Collecting nvidia-cuda-runtime-cu12==12.1.105 (from torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia_cuda_runtime_cu12-12.1.105-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+Collecting nvidia-cuda-cupti-cu12==12.1.105 (from torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia_cuda_cupti_cu12-12.1.105-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
+Collecting nvidia-cudnn-cu12==8.9.2.26 (from torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia_cudnn_cu12-8.9.2.26-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
+Collecting nvidia-cublas-cu12==12.1.3.1 (from torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia_cublas_cu12-12.1.3.1-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+Collecting nvidia-cufft-cu12==11.0.2.54 (from torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia_cufft_cu12-11.0.2.54-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+Collecting nvidia-curand-cu12==10.3.2.106 (from torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia_curand_cu12-10.3.2.106-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+Collecting nvidia-cusolver-cu12==11.4.5.107 (from torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia_cusolver_cu12-11.4.5.107-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
+Collecting nvidia-cusparse-cu12==12.1.0.106 (from torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia_cusparse_cu12-12.1.0.106-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
+Collecting nvidia-nccl-cu12==2.20.5 (from torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia_nccl_cu12-2.20.5-py3-none-manylinux2014_x86_64.whl.metadata (1.8 kB)
+Collecting nvidia-nvtx-cu12==12.1.105 (from torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia_nvtx_cu12-12.1.105-py3-none-manylinux1_x86_64.whl.metadata (1.7 kB)
+Collecting triton==2.3.1 (from torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading triton-2.3.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.4 kB)
+Collecting nvidia-nvjitlink-cu12 (from nvidia-cusolver-cu12==11.4.5.107->torch<2.4,>=2.2->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading nvidia_nvjitlink_cu12-12.9.86-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl.metadata (1.7 kB)
+Collecting huggingface-hub>=0.7.0 (from evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading huggingface_hub-0.36.0-py3-none-any.whl.metadata (14 kB)
+Collecting tokenizers<0.19,>=0.14 (from transformers<4.41.0,>=4.38.0->transformers[sentencepiece]<4.41.0,>=4.38.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading tokenizers-0.15.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.7 kB)
+Collecting hf-xet<2.0.0,>=1.1.3 (from huggingface-hub>=0.7.0->evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading hf_xet-1.2.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting sentencepiece!=0.1.92,>=0.1.91 (from transformers[sentencepiece]<4.41.0,>=4.38.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading sentencepiece-0.2.1-cp39-cp39-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (10 kB)
+Collecting cloudpathlib<1.0.0,>=0.7.0 (from weasel<0.5.0,>=0.4.2->spacy<4->fastai<2.8,>=2.3.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading cloudpathlib-0.23.0-py3-none-any.whl.metadata (16 kB)
+Collecting wrapt (from smart-open->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading wrapt-2.0.1-cp39-cp39-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (9.0 kB)
+Collecting aiohappyeyeballs>=2.5.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]>=2021.05.0->evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading aiohappyeyeballs-2.6.1-py3-none-any.whl.metadata (5.9 kB)
+Collecting async-timeout<6.0,>=4.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]>=2021.05.0->evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading async_timeout-5.0.1-py3-none-any.whl.metadata (5.1 kB)
+Collecting multidict<7.0,>=4.5 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]>=2021.05.0->evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading multidict-6.7.1-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.3 kB)
+Collecting propcache>=0.2.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]>=2021.05.0->evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading propcache-0.4.1-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (13 kB)
+Collecting yarl<2.0,>=1.17.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]>=2021.05.0->evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading yarl-1.22.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (75 kB)
+Collecting stanio<2.0.0,>=0.4.0 (from cmdstanpy>=1.0.4->prophet)
+  Downloading stanio-0.5.1-py3-none-any.whl.metadata (1.6 kB)
+INFO: pip is looking at multiple versions of datasets to determine which version is compatible with other requirements. This could take a while.
+Collecting datasets>=2.0.0 (from evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading datasets-4.4.2-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-4.4.1-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-4.4.0-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-4.3.0-py3-none-any.whl.metadata (18 kB)
+  Downloading datasets-4.2.0-py3-none-any.whl.metadata (18 kB)
+  Downloading datasets-4.1.1-py3-none-any.whl.metadata (18 kB)
+  Downloading datasets-4.1.0-py3-none-any.whl.metadata (18 kB)
+INFO: pip is still looking at multiple versions of datasets to determine which version is compatible with other requirements. This could take a while.
+  Downloading datasets-4.0.0-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-3.6.0-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-3.5.1-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-3.5.0-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-3.4.1-py3-none-any.whl.metadata (19 kB)
+INFO: This is taking longer than usual. You might need to provide the dependency resolver with stricter constraints to reduce runtime. See https://pip.pypa.io/warnings/backtracking for guidance. If you want to abort this run, press Ctrl + C.
+  Downloading datasets-3.4.0-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-3.3.2-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-3.3.1-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-3.3.0-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-3.2.0-py3-none-any.whl.metadata (20 kB)
+  Downloading datasets-3.1.0-py3-none-any.whl.metadata (20 kB)
+  Downloading datasets-3.0.2-py3-none-any.whl.metadata (20 kB)
+  Downloading datasets-3.0.1-py3-none-any.whl.metadata (20 kB)
+  Downloading datasets-3.0.0-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-2.21.0-py3-none-any.whl.metadata (21 kB)
+  Downloading datasets-2.20.0-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-2.19.2-py3-none-any.whl.metadata (19 kB)
+Collecting pyarrow-hotfix (from datasets>=2.0.0->evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading pyarrow_hotfix-0.7-py3-none-any.whl.metadata (3.6 kB)
+Collecting dill (from evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading dill-0.3.8-py3-none-any.whl.metadata (10 kB)
+Collecting datasets>=2.0.0 (from evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading datasets-2.19.1-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-2.19.0-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-2.18.0-py3-none-any.whl.metadata (20 kB)
+  Downloading datasets-2.17.1-py3-none-any.whl.metadata (20 kB)
+  Downloading datasets-2.17.0-py3-none-any.whl.metadata (20 kB)
+  Downloading datasets-2.16.1-py3-none-any.whl.metadata (20 kB)
+Collecting dill (from evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading dill-0.3.7-py3-none-any.whl.metadata (9.9 kB)
+Collecting datasets>=2.0.0 (from evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading datasets-2.16.0-py3-none-any.whl.metadata (20 kB)
+  Downloading datasets-2.15.0-py3-none-any.whl.metadata (20 kB)
+  Downloading datasets-2.14.7-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-2.14.6-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-2.14.5-py3-none-any.whl.metadata (19 kB)
+  Downloading datasets-2.14.4-py3-none-any.whl.metadata (19 kB)
+Collecting beautifulsoup4 (from gdown>=4.0.0->nlpaug<1.2.0,>=1.1.10->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading beautifulsoup4-4.14.3-py3-none-any.whl.metadata (3.8 kB)
+Collecting zipp>=3.1.0 (from importlib_resources->prophet)
+  Downloading zipp-3.23.0-py3-none-any.whl.metadata (3.6 kB)
+Collecting importlib-metadata>=4.4 (from markdown>=2.6.8->tensorboard<3,>=2.9->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading importlib_metadata-8.7.1-py3-none-any.whl.metadata (4.7 kB)
+Collecting llvmlite<0.44,>=0.43.0dev0 (from numba->mlforecast<0.10.1,>=0.10.0->autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading llvmlite-0.43.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.8 kB)
+Collecting flatbuffers (from onnxruntime>=1.11.0->optimum[onnxruntime]<1.19,>=1.17; extra == "all"->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading flatbuffers-25.12.19-py2.py3-none-any.whl.metadata (1.0 kB)
+Collecting patsy>=0.5.6 (from statsmodels>=0.13.2->statsforecast<1.5,>=1.4.0->autogluon.timeseries==1.1.1->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading patsy-1.0.2-py2.py3-none-any.whl.metadata (3.6 kB)
+Collecting distlib<1,>=0.3.7 (from virtualenv!=20.21.1,>=20.0.24->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading distlib-0.4.0-py2.py3-none-any.whl.metadata (5.2 kB)
+Requirement already satisfied: platformdirs<5,>=3.9.1 in /miniconda3/lib/python3.9/site-packages (from virtualenv!=20.21.1,>=20.0.24->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (3.10.0)
+Collecting soupsieve>=1.6.1 (from beautifulsoup4->gdown>=4.0.0->nlpaug<1.2.0,>=1.1.10->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading soupsieve-2.8.3-py3-none-any.whl.metadata (4.6 kB)
+Collecting humanfriendly>=9.1 (from coloredlogs->optimum<1.19,>=1.17->optimum[onnxruntime]<1.19,>=1.17; extra == "all"->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading humanfriendly-10.0-py2.py3-none-any.whl.metadata (9.2 kB)
+Collecting ordered-set (from model-index->openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading ordered_set-4.1.0-py3-none-any.whl.metadata (5.3 kB)
+INFO: pip is looking at multiple versions of multiprocess to determine which version is compatible with other requirements. This could take a while.
+Collecting multiprocess (from evaluate<0.5.0,>=0.4.0->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading multiprocess-0.70.18-py39-none-any.whl.metadata (7.5 kB)
+  Downloading multiprocess-0.70.17-py39-none-any.whl.metadata (7.2 kB)
+  Downloading multiprocess-0.70.16-py39-none-any.whl.metadata (7.2 kB)
+  Downloading multiprocess-0.70.15-py39-none-any.whl.metadata (7.2 kB)
+Collecting protobuf>=3.20.1 (from optimum[onnxruntime]<1.19,>=1.17; extra == "all"->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading protobuf-6.33.5-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes)
+Collecting ml_dtypes>=0.5.0 (from onnx->optimum[onnxruntime]<1.19,>=1.17; extra == "all"->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading ml_dtypes-0.5.4-cp39-cp39-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.9 kB)
+Collecting opencensus-context>=0.1.3 (from opencensus->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading opencensus_context-0.1.3-py2.py3-none-any.whl.metadata (3.3 kB)
+Collecting six (from catboost<1.3,>=1.1->autogluon.tabular[all]==1.1.1->autogluon>=1.1.0)
+  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting google-api-core<3.0.0,>=1.0.0 (from opencensus->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading google_api_core-2.29.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting googleapis-common-protos<2.0.0,>=1.56.2 (from google-api-core<3.0.0,>=1.0.0->opencensus->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading googleapis_common_protos-1.72.0-py3-none-any.whl.metadata (9.4 kB)
+Collecting proto-plus<2.0.0,>=1.22.3 (from google-api-core<3.0.0,>=1.0.0->opencensus->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading proto_plus-1.27.0-py3-none-any.whl.metadata (2.2 kB)
+Collecting google-auth<3.0.0,>=2.14.1 (from google-api-core<3.0.0,>=1.0.0->opencensus->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading google_auth-2.48.0-py3-none-any.whl.metadata (6.2 kB)
+Collecting pyasn1-modules>=0.2.1 (from google-auth<3.0.0,>=2.14.1->google-api-core<3.0.0,>=1.0.0->opencensus->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+Requirement already satisfied: cryptography>=38.0.3 in /miniconda3/lib/python3.9/site-packages (from google-auth<3.0.0,>=2.14.1->google-api-core<3.0.0,>=1.0.0->opencensus->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (42.0.5)
+Collecting rsa<5,>=3.1.4 (from google-auth<3.0.0,>=2.14.1->google-api-core<3.0.0,>=1.0.0->opencensus->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+Collecting pyasn1>=0.1.3 (from rsa<5,>=3.1.4->google-auth<3.0.0,>=2.14.1->google-api-core<3.0.0,>=1.0.0->opencensus->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading pyasn1-0.6.2-py3-none-any.whl.metadata (8.4 kB)
+Requirement already satisfied: cffi>=1.12 in /miniconda3/lib/python3.9/site-packages (from cryptography>=38.0.3->google-auth<3.0.0,>=2.14.1->google-api-core<3.0.0,>=1.0.0->opencensus->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (1.16.0)
+Requirement already satisfied: pycparser in /miniconda3/lib/python3.9/site-packages (from cffi>=1.12->cryptography>=38.0.3->google-auth<3.0.0,>=2.14.1->google-api-core<3.0.0,>=1.0.0->opencensus->ray[default,tune]<2.11,>=2.10.0; extra == "all"->autogluon.core[all]==1.1.1->autogluon>=1.1.0) (2.21)
+Collecting pycryptodome (from opendatalab->openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading pycryptodome-3.23.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.4 kB)
+Collecting openxlab (from opendatalab->openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading openxlab-0.1.3-py3-none-any.whl.metadata (3.8 kB)
+INFO: pip is looking at multiple versions of openxlab to determine which version is compatible with other requirements. This could take a while.
+  Downloading openxlab-0.1.2-py3-none-any.whl.metadata (3.8 kB)
+  Downloading openxlab-0.1.1-py3-none-any.whl.metadata (3.8 kB)
+  Downloading openxlab-0.1.0-py3-none-any.whl.metadata (3.8 kB)
+  Downloading openxlab-0.0.38-py3-none-any.whl.metadata (3.8 kB)
+Collecting oss2~=2.17.0 (from openxlab->opendatalab->openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading oss2-2.17.0.tar.gz (259 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting pytz>=2020.1 (from pandas==2.1.4)
+  Downloading pytz-2023.4-py2.py3-none-any.whl.metadata (22 kB)
+Collecting requests (from autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading requests-2.28.2-py3-none-any.whl.metadata (4.6 kB)
+Collecting rich (from openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading rich-13.4.2-py3-none-any.whl.metadata (18 kB)
+Collecting setuptools (from autogluon.common==1.1.1->autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading setuptools-60.2.0-py3-none-any.whl.metadata (5.1 kB)
+Collecting tqdm>=4.36.1 (from prophet)
+  Downloading tqdm-4.65.2-py3-none-any.whl.metadata (56 kB)
+Collecting crcmod>=1.7 (from oss2~=2.17.0->openxlab->opendatalab->openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading crcmod-1.7.tar.gz (89 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting aliyun-python-sdk-kms>=2.4.1 (from oss2~=2.17.0->openxlab->opendatalab->openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading aliyun_python_sdk_kms-2.16.5-py2.py3-none-any.whl.metadata (1.5 kB)
+Collecting aliyun-python-sdk-core>=2.13.12 (from oss2~=2.17.0->openxlab->opendatalab->openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading aliyun-python-sdk-core-2.16.0.tar.gz (449 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting markdown-it-py>=2.2.0 (from rich->openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading markdown_it_py-3.0.0-py3-none-any.whl.metadata (6.9 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich->openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
+Collecting jmespath<2.0.0,>=0.7.1 (from boto3<2,>=1.10->autogluon.core==1.1.1->autogluon.core[all]==1.1.1->autogluon>=1.1.0)
+  Downloading jmespath-0.10.0-py2.py3-none-any.whl.metadata (8.0 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich->openmim<0.4.0,>=0.3.7->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+INFO: pip is looking at multiple versions of requests[socks] to determine which version is compatible with other requirements. This could take a while.
+Collecting requests[socks] (from gdown>=4.0.0->nlpaug<1.2.0,>=1.1.10->autogluon.multimodal==1.1.1->autogluon>=1.1.0)
+  Downloading requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+  Downloading requests-2.32.4-py3-none-any.whl.metadata (4.9 kB)
+  Downloading requests-2.32.2-py3-none-any.whl.metadata (4.6 kB)
+  Downloading requests-2.31.0-py3-none-any.whl.metadata (4.6 kB)
+  Downloading requests-2.30.0-py3-none-any.whl.metadata (4.6 kB)
+  Downloading requests-2.29.0-py3-none-any.whl.metadata (4.6 kB)
+Requirement already satisfied: PySocks!=1.5.7,>=1.5.6 in /miniconda3/lib/python3.9/site-packages (from requests[socks]->gdown>=4.0.0->nlpaug<1.2.0,>=1.1.10->autogluon.multimodal==1.1.1->autogluon>=1.1.0) (1.7.1)
+Collecting mpmath<1.4,>=1.1.0 (from sympy->optimum<1.19,>=1.17->optimum[onnxruntime]<1.19,>=1.17; extra == "all"->autogluon.timeseries[all]==1.1.1->autogluon>=1.1.0)
+  Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Downloading pandas-2.1.4-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.3/12.3 MB 149.1 MB/s  0:00:00
+Downloading fastparquet-2023.10.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 60.4 MB/s  0:00:00
+Downloading prophet-1.3.0-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (12.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.1/12.1 MB 197.3 MB/s  0:00:00
+Downloading holidays-0.83-py3-none-any.whl (1.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 75.0 MB/s  0:00:00
+Downloading pyyaml-6.0.3-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (750 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 750.8/750.8 kB 36.0 MB/s  0:00:00
+Downloading matplotlib-3.9.4-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (8.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 162.8 MB/s  0:00:00
+Downloading plotly-6.5.2-py3-none-any.whl (9.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 196.1 MB/s  0:00:00
+Downloading python_dotenv-1.2.1-py3-none-any.whl (21 kB)
+Downloading autogluon-1.1.1-py3-none-any.whl (9.7 kB)
+Downloading autogluon.core-1.1.1-py3-none-any.whl (234 kB)
+Downloading scikit_learn-1.4.0-1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.1/12.1 MB 162.1 MB/s  0:00:00
+Downloading autogluon.common-1.1.1-py3-none-any.whl (64 kB)
+Downloading autogluon.features-1.1.1-py3-none-any.whl (63 kB)
+Downloading autogluon.multimodal-1.1.1-py3-none-any.whl (427 kB)
+Downloading autogluon.tabular-1.1.1-py3-none-any.whl (312 kB)
+Downloading autogluon.timeseries-1.1.1-py3-none-any.whl (148 kB)
+Downloading gluonts-0.15.1-py3-none-any.whl (1.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 79.7 MB/s  0:00:00
+Downloading accelerate-0.21.0-py3-none-any.whl (244 kB)
+Downloading catboost-1.2.8-cp39-cp39-manylinux2014_x86_64.whl (99.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 99.2/99.2 MB 182.6 MB/s  0:00:00
+Downloading defusedxml-0.7.1-py2.py3-none-any.whl (25 kB)
+Downloading evaluate-0.4.6-py3-none-any.whl (84 kB)
+Downloading fastai-2.7.19-py3-none-any.whl (234 kB)
+Downloading fastcore-1.7.29-py3-none-any.whl (84 kB)
+Downloading fastdownload-0.0.7-py3-none-any.whl (12 kB)
+Downloading hyperopt-0.2.7-py2.py3-none-any.whl (1.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 83.7 MB/s  0:00:00
+Downloading jsonschema-4.21.1-py3-none-any.whl (85 kB)
+Downloading lightgbm-4.3.0-py3-none-manylinux_2_28_x86_64.whl (3.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 125.9 MB/s  0:00:00
+Downloading lightning-2.3.3-py3-none-any.whl (808 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 808.5/808.5 kB 42.8 MB/s  0:00:00
+Downloading fsspec-2025.10.0-py3-none-any.whl (200 kB)
+Downloading lightning_utilities-0.15.2-py3-none-any.whl (29 kB)
+Downloading mlforecast-0.10.0-py3-none-any.whl (47 kB)
+Downloading networkx-3.2.1-py3-none-any.whl (1.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 75.6 MB/s  0:00:00
+Downloading nlpaug-1.1.11-py3-none-any.whl (410 kB)
+Downloading nltk-3.9.2-py3-none-any.whl (1.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 61.0 MB/s  0:00:00
+Downloading nptyping-2.4.1-py3-none-any.whl (36 kB)
+Downloading omegaconf-2.2.3-py3-none-any.whl (79 kB)
+Downloading openmim-0.3.9-py2.py3-none-any.whl (52 kB)
+Downloading optimum-1.18.1-py3-none-any.whl (410 kB)
+Downloading orjson-3.11.5-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (138 kB)
+Downloading pdf2image-1.17.0-py3-none-any.whl (11 kB)
+Downloading pillow-10.4.0-cp39-cp39-manylinux_2_28_x86_64.whl (4.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 128.2 MB/s  0:00:00
+Downloading psutil-5.9.8-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (288 kB)
+Using cached pydantic-2.12.5-py3-none-any.whl (463 kB)
+Using cached pydantic_core-2.41.5-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+Downloading pytesseract-0.3.10-py3-none-any.whl (14 kB)
+Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Downloading pytorch_lightning-2.3.3-py3-none-any.whl (812 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 812.3/812.3 kB 42.9 MB/s  0:00:00
+Downloading pytorch_metric_learning-2.3.0-py3-none-any.whl (115 kB)
+Downloading ray-2.10.0-cp39-cp39-manylinux2014_x86_64.whl (65.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.1/65.1 MB 95.1 MB/s  0:00:00
+Downloading msgpack-1.1.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (404 kB)
+Downloading scikit_image-0.20.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.2/13.2 MB 100.7 MB/s  0:00:00
+Using cached catalogue-2.0.10-py3-none-any.whl (17 kB)
+Using cached cymem-2.0.13-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (229 kB)
+Using cached murmurhash-1.0.15-cp39-cp39-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl (122 kB)
+Using cached preshed-3.0.12-cp39-cp39-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl (781 kB)
+Downloading spacy_legacy-3.0.12-py2.py3-none-any.whl (29 kB)
+Downloading spacy_loggers-1.0.5-py3-none-any.whl (22 kB)
+Using cached srsly-2.5.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.1 MB)
+Downloading statsforecast-1.4.0-py3-none-any.whl (91 kB)
+Downloading tensorboard-2.20.0-py3-none-any.whl (5.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 142.3 MB/s  0:00:00
+Downloading tensorboard_data_server-0.7.2-py3-none-manylinux_2_31_x86_64.whl (6.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 162.9 MB/s  0:00:00
+Downloading text_unidecode-1.3-py2.py3-none-any.whl (78 kB)
+Using cached confection-0.1.5-py3-none-any.whl (35 kB)
+Downloading timm-0.9.16-py3-none-any.whl (2.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 125.3 MB/s  0:00:00
+Downloading toolz-0.12.1-py3-none-any.whl (56 kB)
+Downloading torch-2.3.1-cp39-cp39-manylinux1_x86_64.whl (779.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 779.1/779.1 MB 16.8 MB/s  0:00:18
+Downloading nvidia_cublas_cu12-12.1.3.1-py3-none-manylinux1_x86_64.whl (410.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 410.6/410.6 MB 46.7 MB/s  0:00:06
+Downloading nvidia_cuda_cupti_cu12-12.1.105-py3-none-manylinux1_x86_64.whl (14.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 14.1/14.1 MB 172.1 MB/s  0:00:00
+Downloading nvidia_cuda_nvrtc_cu12-12.1.105-py3-none-manylinux1_x86_64.whl (23.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 23.7/23.7 MB 197.7 MB/s  0:00:00
+Downloading nvidia_cuda_runtime_cu12-12.1.105-py3-none-manylinux1_x86_64.whl (823 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 823.6/823.6 kB 50.7 MB/s  0:00:00
+Downloading nvidia_cudnn_cu12-8.9.2.26-py3-none-manylinux1_x86_64.whl (731.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 731.7/731.7 MB 19.2 MB/s  0:00:15
+Downloading nvidia_cufft_cu12-11.0.2.54-py3-none-manylinux1_x86_64.whl (121.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 121.6/121.6 MB 151.3 MB/s  0:00:00
+Downloading nvidia_curand_cu12-10.3.2.106-py3-none-manylinux1_x86_64.whl (56.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.5/56.5 MB 146.0 MB/s  0:00:00
+Downloading nvidia_cusolver_cu12-11.4.5.107-py3-none-manylinux1_x86_64.whl (124.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 124.2/124.2 MB 67.6 MB/s  0:00:01
+Downloading nvidia_cusparse_cu12-12.1.0.106-py3-none-manylinux1_x86_64.whl (196.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 196.0/196.0 MB 63.6 MB/s  0:00:03
+Downloading nvidia_nccl_cu12-2.20.5-py3-none-manylinux2014_x86_64.whl (176.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 176.2/176.2 MB 64.5 MB/s  0:00:02
+Downloading nvidia_nvtx_cu12-12.1.105-py3-none-manylinux1_x86_64.whl (99 kB)
+Downloading triton-2.3.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (168.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.1/168.1 MB 63.9 MB/s  0:00:02
+Downloading torchmetrics-1.2.1-py3-none-any.whl (806 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.1/806.1 kB 39.2 MB/s  0:00:00
+Downloading torchvision-0.18.1-cp39-cp39-manylinux1_x86_64.whl (7.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.0/7.0 MB 135.0 MB/s  0:00:00
+Downloading transformers-4.39.3-py3-none-any.whl (8.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.8/8.8 MB 182.6 MB/s  0:00:00
+Downloading huggingface_hub-0.36.0-py3-none-any.whl (566 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 566.1/566.1 kB 29.6 MB/s  0:00:00
+Downloading hf_xet-1.2.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 121.0 MB/s  0:00:00
+Downloading tokenizers-0.15.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.6/3.6 MB 139.0 MB/s  0:00:00
+Downloading typer_slim-0.21.1-py3-none-any.whl (47 kB)
+Using cached typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+Downloading utilsforecast-0.0.10-py3-none-any.whl (30 kB)
+Using cached wasabi-1.1.3-py3-none-any.whl (27 kB)
+Downloading weasel-0.4.3-py3-none-any.whl (50 kB)
+Downloading cloudpathlib-0.23.0-py3-none-any.whl (62 kB)
+Downloading smart_open-7.5.0-py3-none-any.whl (63 kB)
+Downloading xgboost-2.0.3-py3-none-manylinux2014_x86_64.whl (297.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 297.1/297.1 MB 54.0 MB/s  0:00:04
+Downloading absl_py-2.3.1-py3-none-any.whl (135 kB)
+Downloading aiohttp-3.13.3-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 80.1 MB/s  0:00:00
+Downloading async_timeout-5.0.1-py3-none-any.whl (6.2 kB)
+Downloading multidict-6.7.1-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (240 kB)
+Downloading yarl-1.22.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (346 kB)
+Downloading aiohappyeyeballs-2.6.1-py3-none-any.whl (15 kB)
+Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+Using cached annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading attrs-25.4.0-py3-none-any.whl (67 kB)
+Downloading cmdstanpy-1.3.0-py3-none-any.whl (99 kB)
+Downloading stanio-0.5.1-py3-none-any.whl (8.1 kB)
+Downloading contourpy-1.3.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (321 kB)
+Downloading cramjam-2.11.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 99.4 MB/s  0:00:00
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading datasets-2.14.4-py3-none-any.whl (519 kB)
+Downloading dill-0.3.7-py3-none-any.whl (115 kB)
+Downloading fastprogress-1.0.5-py3-none-any.whl (13 kB)
+Downloading fonttools-4.60.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 153.3 MB/s  0:00:00
+Downloading frozenlist-1.8.0-cp39-cp39-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (219 kB)
+Downloading gdown-5.2.1-py3-none-any.whl (18 kB)
+Downloading grpcio-1.76.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (6.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 181.0 MB/s  0:00:00
+Downloading imageio-2.37.2-py3-none-any.whl (317 kB)
+Downloading importlib_resources-6.5.2-py3-none-any.whl (37 kB)
+Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+Downloading kiwisolver-1.4.7-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 76.6 MB/s  0:00:00
+Downloading lazy_loader-0.4-py3-none-any.whl (12 kB)
+Downloading markdown-3.9-py3-none-any.whl (107 kB)
+Downloading importlib_metadata-8.7.1-py3-none-any.whl (27 kB)
+Downloading narwhals-2.15.0-py3-none-any.whl (432 kB)
+Downloading numba-0.60.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.7/3.7 MB 125.9 MB/s  0:00:00
+Downloading llvmlite-0.43.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (43.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.9/43.9 MB 189.6 MB/s  0:00:00
+Downloading onnxruntime-1.19.2-cp39-cp39-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (13.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.2/13.2 MB 159.5 MB/s  0:00:00
+Downloading prometheus_client-0.24.1-py3-none-any.whl (64 kB)
+Downloading propcache-0.4.1-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (197 kB)
+Downloading py_spy-0.4.1-py2.py3-none-manylinux_2_5_x86_64.manylinux1_x86_64.whl (2.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 121.6 MB/s  0:00:00
+Downloading pyparsing-3.3.2-py3-none-any.whl (122 kB)
+Downloading pywavelets-1.6.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 136.3 MB/s  0:00:00
+Downloading referencing-0.36.2-py3-none-any.whl (26 kB)
+Downloading regex-2026.1.15-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (791 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 791.3/791.3 kB 42.5 MB/s  0:00:00
+Downloading rpds_py-0.27.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (384 kB)
+Downloading safetensors-0.7.0-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (507 kB)
+Downloading sentencepiece-0.2.1-cp39-cp39-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (1.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 70.3 MB/s  0:00:00
+Downloading statsmodels-0.14.6-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (10.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.4/10.4 MB 159.2 MB/s  0:00:00
+Downloading patsy-1.0.2-py2.py3-none-any.whl (233 kB)
+Downloading tensorboardx-2.6.4-py3-none-any.whl (87 kB)
+Downloading tifffile-2024.8.30-py3-none-any.whl (227 kB)
+Using cached typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+Downloading tzdata-2025.3-py2.py3-none-any.whl (348 kB)
+Downloading virtualenv-20.36.1-py3-none-any.whl (6.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.0/6.0 MB 158.9 MB/s  0:00:00
+Downloading distlib-0.4.0-py2.py3-none-any.whl (469 kB)
+Downloading filelock-3.19.1-py3-none-any.whl (15 kB)
+Downloading zipp-3.23.0-py3-none-any.whl (10 kB)
+Downloading aiohttp_cors-0.8.1-py3-none-any.whl (25 kB)
+Downloading beautifulsoup4-4.14.3-py3-none-any.whl (107 kB)
+Downloading soupsieve-2.8.3-py3-none-any.whl (37 kB)
+Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+Downloading coloredlogs-15.0.1-py2.py3-none-any.whl (46 kB)
+Downloading humanfriendly-10.0-py2.py3-none-any.whl (86 kB)
+Downloading colorful-0.5.8-py2.py3-none-any.whl (201 kB)
+Downloading flatbuffers-25.12.19-py2.py3-none-any.whl (26 kB)
+Downloading graphviz-0.21-py3-none-any.whl (47 kB)
+Downloading model_index-0.1.11-py3-none-any.whl (34 kB)
+Downloading multiprocess-0.70.15-py39-none-any.whl (133 kB)
+Downloading nvidia_nvjitlink_cu12-12.9.86-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (39.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 39.7/39.7 MB 190.0 MB/s  0:00:00
+Downloading onnx-1.19.1-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (18.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.2/18.2 MB 190.3 MB/s  0:00:00
+Downloading ml_dtypes-0.5.4-cp39-cp39-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (5.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 110.6 MB/s  0:00:00
+Downloading protobuf-6.33.5-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
+Downloading opencensus-0.11.4-py2.py3-none-any.whl (128 kB)
+Downloading google_api_core-2.29.0-py3-none-any.whl (173 kB)
+Downloading google_auth-2.48.0-py3-none-any.whl (236 kB)
+Downloading googleapis_common_protos-1.72.0-py3-none-any.whl (297 kB)
+Downloading proto_plus-1.27.0-py3-none-any.whl (50 kB)
+Downloading rsa-4.9.1-py3-none-any.whl (34 kB)
+Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+Downloading opencensus_context-0.1.3-py2.py3-none-any.whl (5.1 kB)
+Downloading pyasn1-0.6.2-py3-none-any.whl (83 kB)
+Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+Downloading opendatalab-0.0.10-py3-none-any.whl (29 kB)
+Downloading openxlab-0.0.38-py3-none-any.whl (302 kB)
+Downloading pytz-2023.4-py2.py3-none-any.whl (506 kB)
+Downloading requests-2.28.2-py3-none-any.whl (62 kB)
+Downloading rich-13.4.2-py3-none-any.whl (239 kB)
+Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 95.7 MB/s  0:00:00
+Downloading setuptools-60.2.0-py3-none-any.whl (953 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 953.1/953.1 kB 80.2 MB/s  0:00:00
+Downloading tqdm-4.65.2-py3-none-any.whl (77 kB)
+Downloading jmespath-0.10.0-py2.py3-none-any.whl (24 kB)
+Downloading aliyun_python_sdk_kms-2.16.5-py2.py3-none-any.whl (99 kB)
+Downloading markdown_it_py-3.0.0-py3-none-any.whl (87 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading pycryptodome-3.23.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 114.0 MB/s  0:00:00
+Downloading ordered_set-4.1.0-py3-none-any.whl (7.6 kB)
+Downloading py4j-0.10.9.9-py2.py3-none-any.whl (203 kB)
+Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 170.2 MB/s  0:00:00
+Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 45.2 MB/s  0:00:00
+Downloading tabulate-0.9.0-py3-none-any.whl (35 kB)
+Downloading window_ops-0.0.15-py3-none-any.whl (15 kB)
+Downloading wrapt-2.0.1-cp39-cp39-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (113 kB)
+Downloading xxhash-3.6.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (192 kB)
+Building wheels for collected packages: nvidia-ml-py3, antlr4-python3-runtime, seqeval, spacy, oss2, aliyun-python-sdk-core, crcmod
+  DEPRECATION: Building 'nvidia-ml-py3' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'nvidia-ml-py3'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+  Building wheel for nvidia-ml-py3 (setup.py): started
+  Building wheel for nvidia-ml-py3 (setup.py): finished with status 'done'
+  Created wheel for nvidia-ml-py3: filename=nvidia_ml_py3-7.352.0-py3-none-any.whl size=19208 sha256=db5a64746b84d55185c48c7ca2edc20064ee61988abfca4feeae150950c3a9db
+  Stored in directory: /root/.cache/pip/wheels/f6/d8/b0/15cfd7805d39250ac29318105f09b1750683387630d68423e1
+  DEPRECATION: Building 'antlr4-python3-runtime' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'antlr4-python3-runtime'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+  Building wheel for antlr4-python3-runtime (setup.py): started
+  Building wheel for antlr4-python3-runtime (setup.py): finished with status 'done'
+  Created wheel for antlr4-python3-runtime: filename=antlr4_python3_runtime-4.9.3-py3-none-any.whl size=144591 sha256=cf2e71735c918fc65cf2ffaf07fd520bd4c75cd3af717c0436d41b2d6fcb1059
+  Stored in directory: /root/.cache/pip/wheels/23/cf/80/f3efa822e6ab23277902ee9165fe772eeb1dfb8014f359020a
+  DEPRECATION: Building 'seqeval' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'seqeval'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+  Building wheel for seqeval (setup.py): started
+  Building wheel for seqeval (setup.py): finished with status 'done'
+  Created wheel for seqeval: filename=seqeval-1.2.2-py3-none-any.whl size=16250 sha256=8da95fb033dc55fe68754334b760d23c3a5f696b635451627647f9db54960f55
+  Stored in directory: /root/.cache/pip/wheels/e2/a5/92/2c80d1928733611c2747a9820e1324a6835524d9411510c142
+  Building wheel for spacy (pyproject.toml): started
+  Building wheel for spacy (pyproject.toml): still running...
+  Building wheel for spacy (pyproject.toml): still running...
+  Building wheel for spacy (pyproject.toml): still running...
+  Building wheel for spacy (pyproject.toml): still running...
+  Building wheel for spacy (pyproject.toml): still running...
+  Building wheel for spacy (pyproject.toml): finished with status 'done'
+  Created wheel for spacy: filename=spacy-3.8.11-cp39-cp39-linux_x86_64.whl size=7508146 sha256=45679c33e7e42f8058b1fee78a177e8c608268ab0200949c8f2ba9f7f9dd0747
+  Stored in directory: /root/.cache/pip/wheels/a8/ad/31/4477e5bf199f83e76944b01dce246860fa577d6ee5126300e8
+  DEPRECATION: Building 'oss2' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'oss2'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+  Building wheel for oss2 (setup.py): started
+  Building wheel for oss2 (setup.py): finished with status 'done'
+  Created wheel for oss2: filename=oss2-2.17.0-py3-none-any.whl size=112465 sha256=514afc9254a60aac52c582a29a97f9fa19389863c3607f52a6d87a7a14b83812
+  Stored in directory: /root/.cache/pip/wheels/4b/23/be/4682480f462daef0106731b7efd0c513bfca3c846dc20081ab
+  DEPRECATION: Building 'aliyun-python-sdk-core' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'aliyun-python-sdk-core'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+  Building wheel for aliyun-python-sdk-core (setup.py): started
+  Building wheel for aliyun-python-sdk-core (setup.py): finished with status 'done'
+  Created wheel for aliyun-python-sdk-core: filename=aliyun_python_sdk_core-2.16.0-py3-none-any.whl size=535417 sha256=c7d8e3d6bc510f6b811ad4176e844c370efec944db33151967e59788ca658bac
+  Stored in directory: /root/.cache/pip/wheels/be/85/b9/f7c05b089e7fad969001438f8a0175c7233a8635b49d5af57e
+  DEPRECATION: Building 'crcmod' using the legacy setup.py bdist_wheel mechanism, which will be removed in a future version. pip 25.3 will enforce this behaviour change. A possible replacement is to use the standardized build interface by setting the `--use-pep517` option, (possibly combined with `--no-build-isolation`), or adding a `pyproject.toml` file to the source tree of 'crcmod'. Discussion can be found at https://github.com/pypa/pip/issues/6334
+  Building wheel for crcmod (setup.py): started
+  Building wheel for crcmod (setup.py): finished with status 'done'
+  Created wheel for crcmod: filename=crcmod-1.7-cp39-cp39-linux_x86_64.whl size=23590 sha256=5b0d8043e7aafaff963236d149f4a28cab6b6c59a353f636868b814048aef986
+  Stored in directory: /root/.cache/pip/wheels/4a/6c/a6/ffdd136310039bf226f2707a9a8e6857be7d70a3fc061f6b36
+Successfully built nvidia-ml-py3 antlr4-python3-runtime seqeval spacy oss2 aliyun-python-sdk-core crcmod
+Installing collected packages: text-unidecode, pytz, py4j, py-spy, opencensus-context, nvidia-ml-py3, mpmath, flatbuffers, distlib, crcmod, colorful, antlr4-python3-runtime, zipp, xxhash, wrapt, wasabi, tzdata, typing-extensions, tqdm, toolz, tifffile, tensorboard-data-server, tabulate, sympy, stanio, spacy-loggers, spacy-legacy, soupsieve, six, setuptools, sentencepiece, safetensors, rpds-py, requests, regex, PyYAML, PyWavelets, python-dotenv, pyparsing, pygments, pycryptodome, pyasn1, psutil, protobuf, propcache, prometheus-client, pillow, patsy, orjson, ordered-set, nvidia-nvtx-cu12, nvidia-nvjitlink-cu12, nvidia-nccl-cu12, nvidia-curand-cu12, nvidia-cufft-cu12, nvidia-cuda-runtime-cu12, nvidia-cuda-nvrtc-cu12, nvidia-cuda-cupti-cu12, nvidia-cublas-cu12, networkx, narwhals, murmurhash, msgpack, ml_dtypes, mdurl, llvmlite, lazy_loader, kiwisolver, jmespath, humanfriendly, hf-xet, graphviz, fsspec, frozenlist, fonttools, filelock, fastprogress, fastcore, dill, defusedxml, cymem, cycler, cramjam, contourpy, colorama, cloudpickle, catalogue, blis, attrs, async-timeout, annotated-types, aiohappyeyeballs, absl-py, xgboost, virtualenv, typing-inspection, typer-slim, triton, tensorboardX, srsly, smart-open, scikit-learn, rsa, referencing, python-dateutil, pytesseract, pydantic-core, pyasn1-modules, proto-plus, preshed, plotly, pdf2image, onnx, omegaconf, nvidia-cusparse-cu12, nvidia-cudnn-cu12, numba, nptyping, nltk, multiprocess, multidict, markdown-it-py, lightning-utilities, lightgbm, importlib_resources, importlib-metadata, imageio, hyperopt, huggingface-hub, grpcio, googleapis-common-protos, fastdownload, coloredlogs, cloudpathlib, beautifulsoup4, aiosignal, yarl, window-ops, tokenizers, seqeval, scikit-image, rich, pydantic, pandas, onnxruntime, nvidia-cusolver-cu12, matplotlib, markdown, jsonschema-specifications, holidays, google-auth, gdown, aliyun-python-sdk-core, utilsforecast, transformers, torch, tensorboard, statsmodels, nlpaug, model-index, jsonschema, google-api-core, gluonts, fastparquet, confection, cmdstanpy, catboost, aliyun-python-sdk-kms, aiohttp, weasel, torchvision, torchmetrics, thinc, statsforecast, ray, pytorch-metric-learning, prophet, oss2, opencensus, mlforecast, aiohttp-cors, accelerate, timm, spacy, pytorch-lightning, openxlab, datasets, autogluon.common, optimum, opendatalab, lightning, fastai, evaluate, autogluon.features, autogluon.core, openmim, autogluon.tabular, autogluon.multimodal, autogluon.timeseries, autogluon
+  Attempting uninstall: pytz
+    Found existing installation: pytz 2025.2
+    Uninstalling pytz-2025.2:
+      Successfully uninstalled pytz-2025.2
+  Attempting uninstall: tqdm
+    Found existing installation: tqdm 4.66.4
+    Uninstalling tqdm-4.66.4:
+      Successfully uninstalled tqdm-4.66.4
+  Attempting uninstall: six
+    Found existing installation: six 1.15.0
+    Uninstalling six-1.15.0:
+      Successfully uninstalled six-1.15.0
+  Attempting uninstall: setuptools
+    Found existing installation: setuptools 80.9.0
+    Uninstalling setuptools-80.9.0:
+      Successfully uninstalled setuptools-80.9.0
+  Attempting uninstall: requests
+    Found existing installation: requests 2.32.3
+    Uninstalling requests-2.32.3:
+      Successfully uninstalled requests-2.32.3
+  Attempting uninstall: psutil
+    Found existing installation: psutil 5.7.2
+    Uninstalling psutil-5.7.2:
+      Successfully uninstalled psutil-5.7.2
+  Attempting uninstall: protobuf
+    Found existing installation: protobuf 3.20.2
+    Uninstalling protobuf-3.20.2:
+      Successfully uninstalled protobuf-3.20.2
+  Attempting uninstall: pillow
+    Found existing installation: pillow 11.3.0
+    Uninstalling pillow-11.3.0:
+      Successfully uninstalled pillow-11.3.0
+  Attempting uninstall: jmespath
+    Found existing installation: jmespath 1.0.1
+    Uninstalling jmespath-1.0.1:
+      Successfully uninstalled jmespath-1.0.1
+  Attempting uninstall: scikit-learn
+    Found existing installation: scikit-learn 1.2.1
+    Uninstalling scikit-learn-1.2.1:
+      Successfully uninstalled scikit-learn-1.2.1
+  Attempting uninstall: python-dateutil
+    Found existing installation: python-dateutil 2.8.1
+    Uninstalling python-dateutil-2.8.1:
+      Successfully uninstalled python-dateutil-2.8.1
+  Attempting uninstall: pandas
+    Found existing installation: pandas 1.1.3
+    Uninstalling pandas-1.1.3:
+      Successfully uninstalled pandas-1.1.3
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+sagemaker-sklearn-container 2.0 requires pandas==1.1.3, but you have pandas 2.1.4 which is incompatible.
+sagemaker-sklearn-container 2.0 requires protobuf==3.20.2, but you have protobuf 6.33.5 which is incompatible.
+sagemaker-sklearn-container 2.0 requires psutil==5.7.2, but you have psutil 5.9.8 which is incompatible.
+sagemaker-sklearn-container 2.0 requires python-dateutil==2.8.1, but you have python-dateutil 2.9.0.post0 which is incompatible.
+sagemaker-sklearn-container 2.0 requires scikit-learn==1.2.1, but you have scikit-learn 1.4.0 which is incompatible.
+sagemaker-sklearn-container 2.0 requires six==1.15.0, but you have six 1.17.0 which is incompatible.
+sagemaker-training 4.8.0 requires protobuf<=3.20.3,>=3.9.2, but you have protobuf 6.33.5 which is incompatible.
+zope-event 5.1.1 requires setuptools>=75.8.2, but you have setuptools 60.2.0 which is incompatible.
+Successfully installed PyWavelets-1.6.0 PyYAML-6.0.3 absl-py-2.3.1 accelerate-0.21.0 aiohappyeyeballs-2.6.1 aiohttp-3.13.3 aiohttp-cors-0.8.1 aiosignal-1.4.0 aliyun-python-sdk-core-2.16.0 aliyun-python-sdk-kms-2.16.5 annotated-types-0.7.0 antlr4-python3-runtime-4.9.3 async-timeout-5.0.1 attrs-25.4.0 autogluon-1.1.1 autogluon.common-1.1.1 autogluon.core-1.1.1 autogluon.features-1.1.1 autogluon.multimodal-1.1.1 autogluon.tabular-1.1.1 autogluon.timeseries-1.1.1 beautifulsoup4-4.14.3 blis-1.3.3 catalogue-2.0.10 catboost-1.2.8 cloudpathlib-0.23.0 cloudpickle-3.1.2 cmdstanpy-1.3.0 colorama-0.4.6 coloredlogs-15.0.1 colorful-0.5.8 confection-0.1.5 contourpy-1.3.0 cramjam-2.11.0 crcmod-1.7 cycler-0.12.1 cymem-2.0.13 datasets-2.14.4 defusedxml-0.7.1 dill-0.3.7 distlib-0.4.0 evaluate-0.4.6 fastai-2.7.19 fastcore-1.7.29 fastdownload-0.0.7 fastparquet-2023.10.1 fastprogress-1.0.5 filelock-3.19.1 flatbuffers-25.12.19 fonttools-4.60.2 frozenlist-1.8.0 fsspec-2025.10.0 gdown-5.2.1 gluonts-0.15.1 google-api-core-2.29.0 google-auth-2.48.0 googleapis-common-protos-1.72.0 graphviz-0.21 grpcio-1.76.0 hf-xet-1.2.0 holidays-0.83 huggingface-hub-0.36.0 humanfriendly-10.0 hyperopt-0.2.7 imageio-2.37.2 importlib-metadata-8.7.1 importlib_resources-6.5.2 jmespath-0.10.0 jsonschema-4.21.1 jsonschema-specifications-2025.9.1 kiwisolver-1.4.7 lazy_loader-0.4 lightgbm-4.3.0 lightning-2.3.3 lightning-utilities-0.15.2 llvmlite-0.43.0 markdown-3.9 markdown-it-py-3.0.0 matplotlib-3.9.4 mdurl-0.1.2 ml_dtypes-0.5.4 mlforecast-0.10.0 model-index-0.1.11 mpmath-1.3.0 msgpack-1.1.2 multidict-6.7.1 multiprocess-0.70.15 murmurhash-1.0.15 narwhals-2.15.0 networkx-3.2.1 nlpaug-1.1.11 nltk-3.9.2 nptyping-2.4.1 numba-0.60.0 nvidia-cublas-cu12-12.1.3.1 nvidia-cuda-cupti-cu12-12.1.105 nvidia-cuda-nvrtc-cu12-12.1.105 nvidia-cuda-runtime-cu12-12.1.105 nvidia-cudnn-cu12-8.9.2.26 nvidia-cufft-cu12-11.0.2.54 nvidia-curand-cu12-10.3.2.106 nvidia-cusolver-cu12-11.4.5.107 nvidia-cusparse-cu12-12.1.0.106 nvidia-ml-py3-7.352.0 nvidia-nccl-cu12-2.20.5 nvidia-nvjitlink-cu12-12.9.86 nvidia-nvtx-cu12-12.1.105 omegaconf-2.2.3 onnx-1.19.1 onnxruntime-1.19.2 opencensus-0.11.4 opencensus-context-0.1.3 opendatalab-0.0.10 openmim-0.3.9 openxlab-0.0.38 optimum-1.18.1 ordered-set-4.1.0 orjson-3.11.5 oss2-2.17.0 pandas-2.1.4 patsy-1.0.2 pdf2image-1.17.0 pillow-10.4.0 plotly-6.5.2 preshed-3.0.12 prometheus-client-0.24.1 propcache-0.4.1 prophet-1.3.0 proto-plus-1.27.0 protobuf-6.33.5 psutil-5.9.8 py-spy-0.4.1 py4j-0.10.9.9 pyasn1-0.6.2 pyasn1-modules-0.4.2 pycryptodome-3.23.0 pydantic-2.12.5 pydantic-core-2.41.5 pygments-2.19.2 pyparsing-3.3.2 pytesseract-0.3.10 python-dateutil-2.9.0.post0 python-dotenv-1.2.1 pytorch-lightning-2.3.3 pytorch-metric-learning-2.3.0 pytz-2023.4 ray-2.10.0 referencing-0.36.2 regex-2026.1.15 requests-2.28.2 rich-13.4.2 rpds-py-0.27.1 rsa-4.9.1 safetensors-0.7.0 scikit-image-0.20.0 scikit-learn-1.4.0 sentencepiece-0.2.1 seqeval-1.2.2 setuptools-60.2.0 six-1.17.0 smart-open-7.5.0 soupsieve-2.8.3 spacy-3.8.11 spacy-legacy-3.0.12 spacy-loggers-1.0.5 srsly-2.5.2 stanio-0.5.1 statsforecast-1.4.0 statsmodels-0.14.6 sympy-1.14.0 tabulate-0.9.0 tensorboard-2.20.0 tensorboard-data-server-0.7.2 tensorboardX-2.6.4 text-unidecode-1.3 thinc-8.3.9 tifffile-2024.8.30 timm-0.9.16 tokenizers-0.15.2 toolz-0.12.1 torch-2.3.1 torchmetrics-1.2.1 torchvision-0.18.1 tqdm-4.65.2 transformers-4.39.3 triton-2.3.1 typer-slim-0.21.1 typing-extensions-4.15.0 typing-inspection-0.4.2 tzdata-2025.3 utilsforecast-0.0.10 virtualenv-20.36.1 wasabi-1.1.3 weasel-0.4.3 window-ops-0.0.15 wrapt-2.0.1 xgboost-2.0.3 xxhash-3.6.0 yarl-1.22.0 zipp-3.23.0
+[notice] A new release of pip is available: 25.2 -> 26.0
+[notice] To update, run: pip install --upgrade pip
+Wrapper: Dependencies installed successfully.
+Wrapper: Verifying imports...
+Imports successful
+Wrapper: Launching inner script: /opt/ml/processing/input/project_root/src/modules/module_04_inner.py
+Wrapper: Using config: /opt/ml/processing/input/project_root/config/config.yaml
+RuntimeError: CPU dispatcher tracer already initlized
+Importing matplotlib failed. Plotting will not work.
+2026-01-31 18:48:58,544 | INFO    | Logging initialized — console + file (logs/module_04_model_training.log)
+INFO:__main__:Logging initialized — console + file (logs/module_04_model_training.log)
+INFO:src.utils.config:Configuration loaded and validated successfully
+2026-01-31 18:48:58,569 | INFO    | === MODULE 04 : Model Training & Forward Forecasting ===
+INFO:__main__:=== MODULE 04 : Model Training & Forward Forecasting ===
+2026-01-31 18:48:58,569 | INFO    | SageMaker Mode: Loading input from /opt/ml/processing/input/data
+INFO:__main__:SageMaker Mode: Loading input from /opt/ml/processing/input/data
+2026-01-31 18:48:59,469 | INFO    | Training on 120 servers...
+INFO:__main__:Training on 120 servers...
